@@ -1,0 +1,57 @@
+.empty-state {
+  position: relative;
+  overflow: hidden;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 48px 28px;
+  border: 1px dashed rgba(91, 92, 226, 0.3);
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(255,255,255,.95), rgba(248,249,255,.95));
+  text-align: center;
+}
+
+.empty-icon-wrapper {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 18px;
+  border-radius: 22px;
+  color: var(--primary);
+  background: var(--primary-soft);
+  box-shadow: inset 0 0 0 1px rgba(91,92,226,.1);
+  animation: gentleFloat 3.4s ease-in-out infinite;
+}
+
+.empty-icon {
+  font-size: 33px;
+}
+
+.empty-message {
+  position: relative;
+  z-index: 1;
+  max-width: 350px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.65;
+}
+
+.empty-decoration {
+  position: absolute;
+  right: -40px;
+  bottom: -50px;
+  width: 150px;
+  height: 150px;
+  border: 28px solid var(--secondary-soft);
+  border-radius: 50%;
+}
+
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}

@@ -1,0 +1,40 @@
+<div class="provider-card" [class.verified-border]="recommendation.provider.isVerified">
+  <div class="card-body-inner">
+    <div class="provider-header">
+      <img [src]="recommendation.provider.photoUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'" class="provider-avatar" alt="Avatar" />
+      <div>
+        <h4>{{ recommendation.provider.fullName }}</h4>
+        <div class="provider-tags">
+          <p-tag *ngIf="recommendation.provider.isVerified" severity="success" value="Verificado" icon="pi pi-check-circle"></p-tag>
+          <p-tag *ngIf="recommendation.isNewProvider" severity="warn" value="Novo" icon="pi pi-star"></p-tag>
+        </div>
+      </div>
+      <div class="trust-score">
+        <p-rating [ngModel]="recommendation.provider.trustScore" [readonly]="true" [stars]="5"></p-rating>
+        <span class="review-count d-block mt-1">({{ recommendation.provider.reviewCount }} avaliações)</span>
+      </div>
+    </div>
+
+    <p class="provider-bio">{{ recommendation.provider.bio | truncate:120 }}</p>
+
+    <div class="ranking-breakdown">
+      <span class="score-pill">
+        <span class="icon" style="font-size: 14px;">trending_up</span>
+        Match: <strong>{{ recommendation.totalScore }}%</strong>
+      </span>
+      <button class="btn-link" (click)="showBreakdown.emit(recommendation)">
+        <span class="icon" style="font-size: 14px;">visibility</span> Ver detalhes
+      </button>
+    </div>
+
+    <div class="card-footer-custom">
+      <span class="radius-info">
+        <span class="icon">location_on</span>
+        {{ recommendation.provider.serviceRadiusKm }} km · {{ searchNeighborhood }}
+      </span>
+      <button class="btn-request-quote" (click)="requestQuote.emit()">
+        <span class="icon" style="font-size: 16px;">send</span> Solicitar
+      </button>
+    </div>
+  </div>
+</div>

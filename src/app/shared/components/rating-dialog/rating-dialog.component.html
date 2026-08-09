@@ -1,0 +1,72 @@
+<p-dialog 
+  header="Avaliar Serviço" 
+  [(visible)]="visible" 
+  (onHide)="closeDialog()"
+  [modal]="true" 
+  [style]="{ width: '90vw', maxWidth: '600px' }" 
+  [draggable]="false" 
+  [resizable]="false">
+  
+  <div class="p-3">
+    <p class="text-muted mb-4">Por favor, avalie os seguintes aspectos do serviço prestado. Sua avaliação ajuda a manter a qualidade da nossa comunidade.</p>
+    
+    <div class="d-flex flex-column gap-4">
+      <div class="rating-group">
+        <div class="d-flex justify-content-between align-items-center fw-bold mb-2">
+          Qualidade do Serviço
+          <p-rating [(ngModel)]="quality" [stars]="5" aria-label="Nota para qualidade do serviço"></p-rating>
+        </div>
+        <small class="text-muted">O trabalho foi bem executado e resolveu o problema?</small>
+      </div>
+      
+      <div class="rating-group">
+        <div class="d-flex justify-content-between align-items-center fw-bold mb-2">
+          Pontualidade
+          <p-rating [(ngModel)]="punctuality" [stars]="5" aria-label="Nota para pontualidade"></p-rating>
+        </div>
+        <small class="text-muted">O profissional chegou no horário combinado?</small>
+      </div>
+
+      <div class="rating-group">
+        <div class="d-flex justify-content-between align-items-center fw-bold mb-2">
+          Comunicação
+          <p-rating [(ngModel)]="communication" [stars]="5" aria-label="Nota para comunicação"></p-rating>
+        </div>
+        <small class="text-muted">Foi fácil se comunicar com o profissional?</small>
+      </div>
+
+      <div class="rating-group">
+        <div class="d-flex justify-content-between align-items-center fw-bold mb-2">
+          Cuidado
+          <p-rating [(ngModel)]="care" [stars]="5" aria-label="Nota para cuidado"></p-rating>
+        </div>
+        <small class="text-muted">O profissional foi cuidadoso com o local e o serviço?</small>
+      </div>
+
+      <div class="rating-group">
+        <div class="d-flex justify-content-between align-items-center fw-bold mb-2">
+          Custo-Benefício
+          <p-rating [(ngModel)]="costBenefit" [stars]="5" aria-label="Nota para custo-benefício"></p-rating>
+        </div>
+        <small class="text-muted">O valor cobrado foi condizente com o mercado e com o serviço?</small>
+      </div>
+
+      <div class="mt-2">
+        <label class="fw-bold mb-2 d-block">Comentário (opcional)</label>
+        <textarea 
+          class="form-control" 
+          [(ngModel)]="comment" 
+          rows="3" 
+          placeholder="Conte mais sobre sua experiência...">
+        </textarea>
+      </div>
+    </div>
+    
+    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top border-light">
+      <button type="button" class="btn btn-outline-secondary" (click)="closeDialog()">Cancelar</button>
+      <button type="button" class="btn btn-primary" [disabled]="!isFormValid()" (click)="onSubmit()">
+        Concluir avaliação
+      </button>
+    </div>
+  </div>
+</p-dialog>

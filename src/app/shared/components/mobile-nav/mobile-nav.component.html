@@ -1,0 +1,18 @@
+<nav class="mobile-nav d-flex d-md-none">
+  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+    <span class="icon">search</span>
+    <span>Busca</span>
+  </a>
+  <a *ngIf="currentUser?.role === 'CLIENT'" routerLink="/client" routerLinkActive="active" class="nav-item">
+    <span class="icon">list_alt</span>
+    <span>Pedidos</span>
+  </a>
+  <a *ngIf="currentUser?.role === 'PROVIDER'" routerLink="/provider" routerLinkActive="active" class="nav-item">
+    <span class="icon">dashboard</span>
+    <span>Painel</span>
+  </a>
+  <a *ngIf="currentUser?.role === 'ADMIN'" routerLink="/admin" routerLinkActive="active" class="nav-item">
+    <span class="icon">admin_panel_settings</span>
+    <span>Admin</span>
+  </a>
+</nav>

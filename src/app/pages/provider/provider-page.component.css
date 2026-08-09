@@ -1,0 +1,176 @@
+/* ==========================================================================
+   Provider Page — Premium Styles
+   ========================================================================== */
+
+:host {
+  display: block;
+  animation: fadeInUp 0.4s ease both;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--dark-blue-deep);
+  letter-spacing: -0.5px;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.page-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ocean-blue), var(--gold-primary));
+  border-radius: 2px;
+}
+
+.request-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: none;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  border-top: 3px solid transparent;
+}
+
+.request-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+  border-top-color: var(--ocean-blue);
+}
+
+.request-card .card-body {
+  padding: 24px;
+}
+
+.request-card h5 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--dark-blue-deep);
+  line-height: 1.4;
+}
+
+.request-card .alert {
+  background: linear-gradient(135deg, var(--ocean-blue-light), #f0f9ff);
+  border: 1px solid rgba(2, 132, 199, 0.12);
+  border-radius: var(--radius-sm);
+  color: var(--dark-blue-surface);
+}
+
+.request-card .alert .icon {
+  color: var(--ocean-blue);
+}
+
+.btn.btn-primary.w-100 {
+  padding: 12px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.btn.btn-primary.w-100:hover {
+  box-shadow: var(--shadow-ocean);
+  transform: translateY(-1px);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Modern professional workspace */
+:host .container {
+  padding-top: 42px !important;
+  padding-bottom: 72px !important;
+}
+
+.page-heading {
+  padding: 26px 28px;
+  border: 1px solid rgba(228, 231, 240, 0.9);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 91% 15%, rgba(91, 92, 226, 0.11), transparent 15rem),
+    linear-gradient(135deg, #fff, #f9fffd);
+  box-shadow: var(--shadow-sm);
+}
+
+.page-heading p {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.page-eyebrow {
+  color: var(--secondary);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.page-title {
+  margin: 3px 0 0;
+  padding: 0;
+  font-size: 29px;
+  letter-spacing: -1px;
+}
+
+.page-title::after {
+  display: none;
+}
+
+.request-card {
+  border: 1px solid rgba(228, 231, 240, 0.92);
+  border-top: 0;
+}
+
+.request-card::before {
+  content: '';
+  display: block;
+  height: 4px;
+  background: linear-gradient(90deg, var(--secondary), #53d3c4);
+}
+
+.appointment-card {
+  overflow: hidden;
+  border: 1px solid rgba(228, 231, 240, 0.92);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.appointment-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.section-divider {
+  color: var(--text-primary);
+  font-size: 24px;
+  font-weight: 850;
+  letter-spacing: -0.7px;
+}
+
+.section-divider::after {
+  content: '';
+  display: block;
+  width: 42px;
+  height: 3px;
+  margin-top: 10px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+@media (max-width: 576px) {
+  :host .container {
+    padding-top: 24px !important;
+  }
+
+  .page-heading {
+    padding: 21px;
+  }
+}

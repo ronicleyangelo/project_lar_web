@@ -1,0 +1,157 @@
+:host {
+  display: block;
+  animation: pageIn 0.4s ease both;
+}
+
+:host .container {
+  padding-top: 42px !important;
+  padding-bottom: 72px !important;
+}
+
+.dashboard-heading {
+  padding: 28px;
+  border: 1px solid rgba(228, 231, 240, 0.92);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 88% 5%, rgba(91, 92, 226, 0.12), transparent 17rem),
+    linear-gradient(135deg, #fff, #fafaff);
+  box-shadow: var(--shadow-sm);
+}
+
+.dashboard-heading h2 {
+  margin: 3px 0 5px;
+  color: var(--text-primary);
+  font-size: 29px;
+  font-weight: 850;
+  letter-spacing: -1px;
+}
+
+.dashboard-heading p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.page-eyebrow {
+  color: var(--primary);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.metric-card {
+  position: relative;
+  min-height: 130px;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid rgba(228, 231, 240, 0.92);
+  border-radius: 19px;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  text-align: left;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.metric-card::after {
+  content: '';
+  position: absolute;
+  right: -24px;
+  bottom: -30px;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: var(--primary-soft);
+}
+
+.row > div:nth-child(2) .metric-card::after {
+  background: var(--secondary-soft);
+}
+
+.row > div:nth-child(3) .metric-card::after {
+  background: var(--accent-soft);
+}
+
+.row > div:nth-child(4) .metric-card::after {
+  background: #edf8ff;
+}
+
+.metric-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.metric-title {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+}
+
+.metric-value {
+  margin-top: 10px;
+  color: var(--text-primary);
+  font-size: 34px;
+  font-weight: 850;
+  line-height: 1;
+  letter-spacing: -1.5px;
+}
+
+h4 {
+  margin-bottom: 18px !important;
+  color: var(--text-primary);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+:host ::ng-deep .p-datatable {
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+:host ::ng-deep .p-datatable-thead > tr > th {
+  padding: 15px 17px;
+  border-color: var(--border-light);
+  color: var(--text-secondary);
+  background: #f8f9fd;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+:host ::ng-deep .p-datatable-tbody > tr > td {
+  padding: 15px 17px;
+  border-color: var(--border-light);
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+:host ::ng-deep .p-datatable-tbody > tr:hover {
+  background: var(--primary-soft);
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 576px) {
+  :host .container {
+    padding-top: 24px !important;
+  }
+
+  .dashboard-heading {
+    padding: 21px;
+  }
+
+  .metric-card {
+    min-height: 112px;
+    padding: 17px;
+  }
+}

@@ -1,0 +1,263 @@
+/* ==========================================================================
+   Client Page — Premium Styles
+   ========================================================================== */
+
+:host {
+  display: block;
+  animation: fadeInUp 0.4s ease both;
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.page-header h2 {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--dark-blue-deep);
+  letter-spacing: -0.5px;
+}
+
+.page-header .btn {
+  gap: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-ocean);
+}
+
+/* Request Cards */
+.request-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: none;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+  border-left: 4px solid var(--ocean-blue);
+  overflow: hidden;
+}
+
+.request-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.request-card .card-body {
+  padding: 24px;
+}
+
+.request-card h5 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--dark-blue-deep);
+  margin-bottom: 8px;
+}
+
+/* Privacy Notice */
+.privacy-notice {
+  background: linear-gradient(135deg, var(--ocean-blue-light), #f0f9ff);
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  color: var(--dark-blue-surface);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(2, 132, 199, 0.15);
+}
+
+.privacy-notice .icon {
+  color: var(--ocean-blue);
+  font-size: 18px;
+}
+
+/* Quotes Box */
+.quotes-box {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  margin-top: 16px;
+  border: 1px solid var(--border-light);
+}
+
+.quotes-box h6 {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--dark-blue-surface);
+  margin-bottom: 12px;
+}
+
+.quote-item {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px !important;
+  border: 1px solid var(--border-light) !important;
+  transition: all 0.2s ease;
+}
+
+.quote-item:hover {
+  border-color: var(--ocean-blue) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.quote-price {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ocean-blue);
+  line-height: 1;
+}
+
+/* Section Title */
+.section-divider {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--dark-blue-deep);
+  letter-spacing: -0.5px;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.section-divider::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-primary), var(--gold-border));
+  border-radius: 2px;
+}
+
+/* Appointment Cards */
+.appointment-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: none;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.appointment-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.appointment-card .card-body {
+  padding: 20px;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Modern workspace layer */
+:host .container {
+  padding-top: 42px !important;
+  padding-bottom: 72px !important;
+}
+
+.page-header {
+  margin-bottom: 28px;
+  padding: 26px 28px;
+  border: 1px solid rgba(228, 231, 240, 0.9);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 92% 20%, rgba(15, 159, 145, 0.1), transparent 15rem),
+    linear-gradient(135deg, #fff, #fafaff);
+  box-shadow: var(--shadow-sm);
+}
+
+.page-header h2 {
+  margin: 3px 0 4px;
+  font-size: 29px;
+  letter-spacing: -1px;
+}
+
+.page-eyebrow {
+  color: var(--primary);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.page-subtitle {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.request-card {
+  border: 1px solid rgba(228, 231, 240, 0.9);
+  border-left: 0;
+}
+
+.request-card::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+.quotes-box {
+  border-color: rgba(91, 92, 226, 0.1);
+  background: #f8f9ff;
+}
+
+.quote-item:hover {
+  transform: translateX(3px);
+}
+
+.appointment-card {
+  border: 1px solid rgba(228, 231, 240, 0.9);
+}
+
+.appointment-card .card-body {
+  position: relative;
+  padding: 22px;
+}
+
+.section-divider::after {
+  width: 42px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+@media (max-width: 576px) {
+  :host .container {
+    padding-top: 24px !important;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+    padding: 21px;
+  }
+
+  .page-header .btn {
+    width: 100%;
+  }
+
+  .quote-item {
+    align-items: flex-start !important;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .quote-item .text-end {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

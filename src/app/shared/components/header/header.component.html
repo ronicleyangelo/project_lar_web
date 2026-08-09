@@ -1,0 +1,65 @@
+<header class="app-header" [class.auth-header]="authPage">
+  <div class="header-content d-flex align-items-center justify-content-between px-3 px-md-4 px-lg-5">
+    <a class="logo-group" routerLink="/" aria-label="Ir para o início">
+      <span class="brand-symbol"><span class="icon logo-icon">roofing</span></span>
+      <div class="brand">
+        <h1>Project Lar</h1>
+        <div class="subtitle">Serviços com confiança</div>
+      </div>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav *ngIf="!authPage" class="nav-tabs d-none d-md-flex">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-btn">
+        <span class="icon">search</span> Explorar
+      </a>
+      <a *ngIf="currentUser?.role === 'CLIENT'" routerLink="/client" routerLinkActive="active" class="nav-btn">
+        <span class="icon">list_alt</span> Meus Pedidos
+      </a>
+      <a *ngIf="currentUser?.role === 'PROVIDER'" routerLink="/provider" routerLinkActive="active" class="nav-btn">
+        <span class="icon">dashboard</span> Painel
+      </a>
+      <a *ngIf="currentUser?.role === 'ADMIN'" routerLink="/admin" routerLinkActive="active" class="nav-btn">
+        <span class="icon">admin_panel_settings</span> Admin
+      </a>
+    </nav>
+
+    <!-- Auth Actions -->
+    <div class="header-actions d-flex align-items-center">
+      <ng-container *ngIf="authPage === 'login'">
+        <a class="btn btn-primary btn-sm auth-header-action" routerLink="/auth/register">
+          <span class="icon">person_add</span> Cadastrar-se
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf="authPage === 'register'">
+        <a class="btn btn-outline btn-sm auth-header-action" routerLink="/auth/login">
+          <span class="icon">login</span> Entrar
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf="!authPage && !currentUser">
+        <a class="btn btn-outline btn-sm" routerLink="/auth/login">Entrar</a>
+        <a class="btn btn-primary btn-sm" routerLink="/auth/register">Cadastrar-se</a>
+      </ng-container>
+
+      <ng-container *ngIf="!authPage && currentUser">
+        <div class="user-info d-none d-sm-flex align-items-center gap-3">
+          <span class="user-avatar icon">person</span>
+          <div class="user-badge">
+            <span class="user-name">{{ currentUser.profile?.fullName || currentUser.email }}</span>
+            <span class="role-pill">{{ currentUser.role }}</span>
+          </div>
+          <button class="btn btn-outline btn-icon" (click)="logoutClicked.emit()" title="Sair">
+            <span class="icon">logout</span>
+          </button>
+        </div>
+        
+        <!-- Mobile Logout -->
+        <button class="btn btn-outline btn-icon d-flex d-sm-none" (click)="logoutClicked.emit()" title="Sair">
+          <span class="icon">logout</span>
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</header>

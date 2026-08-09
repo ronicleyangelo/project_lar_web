@@ -1,0 +1,13 @@
+<app-header
+  *ngIf="!authPage"
+  [currentUser]="currentUser"
+  (logoutClicked)="onLogout()">
+</app-header>
+
+<main class="main-content" [class.auth-route]="authPage">
+  <router-outlet></router-outlet>
+</main>
+
+<app-mobile-nav *ngIf="!authPage" [currentUser]="currentUser"></app-mobile-nav>
+
+<p-toast position="top-right"></p-toast>

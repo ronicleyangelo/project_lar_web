@@ -1,0 +1,103 @@
+<div class="container py-5">
+  <div class="page-heading mb-4">
+    <span class="page-eyebrow">Oportunidades próximas</span>
+    <h2 class="page-title">Pedidos Disponíveis</h2>
+    <p>Encontre novos serviços e gerencie sua agenda profissional.</p>
+  </div>
+
+  <div class="row g-4" *ngIf="openProviderRequests.length > 0; else noReqs">
+    <div class="col-12 col-md-6" *ngFor="let req of openProviderRequests">
+      <div class="card h-100 request-card">
+        <div class="card-body">
+          <span class="badge bg-info text-white mb-2 d-inline-block">{{ req.category.name || req.categoryId }}</span>
+          <h5 class="card-title">{{ req.description }}</h5>
+          <p class="text-muted small mb-2">Bairro: {{ req.neighborhood }} - {{ req.city }}</p>
+          
+          <div class="alert alert-secondary py-2 px-3 small d-flex align-items-center mb-3">
+            <span class="icon me-2 fs-6">lock</span>
+            Endereço exato oculto. Liberação após aprovação.
+          </div>
+
+          <button class="btn btn-primary w-100" (click)="openSendQuoteModal(req.id, quoteModal)">Enviar Orçamento</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noReqs>
+    <app-empty-state icon="work_off" message="Não há pedidos disponíveis na sua região no momento."></app-empty-state>
+  </ng-template>
+
+  <h2 class="section-divider mt-5 mb-4">Meus Trabalhos (Agendamentos)</h2>
+  <div class="row g-4" *ngIf="appointments.length > 0; else noAppointments">
+    <div class="col-12 col-md-6" *ngFor="let app of appointments">
+      <div class="card appointment-card h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Agendamento</h5>
+            <span class="badge" [ngClass]="app.status === 'COMPLETED' ? 'bg-success text-white' : 'bg-info text-white'">{{ app.status }}</span>
+          </div>
+          <p class="text-muted small mb-2">ID: {{ app.id | slice:0:8 }}...</p>
+          
+          <div class="alert alert-success py-2 px-3 small mb-3">
+            <span class="icon me-2 fs-6">location_on</span>
+            <strong>Endereço Liberado:</strong> {{ app.client?.fullAddress || 'Endereço não disponível' }}
+          </div>
+
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-primary btn-sm w-100 mb-2" *ngIf="app.status === 'SCHEDULED'" (click)="startAppointment(app.id)">
+              <span class="icon" style="font-size: 16px;">play_arrow</span> Iniciar servico
+            </button>
+            <button class="btn btn-primary btn-sm w-100" *ngIf="app.status === 'SCHEDULED' || app.status === 'IN_PROGRESS'" (click)="completeAppointment(app.id)">
+              <span class="icon" style="font-size: 16px;">task_alt</span> Informar execucao
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noAppointments>
+    <app-empty-state icon="event_available" message="Você ainda não possui agendamentos."></app-empty-state>
+  </ng-template>
+</div>
+
+<ng-template #quoteModal let-modal>
+  <div class="modal-header d-flex align-items-center gap-2" style="background: linear-gradient(90deg, var(--dark-blue-deep) 0%, #0c2340 100%); border-bottom: 2px solid var(--gold-primary);">
+    <span class="icon text-gold">local_offer</span>
+    <h5 class="modal-title mb-0 fw-bold text-white">Enviar Orçamento</h5>
+    <button type="button" class="btn-close btn-close-white ms-auto" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+
+  <div class="modal-body p-4 bg-surface">
+    <div class="form-floating-custom mb-3">
+      <label class="form-label text-muted small">Preço Estimado (R$)</label>
+      <div class="input-group">
+        <span class="input-group-text bg-transparent border-end-0 text-muted">R$</span>
+        <input type="number" class="form-control border-start-0 ps-0" placeholder="0.00" [(ngModel)]="quotePrice">
+      </div>
+    </div>
+    
+    <div class="form-floating-custom mb-3">
+      <label class="form-label text-muted small">Duração Estimada</label>
+      <div class="input-group">
+        <span class="input-group-text bg-transparent border-end-0 text-muted"><span class="icon fs-6">schedule</span></span>
+        <input type="text" class="form-control border-start-0 ps-0" placeholder="Ex: 4 horas" [(ngModel)]="quoteDuration">
+      </div>
+    </div>
+    
+    <div class="form-floating-custom mb-2">
+      <label class="form-label text-muted small">Mensagem para o cliente</label>
+      <textarea class="form-control" rows="3" placeholder="Olá! Tenho disponibilidade para realizar este serviço..." [(ngModel)]="quoteMessage"></textarea>
+    </div>
+  </div>
+
+  <div class="modal-footer bg-surface border-top">
+    <div class="d-flex justify-content-end gap-2 w-100">
+      <button class="btn btn-outline" (click)="modal.dismiss('Cancel')">Cancelar</button>
+      <button class="btn btn-primary" (click)="submitQuote()">
+        <span class="icon">send</span> Enviar Proposta
+      </button>
+    </div>
+  </div>
+</ng-template>

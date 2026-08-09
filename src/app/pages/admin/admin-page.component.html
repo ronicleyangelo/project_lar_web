@@ -1,0 +1,56 @@
+<div class="container py-5">
+  <div class="dashboard-heading mb-4">
+    <span class="page-eyebrow">Visão geral</span>
+    <h2>Dashboard Administrativo</h2>
+    <p>Acompanhe os principais indicadores e valide profissionais da plataforma.</p>
+  </div>
+  
+  <div class="row g-3 mb-5">
+    <div class="col-6 col-md-3">
+      <div class="metric-card">
+        <div class="metric-title">Total Usuários</div>
+        <div class="metric-value">{{ adminMetrics.totalUsers || 0 }}</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="metric-card">
+        <div class="metric-title">Profissionais</div>
+        <div class="metric-value">{{ adminMetrics.totalProviders || 0 }}</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="metric-card">
+        <div class="metric-title">Pedidos Abertos</div>
+        <div class="metric-value">{{ adminMetrics.openRequests || 0 }}</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="metric-card">
+        <div class="metric-title">Agendamentos</div>
+        <div class="metric-value">{{ adminMetrics.completedAppointments || 0 }}</div>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="mb-3">Verificação de Profissionais</h4>
+  <p-table [value]="adminProviders" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nome</th>
+        <th>Contato</th>
+        <th>Serviços</th>
+        <th>Verificado (Selo)</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-provider>
+      <tr>
+        <td>{{ provider.fullName }}</td>
+        <td>{{ provider.user?.email || '—' }}</td>
+        <td>{{ provider.services?.length || 0 }} cadastrados</td>
+        <td>
+          <p-inputSwitch [(ngModel)]="provider.isVerified" (onChange)="toggleVerifyProvider(provider)"></p-inputSwitch>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

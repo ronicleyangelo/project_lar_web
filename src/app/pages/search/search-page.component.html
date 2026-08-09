@@ -1,0 +1,100 @@
+<section class="search-hero" aria-labelledby="search-page-title">
+  <div class="container">
+    <span class="hero-eyebrow">Serviços para o seu lar</span>
+    <h2 id="search-page-title">Encontre profissionais <span>confiáveis</span> para sua casa</h2>
+    <p>Compare profissionais da sua região com critérios transparentes.</p>
+  </div>
+</section>
+
+<section class="search-workspace">
+  <div class="container">
+    <button class="mobile-filter-toggle" type="button" (click)="toggleFilters()" [attr.aria-expanded]="filtersOpen">
+      <span class="icon">tune</span>
+      {{ filtersOpen ? 'Fechar filtros' : 'Filtros de busca' }}
+    </button>
+
+    <div class="search-layout">
+      <aside class="filter-sidebar" [class.is-open]="filtersOpen">
+        <div class="filter-heading">
+          <div>
+            <span class="filter-kicker">Busca personalizada</span>
+            <h3>Encontre o profissional certo</h3>
+          </div>
+          <span class="filter-icon icon">tune</span>
+        </div>
+
+        <div class="filter-field">
+          <label class="form-label" for="search-category">Categoria</label>
+          <select id="search-category" class="form-select" [(ngModel)]="selectedCategoryId">
+            <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+          </select>
+        </div>
+
+        <div class="filter-field">
+          <label class="form-label" for="search-city">Cidade</label>
+          <input id="search-city" type="text" class="form-control" [(ngModel)]="searchCity" placeholder="Ex.: São Paulo">
+        </div>
+
+        <div class="filter-field">
+          <label class="form-label" for="search-neighborhood">Bairro</label>
+          <input id="search-neighborhood" type="text" class="form-control" [(ngModel)]="searchNeighborhood" placeholder="Ex.: Moema">
+        </div>
+
+        <div class="budget-filter">
+          <div class="budget-heading">
+            <label class="form-label">Faixa de orçamento</label>
+            <span>R$ {{ minBudget }} — R$ {{ maxBudget }}</span>
+          </div>
+
+          <div class="range-values">
+            <span>Mínimo<strong>R$ {{ minBudget }}</strong></span>
+            <span>Máximo<strong>R$ {{ maxBudget }}</strong></span>
+          </div>
+          <div class="dual-range">
+            <div class="range-track"></div>
+            <div class="range-selection" [style.left.%]="minBudgetPercent" [style.right.%]="100 - maxBudgetPercent"></div>
+            <input class="range-min" type="range" [(ngModel)]="minBudget" (input)="onMinBudgetChange()"
+              min="0" [max]="budgetCeiling" step="50" aria-label="Orçamento mínimo">
+            <input class="range-max" type="range" [(ngModel)]="maxBudget" (input)="onMaxBudgetChange()"
+              min="0" [max]="budgetCeiling" step="50" aria-label="Orçamento máximo">
+          </div>
+          <div class="range-scale"><span>R$ 0</span><span>R$ {{ budgetCeiling }}</span></div>
+        </div>
+
+        <p class="search-error" *ngIf="searchError">{{ searchError }}</p>
+
+        <button class="btn btn-primary search-btn" type="button" (click)="runSearch()">
+          <span class="icon">search</span> Buscar profissionais
+        </button>
+        <button class="clear-filters" type="button" (click)="clearFilters()">Limpar filtros</button>
+      </aside>
+
+      <main class="results-panel">
+        <div class="results-header">
+          <div>
+            <span class="results-eyebrow">Profissionais recomendados</span>
+            <h3 class="results-title">Resultados da busca</h3>
+          </div>
+          <span class="results-count">{{ recommendations.length }} encontrados</span>
+        </div>
+
+        <div class="row g-4" *ngIf="recommendations.length > 0; else noResults">
+          <div class="col-12 col-xl-6 animate-in" *ngFor="let item of recommendations; let i = index" [style.animation-delay]="(i * 0.08) + 's'">
+            <app-provider-card
+              [recommendation]="item"
+              [searchNeighborhood]="searchNeighborhood"
+              (requestQuote)="onRequestQuote()"
+              (showBreakdown)="onShowBreakdown($event)">
+            </app-provider-card>
+          </div>
+        </div>
+
+        <ng-template #noResults>
+          <app-empty-state icon="search_off" message="Nenhum profissional encontrado com os filtros atuais."></app-empty-state>
+        </ng-template>
+      </main>
+    </div>
+  </div>
+</section>
+
+<app-score-breakdown-dialog *ngIf="showBreakdown" [(visible)]="showBreakdown" [recommendation]="selectedProviderBreakdown!"></app-score-breakdown-dialog>

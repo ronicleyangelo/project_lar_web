@@ -1,0 +1,30 @@
+:host ::ng-deep .p-dialog-content h3 {
+  color: var(--text-primary);
+  font-size: 24px;
+  font-weight: 850;
+  letter-spacing: -0.8px;
+}
+
+.list-group {
+  display: grid;
+  gap: 8px;
+}
+
+.list-group-item {
+  padding: 12px 14px;
+  border: 1px solid var(--border-light) !important;
+  border-radius: 12px !important;
+  color: var(--text-secondary);
+  background: #f9faff;
+  font-size: 12px;
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+.list-group-item:hover {
+  transform: translateX(3px);
+  border-color: rgba(91, 92, 226, 0.25) !important;
+}
+
+.list-group-item strong {
+  color: var(--primary);
+}
