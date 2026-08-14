@@ -39,7 +39,7 @@
               </div>
               <div class="text-end">
                 <div class="quote-price mb-1">R$ {{ q.price }}</div>
-                <button class="btn btn-sm btn-primary" *ngIf="req.status === 'OPEN' || req.status === 'QUOTED'" (click)="acceptQuote(q.id)">
+                <button class="btn btn-sm btn-primary" *ngIf="req.status === 'OPEN' || req.status === 'QUOTED'" [disabled]="isAcceptingQuote(q.id)" (click)="acceptQuote(q.id)">
                   <span class="icon" style="font-size: 16px;">check_circle</span> Aceitar
                 </button>
               </div>
@@ -65,7 +65,7 @@
           </div>
           <p class="text-muted small mb-3">ID: {{ app.id | slice:0:8 }}...</p>
           <div class="d-flex gap-2">
-            <button class="btn btn-primary btn-sm" *ngIf="app.status === 'AWAITING_CONFIRMATION'" (click)="confirmCompletion(app.id)">
+            <button class="btn btn-primary btn-sm" *ngIf="app.status === 'AWAITING_CONFIRMATION'" [disabled]="isConfirmingAppointment(app.id)" (click)="confirmCompletion(app.id)">
               <span class="icon" style="font-size: 16px;">task_alt</span> Confirmar conclusao
             </button>
             <button class="btn btn-gold btn-sm" *ngIf="app.status === 'COMPLETED' && !app.review" (click)="openRating(app.id)">
@@ -131,7 +131,7 @@
     </div>
   </div>
   <div class="modal-footer bg-surface border-top-0 pt-0 pb-4 px-4" style="border-radius: 0 0 var(--radius-md) var(--radius-md);">
-    <button class="btn btn-primary w-100" (click)="submitNewRequest()">
+    <button class="btn btn-primary w-100" [disabled]="isCreatingRequest" (click)="submitNewRequest()">
       <span class="icon">publish</span> Publicar Pedido
     </button>
   </div>
@@ -141,5 +141,6 @@
   *ngIf="showRatingModal"
   [(visible)]="showRatingModal"
   [appointmentId]="selectedAppointmentId"
+  [submitting]="isSubmittingReview"
   (submitReview)="onSubmitReview($event)">
 </app-rating-dialog>

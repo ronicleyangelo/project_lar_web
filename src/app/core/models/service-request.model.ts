@@ -13,7 +13,7 @@ export interface ServiceRequest {
   timeSlot: string;
   budgetLimit?: number;
   status: string;
-  quotes: Quote[];
+  quotes?: Quote[];
   approxDistanceKm?: number;
 }
 
@@ -36,6 +36,12 @@ export interface CreateRequestPayload {
   timeSlot: string;
   budgetLimit?: number;
   description: string;
+}
+
+export interface CreateRequestResponse {
+  message: string;
+  serviceRequest: ServiceRequest;
+  deduplicated: boolean;
 }
 
 export interface SendQuotePayload {

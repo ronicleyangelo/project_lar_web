@@ -45,10 +45,10 @@
           </div>
 
           <div class="d-flex gap-2">
-            <button class="btn btn-outline-primary btn-sm w-100 mb-2" *ngIf="app.status === 'SCHEDULED'" (click)="startAppointment(app.id)">
+            <button class="btn btn-outline-primary btn-sm w-100 mb-2" *ngIf="app.status === 'SCHEDULED'" [disabled]="isAppointmentActionRunning(app.id)" (click)="startAppointment(app.id)">
               <span class="icon" style="font-size: 16px;">play_arrow</span> Iniciar servico
             </button>
-            <button class="btn btn-primary btn-sm w-100" *ngIf="app.status === 'SCHEDULED' || app.status === 'IN_PROGRESS'" (click)="completeAppointment(app.id)">
+            <button class="btn btn-primary btn-sm w-100" *ngIf="app.status === 'SCHEDULED' || app.status === 'IN_PROGRESS'" [disabled]="isAppointmentActionRunning(app.id)" (click)="completeAppointment(app.id)">
               <span class="icon" style="font-size: 16px;">task_alt</span> Informar execucao
             </button>
           </div>
@@ -95,7 +95,7 @@
   <div class="modal-footer bg-surface border-top">
     <div class="d-flex justify-content-end gap-2 w-100">
       <button class="btn btn-outline" (click)="modal.dismiss('Cancel')">Cancelar</button>
-      <button class="btn btn-primary" (click)="submitQuote()">
+      <button class="btn btn-primary" [disabled]="isSendingQuote" (click)="submitQuote()">
         <span class="icon">send</span> Enviar Proposta
       </button>
     </div>
