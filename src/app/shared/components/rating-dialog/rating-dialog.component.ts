@@ -9,6 +9,7 @@ import { CreateReviewPayload } from '../../../core/models/appointment.model';
 export class RatingDialogComponent {
   @Input() visible: boolean = false;
   @Input() appointmentId!: string;
+  @Input() submitting: boolean = false;
   
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() submitReview = new EventEmitter<CreateReviewPayload>();
@@ -26,6 +27,7 @@ export class RatingDialogComponent {
   }
 
   onSubmit() {
+    if (this.submitting || !this.isFormValid()) return;
     this.submitReview.emit({
       appointmentId: this.appointmentId,
       qualityRating: this.quality,
@@ -35,7 +37,6 @@ export class RatingDialogComponent {
       costBenefitRating: this.costBenefit,
       comment: this.comment
     });
-    this.closeDialog();
   }
 
   isFormValid(): boolean {

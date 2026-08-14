@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Appointment } from '../models/appointment.model';
+import { EntityActionResponse } from '../models/api-response.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -14,15 +15,15 @@ export class AppointmentService {
     return this.http.get<Appointment[]>(this.apiUrl);
   }
 
-  complete(id: string): Observable<Appointment> {
-    return this.http.post<Appointment>(`${this.apiUrl}/${id}/complete`, {});
+  complete(id: string): Observable<EntityActionResponse<Appointment>> {
+    return this.http.post<EntityActionResponse<Appointment>>(`${this.apiUrl}/${id}/complete`, {});
   }
 
-  start(id: string): Observable<Appointment> {
-    return this.http.post<Appointment>(`${this.apiUrl}/${id}/start`, {});
+  start(id: string): Observable<EntityActionResponse<Appointment>> {
+    return this.http.post<EntityActionResponse<Appointment>>(`${this.apiUrl}/${id}/start`, {});
   }
 
-  confirmCompletion(id: string): Observable<Appointment> {
-    return this.http.post<Appointment>(`${this.apiUrl}/${id}/confirm-completion`, {});
+  confirmCompletion(id: string): Observable<EntityActionResponse<Appointment>> {
+    return this.http.post<EntityActionResponse<Appointment>>(`${this.apiUrl}/${id}/confirm-completion`, {});
   }
 }

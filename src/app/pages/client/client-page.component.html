@@ -39,7 +39,7 @@
               </div>
               <div class="text-end">
                 <div class="quote-price mb-1">R$ {{ q.price }}</div>
-                <button class="btn btn-sm btn-primary" *ngIf="req.status === 'OPEN' || req.status === 'QUOTED'" (click)="acceptQuote(q.id)">
+                <button class="btn btn-sm btn-primary" *ngIf="req.status === 'OPEN' || req.status === 'QUOTED'" [disabled]="isAcceptingQuote(q.id)" (click)="acceptQuote(q.id)">
                   <span class="icon" style="font-size: 16px;">check_circle</span> Aceitar
                 </button>
               </div>
@@ -65,7 +65,7 @@
           </div>
           <p class="text-muted small mb-3">ID: {{ app.id | slice:0:8 }}...</p>
           <div class="d-flex gap-2">
-            <button class="btn btn-primary btn-sm" *ngIf="app.status === 'AWAITING_CONFIRMATION'" (click)="confirmCompletion(app.id)">
+            <button class="btn btn-primary btn-sm" *ngIf="app.status === 'AWAITING_CONFIRMATION'" [disabled]="isConfirmingAppointment(app.id)" (click)="confirmCompletion(app.id)">
               <span class="icon" style="font-size: 16px;">task_alt</span> Confirmar conclusao
             </button>
             <button class="btn btn-gold btn-sm" *ngIf="app.status === 'COMPLETED' && !app.review" (click)="openRating(app.id)">
@@ -103,43 +103,6 @@
         <label class="form-label text-muted small fw-bold">HORÃRIO</label>
         <select class="form-select" [(ngModel)]="newReqTimeSlot">
           <option>ManhÃ£ (08:00 - 12:00)</option>
-          <option>Tarde (13:00 - 17:00)</option>
-          <option>Integral</option>
-        </select>
-      </div>
-    </div>
-    <div class="row g-3 mt-0">
-      <div class="col-6">
-        <label class="form-label text-muted small fw-bold">CIDADE</label>
-        <input type="text" class="form-control" [(ngModel)]="newReqCity">
-      </div>
-      <div class="col-6">
-        <label class="form-label text-muted small fw-bold">BAIRRO</label>
-        <input type="text" class="form-control" [(ngModel)]="newReqNeighborhood">
-      </div>
-    </div>
-    <div class="mb-3 mt-3">
-      <label class="form-label text-muted small fw-bold">ORÃ‡AMENTO MÃXIMO (OPCIONAL)</label>
-      <div class="input-group">
-        <span class="input-group-text">R$</span>
-        <input type="number" min="0" class="form-control" [(ngModel)]="newReqBudget" placeholder="Ex.: 250">
-      </div>
-    </div>
-    <div class="mb-3 mt-3">
-      <label class="form-label text-muted small fw-bold">DESCRIÃ‡ÃƒO DO SERVIÃ‡O</label>
-      <textarea class="form-control" rows="3" [(ngModel)]="newReqDescription" placeholder="Descreva o que precisa..."></textarea>
-    </div>
-  </div>
-  <div class="modal-footer bg-surface border-top-0 pt-0 pb-4 px-4" style="border-radius: 0 0 var(--radius-md) var(--radius-md);">
-    <button class="btn btn-primary w-100" (click)="submitNewRequest()">
-      <span class="icon">publish</span> Publicar Pedido
-    </button>
-  </div>
-</ng-template>
-
-<app-rating-dialog
-  *ngIf="showRatingModal"
-  [(visible)]="showRatingModal"
-  [appointmentId]="selectedAppointmentId"
-  (submitReview)="onSubmitReview($event)">
-</app-rating-dialog>
+          <option>Tarde (13:00 - 176óNí¢G§²ÚîÆ­yÛ[X\Nˆ	Ğ]˜[XpéğèÛÈ[šXYIË]Z[ˆ	ÓØœšYØYÈ[HİXH]˜[XpéğèÛË‰ÈJNÂˆ\Ë›ØY\Ú[Y[Ê
+NÂˆKˆ\œ›Üˆ\œ›ÜˆOˆ\ËœÚİÑ\œ›ÜŠ\œ›Ü‹	Ó°èÛÈ›ÚHÜÜğë]™[[šX\ˆH]˜[XpéğèÛË‰ÊBˆJNÂˆB‚ˆš]˜]HÚİÑ\œ›ÜŠ\œ›Üˆ[K˜[˜XÚÎˆİš[™ÊNˆ›ÚYÂˆ\Ë›Y\ÜØYÙTÙ\šXÙK˜Y
+ÈÙ]™\š]Nˆ	Ù\œ›Ü‰Ëİ[[X\Nˆ	Ñ\œ›ÉË]Z[ˆ\œ›ÜË™\œ›ÜË™\œ›Üˆ˜[˜XÚÈJNÂˆBŸB
