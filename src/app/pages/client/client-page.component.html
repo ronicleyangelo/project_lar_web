@@ -103,6 +103,44 @@
         <label class="form-label text-muted small fw-bold">HORÃRIO</label>
         <select class="form-select" [(ngModel)]="newReqTimeSlot">
           <option>ManhÃ£ (08:00 - 12:00)</option>
-          <option>Tarde (13:00 - 176óNí¢G§²ÚîÆ­yÛ[X\žNˆ	Ð]˜[XpéðèÛÈ[šXYIË]Z[ˆ	ÓØœšYØYÈ[HÝXH]˜[XpéðèÛË‰ÈJNÂˆ\Ë›ØY\Ú[Y[Ê
-NÂˆKˆ\œ›ÜŽˆ\œ›ÜˆOˆ\ËœÚÝÑ\œ›ÜŠ\œ›Ü‹	Ó°èÛÈ›ÚHÜÜðë]™[[šX\ˆH]˜[XpéðèÛË‰ÊBˆJNÂˆB‚ˆš]˜]HÚÝÑ\œ›ÜŠ\œ›ÜŽˆ[žK˜[˜XÚÎˆÝš[™ÊNˆ›ÚYÂˆ\Ë›Y\ÜØYÙTÙ\šXÙK˜Y
-ÈÙ]™\š]Nˆ	Ù\œ›Ü‰ËÝ[[X\žNˆ	Ñ\œ›ÉË]Z[ˆ\œ›ÜË™\œ›ÜË™\œ›Üˆ˜[˜XÚÈJNÂˆBŸB
+          <option>Tarde (13:00 - 17:00)</option>
+          <option>Integral</option>
+        </select>
+      </div>
+    </div>
+    <div class="row g-3 mt-0">
+      <div class="col-6">
+        <label class="form-label text-muted small fw-bold">CIDADE</label>
+        <input type="text" class="form-control" [(ngModel)]="newReqCity">
+      </div>
+      <div class="col-6">
+        <label class="form-label text-muted small fw-bold">BAIRRO</label>
+        <input type="text" class="form-control" [(ngModel)]="newReqNeighborhood">
+      </div>
+    </div>
+    <div class="mb-3 mt-3">
+      <label class="form-label text-muted small fw-bold">ORÃ‡AMENTO MÃXIMO (OPCIONAL)</label>
+      <div class="input-group">
+        <span class="input-group-text">R$</span>
+        <input type="number" min="0" class="form-control" [(ngModel)]="newReqBudget" placeholder="Ex.: 250">
+      </div>
+    </div>
+    <div class="mb-3 mt-3">
+      <label class="form-label text-muted small fw-bold">DESCRIÃ‡ÃƒO DO SERVIÃ‡O</label>
+      <textarea class="form-control" rows="3" [(ngModel)]="newReqDescription" placeholder="Descreva o que precisa..."></textarea>
+    </div>
+  </div>
+  <div class="modal-footer bg-surface border-top-0 pt-0 pb-4 px-4" style="border-radius: 0 0 var(--radius-md) var(--radius-md);">
+    <button class="btn btn-primary w-100" [disabled]="isCreatingRequest" (click)="submitNewRequest()">
+      <span class="icon">publish</span> Publicar Pedido
+    </button>
+  </div>
+</ng-template>
+
+<app-rating-dialog
+  *ngIf="showRatingModal"
+  [(visible)]="showRatingModal"
+  [appointmentId]="selectedAppointmentId"
+  [submitting]="isSubmittingReview"
+  (submitReview)="onSubmitReview($event)">
+</app-rating-dialog>
