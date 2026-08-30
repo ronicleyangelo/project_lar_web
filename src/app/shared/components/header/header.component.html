@@ -1,65 +1,127 @@
 <header class="app-header" [class.auth-header]="authPage">
-  <div class="header-content d-flex align-items-center justify-content-between px-3 px-md-4 px-lg-5">
-    <a class="logo-group" routerLink="/" aria-label="Ir para o início">
-      <span class="brand-symbol"><span class="icon logo-icon">roofing</span></span>
-      <div class="brand">
+  <div class="header-container">
+    
+    <!-- BRAND -->
+    <a class="brand-group" routerLink="/" aria-label="Ir para o início">
+      <div class="brand-logo">
+        <span class="icon">roofing</span>
+      </div>
+      <div class="brand-text">
         <h1>Project Lar</h1>
-        <div class="subtitle">Serviços com confiança</div>
+        <span class="brand-subtitle">{{ 'HEADER.SUBTITLE' | translate }}</span>
       </div>
     </a>
 
-    <!-- Desktop Navigation -->
-    <nav *ngIf="!authPage" class="nav-tabs d-none d-md-flex">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-btn">
-        <span class="icon">search</span> Explorar
+    <!-- NAVIGATION -->
+    <nav *ngIf="!authPage" class="main-nav d-none d-md-flex">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+        {{ 'HEADER.EXPLORE' | translate }}
       </a>
-      <a *ngIf="currentUser?.role === 'CLIENT'" routerLink="/client" routerLinkActive="active" class="nav-btn">
-        <span class="icon">list_alt</span> Meus Pedidos
+      <a *ngIf="isClient" routerLink="/client" routerLinkActive="active" class="nav-item">
+        {{ 'HEADER.MY_ORDERS' | translate }}
       </a>
-      <a *ngIf="currentUser?.role === 'PROVIDER'" routerLink="/provider" routerLinkActive="active" class="nav-btn">
-        <span class="icon">dashboard</span> Painel
+      <a *ngIf="isProvider" routerLink="/provider" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+        {{ 'HEADER.DASHBOARD' | translate }}
       </a>
-      <a *ngIf="currentUser?.role === 'ADMIN'" routerLink="/admin" routerLinkActive="active" class="nav-btn">
-        <span class="icon">admin_panel_settings</span> Admin
+      <a *ngIf="isProvider" routerLink="/provider/opportunities" routerLinkActive="active" class="nav-item">
+        {{ 'HEADER.OPPORTUNITIES' | translate }}
+      </a>
+      <a *ngIf="isProvider" routerLink="/provider/profile" routerLinkActive="active" class="nav-item">
+        {{ 'HEADER.PROFILE' | translate }}
+      </a>
+      <a *ngIf="isAdmin" routerLink="/admin" routerLinkActive="active" class="nav-item">
+        {{ 'HEADER.ADMIN' | translate }}
       </a>
     </nav>
 
-    <!-- Auth Actions -->
-    <div class="header-actions d-flex align-items-center">
-      <ng-container *ngIf="authPage === 'login'">
-        <a class="btn btn-primary btn-sm auth-header-action" routerLink="/auth/register">
-          <span class="icon">person_add</span> Cadastrar-se
-        </a>
-      </ng-container>
+    <!-- ACTIONS -->
+    <div class="header-actions">
+      
+      <!-- LANGUAGE SWITCHER -->
+      <div class="dropdown-wrapper">
+        <button class="btn-lang" (click)="toggleLangMenu($event)" [attr.aria-expanded]="langMenuOpen">
+          <span class="flag">{{ translate.currentLang() === 'en' ? '🇺🇸' : '🇧🇷' }}</span>
+          <span class="lang-code">{{ translate.currentLang() === 'en' ? 'EN' : 'PT' }}</span>
+          <span class="icon chevron" [class.open]="langMenuOpen">expand_more</span>
+        </button>
 
-      <ng-container *ngIf="authPage === 'register'">
-        <a class="btn btn-outline btn-sm auth-header-action" routerLink="/auth/login">
-          <span class="icon">login</span> Entrar
-        </a>
-      </ng-container>
-
-      <ng-container *ngIf="!authPage && !currentUser">
-        <a class="btn btn-outline btn-sm" routerLink="/auth/login">Entrar</a>
-        <a class="btn btn-primary btn-sm" routerLink="/auth/register">Cadastrar-se</a>
-      </ng-container>
-
-      <ng-container *ngIf="!authPage && currentUser">
-        <div class="user-info d-none d-sm-flex align-items-center gap-3">
-          <span class="user-avatar icon">person</span>
-          <div class="user-badge">
-            <span class="user-name">{{ currentUser.profile?.fullName || currentUser.email }}</span>
-            <span class="role-pill">{{ currentUser.role }}</span>
-          </div>
-          <button class="btn btn-outline btn-icon" (click)="logoutClicked.emit()" title="Sair">
-            <span class="icon">logout</span>
+        <div *ngIf="langMenuOpen" class="dropdown-menu lang-menu" (click)="$event.stopPropagation()">
+          <button type="button" class="dropdown-item" [class.active]="translate.currentLang() === 'pt'" (click)="changeLanguage('pt')">
+            <span class="flag">🇧🇷</span> Português
+            <span class="icon check-icon" *ngIf="translate.currentLang() === 'pt'">check</span>
+          </button>
+          <button type="button" class="dropdown-item" [class.active]="translate.currentLang() === 'en'" (click)="changeLanguage('en')">
+            <span class="flag">🇺🇸</span> English
+            <span class="icon check-icon" *ngIf="translate.currentLang() === 'en'">check</span>
           </button>
         </div>
-        
-        <!-- Mobile Logout -->
-        <button class="btn btn-outline btn-icon d-flex d-sm-none" (click)="logoutClicked.emit()" title="Sair">
-          <span class="icon">logout</span>
-        </button>
+      </div>
+
+      <div class="divider" *ngIf="!authPage"></div>
+
+      <!-- AUTH ACTIONS -->
+      <ng-container *ngIf="showLoginAction">
+        <a class="btn-auth-primary" routerLink="/auth/register">{{ 'HEADER.SIGN_UP' | translate }}</a>
       </ng-container>
+      
+      <ng-container *ngIf="showRegisterAction">
+        <a class="btn-auth-secondary" routerLink="/auth/login">{{ 'HEADER.LOG_IN' | translate }}</a>
+      </ng-container>
+
+      <ng-container *ngIf="isAnonymous">
+        <a class="btn-auth-secondary" routerLink="/auth/login">{{ 'HEADER.LOG_IN' | translate }}</a>
+        <a class="btn-auth-primary" routerLink="/auth/register">{{ 'HEADER.SIGN_UP' | translate }}</a>
+      </ng-container>
+
+      <!-- PROFILE DROPDOWN -->
+      <div *ngIf="isAuthenticated" class="dropdown-wrapper">
+        <button class="btn-profile" (click)="toggleAccountMenu($event)" [attr.aria-expanded]="accountMenuOpen">
+          <img *ngIf="avatarUrl; else defaultAvatar" [src]="avatarUrl" class="avatar-img" alt="User Avatar">
+          <ng-template #defaultAvatar>
+            <div class="avatar-placeholder"><span class="icon">person</span></div>
+          </ng-template>
+          
+          <div class="profile-text">
+            <span class="profile-name">{{ accountDisplayName }}</span>
+            <span class="profile-role">{{ roleLabel }}</span>
+          </div>
+          <span class="icon chevron" [class.open]="accountMenuOpen">expand_more</span>
+        </button>
+
+        <div *ngIf="accountMenuOpen" class="dropdown-menu profile-menu" (click)="$event.stopPropagation()">
+          <div class="menu-header">
+            <strong>{{ accountDisplayName }}</strong>
+            <span>{{ accountEmail }}</span>
+          </div>
+          <a routerLink="/account" class="dropdown-item" (click)="closeMenus()">
+            <span class="icon">account_circle</span>
+            <div class="item-text">
+              <strong>{{ 'HEADER.MY_ACCOUNT' | translate }}</strong>
+              <small>{{ 'HEADER.SECURITY_PRIVACY' | translate }}</small>
+            </div>
+          </a>
+          <a *ngIf="isProvider" routerLink="/provider/profile" class="dropdown-item" (click)="closeMenus()">
+            <span class="icon">edit</span>
+            <div class="item-text">
+              <strong>{{ 'HEADER.MY_PROFILE' | translate }}</strong>
+              <small>{{ 'HEADER.PROFESSIONAL_DATA' | translate }}</small>
+            </div>
+          </a>
+          <a *ngIf="isProvider" routerLink="/provider" class="dropdown-item" (click)="closeMenus()">
+            <span class="icon">dashboard</span>
+            <div class="item-text">
+              <strong>{{ 'HEADER.PROFESSIONAL_DASHBOARD' | translate }}</strong>
+              <small>{{ 'HEADER.ORDERS_SCHEDULES' | translate }}</small>
+            </div>
+          </a>
+          <div class="menu-divider"></div>
+          <button type="button" class="dropdown-item logout-btn" (click)="logout()">
+            <span class="icon">logout</span>
+            <strong>{{ 'HEADER.LOG_OUT' | translate }}</strong>
+          </button>
+        </div>
+      </div>
+      
     </div>
   </div>
 </header>
