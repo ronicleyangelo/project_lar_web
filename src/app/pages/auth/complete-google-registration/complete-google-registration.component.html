@@ -1,0 +1,88 @@
+<div class="auth-wrapper">
+  <app-auth-background></app-auth-background>
+  <div class="auth-card card">
+    <div class="card-body p-4">
+      <div class="auth-intro">
+        <img *ngIf="profile?.picture" [src]="profile?.picture" alt="Foto do perfil Google" class="google-avatar">
+        <div>
+          <h3 class="auth-title">Complete seu cadastro</h3>
+          <p>{{ profile?.email }}</p>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="role-selector mb-3">
+        <input type="radio" class="btn-check" id="googleClient" value="CLIENT" formControlName="role">
+        <label class="btn btn-outline-primary" for="googleClient">Sou cliente</label>
+        <input type="radio" class="btn-check" id="googleProvider" value="PROVIDER" formControlName="role">
+        <label class="btn btn-outline-primary" for="googleProvider">Sou profissional</label>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label">Nome completo</label>
+          <input class="form-control" formControlName="fullName" autocomplete="name" [class.is-invalid]="form.controls.fullName.touched && form.controls.fullName.invalid">
+          <div class="invalid-feedback">Informe um nome com pelo menos 3 caracteres.</div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Telefone / WhatsApp</label>
+          <input type="tel" class="form-control" formControlName="phone" (input)="onPhoneInput($event)"
+            placeholder="(27) 99999-9999" maxlength="15" autocomplete="tel-national">
+          <div class="invalid-feedback" [class.d-block]="form.controls.phone.touched && form.controls.phone.invalid">Informe um celular válido com DDD.</div>
+        </div>
+      </div>
+
+      <div class="form-row" [class.provider-location-row]="role === 'PROVIDER'">
+        <div class="form-field">
+          <label class="form-label">Bairro</label>
+          <input class="form-control" formControlName="neighborhood" autocomplete="address-level3" [class.is-invalid]="form.controls.neighborhood.touched && form.controls.neighborhood.invalid">
+          <div class="invalid-feedback">Informe o bairro.</div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Cidade</label>
+          <input class="form-control" formControlName="city" autocomplete="address-level2" [class.is-invalid]="form.controls.city.touched && form.controls.city.invalid">
+          <div class="invalid-feedback">Informe a cidade.</div>
+        </div>
+        <div class="form-field" *ngIf="role === 'PROVIDER'">
+          <label class="form-label">Raio (km)</label>
+          <input type="number" class="form-control" min="1" max="100" formControlName="serviceRadiusKm" [class.is-invalid]="form.controls.serviceRadiusKm.touched && form.controls.serviceRadiusKm.invalid">
+          <div class="invalid-feedback">Use um valor entre 1 e 100 km.</div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="role === 'CLIENT'">
+        <label class="form-label">Endereço completo (protegido)</label>
+        <input class="form-control mb-3" formControlName="fullAddress" autocomplete="street-address" [class.is-invalid]="form.controls.fullAddress.touched && form.controls.fullAddress.invalid">
+        <div class="invalid-feedback mb-3">Informe o endereço completo.</div>
+      </ng-container>
+
+      <ng-container *ngIf="role === 'PROVIDER'">
+        <label class="form-label">Bio / qualificações</label>
+        <textarea class="form-control mb-3" rows="2" formControlName="bio"></textarea>
+
+        <label class="form-label">Onde você realiza faxinas?</label>
+        <div class="property-grid mb-3">
+          <label *ngFor="let option of propertyTypeOptions" class="category-option">
+            <input type="checkbox" [checked]="form.controls.propertyTypes.value.includes(option.value)"
+              (change)="togglePropertyType(option.value, $any($event.target).checked)">
+            <span>{{ option.label }}</span>
+          </label>
+        </div>
+        <div class="validation-message" *ngIf="form.controls.propertyTypes.touched && form.controls.propertyTypes.invalid">Selecione ao menos um tipo de imóvel.</div>
+
+        <label class="pet-option mb-3">
+          <input type="checkbox" formControlName="acceptsPets">
+          <span>Aceito trabalhar em residências com pets</span>
+        </label>
+      </ng-container>
+
+      <button type="submit" class="btn btn-primary w-100 auth-btn" [disabled]="isLoading || form.invalid">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+        {{ isLoading ? 'Finalizando...' : 'Concluir cadastro' }}
+      </button>
+      </form>
+    </div>
+  </div>
+</div>

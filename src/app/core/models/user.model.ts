@@ -27,6 +27,8 @@ export interface ProviderProfile {
   isVerified: boolean;
   trustScore: number;
   reviewCount: number;
+  propertyTypes: string[];
+  acceptsPets: boolean;
   user: { email: string };
   services?: Array<{ id: string; categoryId: string; basePrice: number }>;
 }
@@ -34,6 +36,35 @@ export interface ProviderProfile {
 export interface AuthResponse {
   token: string;
   user: User;
+}
+
+export interface GoogleProfile {
+  email: string;
+  fullName: string;
+  picture?: string;
+}
+
+export interface GoogleAuthResponse {
+  requiresOnboarding: boolean;
+  token?: string;
+  user?: User;
+  onboardingToken?: string;
+  googleProfile?: GoogleProfile;
+}
+
+export interface CompleteGoogleRegistrationPayload {
+  onboardingToken: string;
+  role: 'CLIENT' | 'PROVIDER';
+  phone: string;
+  fullName: string;
+  neighborhood: string;
+  city: string;
+  fullAddress?: string;
+  bio?: string;
+  serviceRadiusKm?: number;
+  categoryIds?: string[];
+  propertyTypes?: string[];
+  acceptsPets?: boolean;
 }
 
 export interface LoginPayload {
@@ -60,5 +91,7 @@ export interface RegisterProviderPayload {
   city: string;
   neighborhood: string;
   serviceRadiusKm: number;
-  categoryIds: string[];
+  categoryIds?: string[];
+  propertyTypes: string[];
+  acceptsPets: boolean;
 }

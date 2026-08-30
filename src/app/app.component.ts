@@ -12,7 +12,7 @@ import { User } from './core/models/user.model';
 })
 export class AppComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
-  authPage: 'login' | 'register' | null = null;
+  authPage: 'login' | 'register' | 'complete-google' | null = null;
   private userSub!: Subscription;
   private routeSub!: Subscription;
 
@@ -43,6 +43,8 @@ export class AppComponent implements OnInit, OnDestroy {
       this.authPage = 'login';
     } else if (url.startsWith('/auth/register')) {
       this.authPage = 'register';
+    } else if (url.startsWith('/auth/complete-google') || url.startsWith('/auth/completar-google')) {
+      this.authPage = 'complete-google';
     } else {
       this.authPage = null;
     }

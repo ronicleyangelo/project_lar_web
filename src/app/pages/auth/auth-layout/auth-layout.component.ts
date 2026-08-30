@@ -3,7 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-type AuthPage = 'login' | 'register';
+type AuthPage = 'login' | 'register' | 'complete-google';
 
 @Component({
   selector: 'app-auth-layout',
@@ -28,6 +28,12 @@ export class AuthLayoutComponent implements OnInit, OnDestroy {
   }
 
   private setAuthPage(url: string): void {
-    this.authPage = url.includes('/register') ? 'register' : 'login';
+    if (url.includes('/complete-google') || url.includes('/completar-google')) {
+      this.authPage = 'complete-google';
+    } else if (url.includes('/register')) {
+      this.authPage = 'register';
+    } else {
+      this.authPage = 'login';
+    }
   }
 }

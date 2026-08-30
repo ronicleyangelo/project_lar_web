@@ -95,27 +95,14 @@
   background: var(--border-light);
 }
 
-.google-auth-btn {
+.google-button-container {
   width: 100%;
-  min-height: 44px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  color: var(--text-secondary);
-  background: var(--surface);
-  font: inherit;
-  font-size: 13px;
-  font-weight: 700;
-  opacity: .68;
-  cursor: not-allowed;
+  min-height: 44px;
 }
-
-.google-mark { color: var(--primary); font-size: 17px; font-weight: 800; }
-.google-soon { color: var(--text-muted); font-size: 10px; font-weight: 600; }
+.google-button-container.google-loading { opacity: .55; pointer-events: none; }
+.google-unavailable { margin: 0; color: var(--text-muted); font-size: 11px; text-align: center; }
 
 .auth-link {
   color: var(--primary);

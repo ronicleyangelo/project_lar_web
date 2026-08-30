@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
-import { User, LoginPayload, RegisterClientPayload, RegisterProviderPayload, AuthResponse } from '../models/user.model';
+import { User, LoginPayload, RegisterClientPayload, RegisterProviderPayload, AuthResponse, GoogleAuthResponse, CompleteGoogleRegistrationPayload } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -26,6 +26,22 @@ export class AuthService {
 
   login(payload: LoginPayload): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, payload).pipe(
+      tap(res => this.setSession(res.token, res.user))
+    );
+  }
+
+  loginWithGoogle(credential: string): Observable<GoogleAuthResponse> {
+    return this.http.post<GoogleAuthResponse>(`${this.apiUrl}/google`, { credential }).pipe(
+      tap(res => {
+        if (res.token && res.user) {
+          this.setSession(res.token, res.user);
+        }
+      })
+    );
+  }
+
+  completeGoogleRegistration(payload: CompleteGoogleRegistrationPayload): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/google/complete`, payload).pipe(
       tap(res => this.setSession(res.token, res.user))
     );
   }

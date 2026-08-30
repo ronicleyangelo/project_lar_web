@@ -8,6 +8,6 @@ import { User } from '../../../core/models/user.model';
 })
 export class HeaderComponent {
   @Input() currentUser: User | null = null;
-  @Input() authPage: 'login' | 'register' | null = null;
+  @Input() authPage: 'login' | 'register' | 'complete-google' | null = null;
   @Output() logoutClicked = new EventEmitter<void>();
 }

@@ -1,129 +1,126 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
-import { CategoryService } from '../../../core/services/category.service';
-import { Category } from '../../../core/models/category.model';
 import { MessageService } from 'primeng/api';
+import { AuthService } from '../../../core/services/auth.service';
+
+const MOBILE_PHONE_PATTERN = /^[1-9]{2}9\d{8}$/;
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
-  registerRole: 'CLIENT' | 'PROVIDER' = 'CLIENT';
-  
-  fullName = '';
-  email = '';
-  password = '';
-  phone = '';
-  neighborhood = '';
-  city = '';
-  
-  // Client only
-  fullAddress = '';
-  
-  // Provider only
-  bio = '';
-  serviceRadiusKm = 10;
-  categories: Category[] = [];
-  selectedCategoryIds: string[] = [];
+  readonly form = this.formBuilder.nonNullable.group({
+    role: ['CLIENT' as 'CLIENT' | 'PROVIDER', Validators.required],
+    fullName: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
+    phone: ['', [Validators.required, Validators.pattern(MOBILE_PHONE_PATTERN)]],
+    neighborhood: ['', Validators.required],
+    city: ['', Validators.required],
+    fullAddress: ['', Validators.required],
+    bio: [''],
+    serviceRadiusKm: [10, [Validators.required, Validators.min(1), Validators.max(100)]],
+    propertyTypes: [['HOUSE', 'APARTMENT'] as string[], Validators.required],
+    acceptsPets: [true],
+  });
 
+  readonly propertyTypeOptions = [
+    { value: 'HOUSE', label: 'Casa' },
+    { value: 'APARTMENT', label: 'Apartamento' },
+    { value: 'CONDOMINIUM', label: 'Condomínio' },
+  ];
   error = '';
   isLoading = false;
 
+  get registerRole(): 'CLIENT' | 'PROVIDER' {
+    return this.form.controls.role.value;
+  }
+
   constructor(
     private authService: AuthService,
-    private categoryService: CategoryService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private formBuilder: FormBuilder,
   ) {}
 
-  ngOnInit() {
-    this.categoryService.getAll().subscribe(cats => {
-      this.categories = cats;
-      this.selectedCategoryIds = cats.map(c => c.id);
-    });
+  ngOnInit(): void {
+    this.form.controls.role.valueChanges.subscribe(role => this.updateConditionalValidators(role));
   }
 
   onPhoneInput(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const digits = this.normalizePhone(input.value).slice(0, 11);
-    let formatted = digits;
-
-    if (digits.length > 2) {
-      formatted = `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-    }
-    if (digits.length > 7) {
-      formatted = `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
-    }
-
-    this.phone = formatted;
+    const digits = input.value.replace(/\D/g, '').slice(0, 11);
+    const formatted = digits.length > 7
+      ? `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
+      : digits.length > 2 ? `(${digits.slice(0, 2)}) ${digits.slice(2)}` : digits;
+    this.form.controls.phone.setValue(digits);
+    this.form.controls.phone.markAsTouched();
     input.value = formatted;
   }
 
-  onRegister() {
-    const normalizedPhone = this.normalizePhone(this.phone);
-    if (!this.isValidMobilePhone(normalizedPhone)) {
-      this.error = 'Informe um celular válido com DDD e 11 dígitos. Ex.: (27) 99999-9999.';
-      this.messageService.add({ severity: 'error', summary: 'Celular inválido', detail: this.error });
+  onRegister(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.showError('Revise os campos destacados antes de continuar.');
       return;
     }
 
+    const value = this.form.getRawValue();
     this.error = '';
     this.isLoading = true;
-    if (this.registerRole === 'CLIENT') {
-      this.authService.registerClient({
-        fullName: this.fullName,
-        email: this.email,
-        password: this.password,
-        phone: normalizedPhone,
-        neighborhood: this.neighborhood,
-        city: this.city,
-        fullAddress: this.fullAddress || `${this.neighborhood}, ${this.city}`
-      }).subscribe({
-        next: () => {
-          this.isLoading = false;
-          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Cadastro realizado com sucesso!' });
-          this.router.navigate(['/']);
-        },
-        error: (err) => {
-          this.isLoading = false;
-          this.error = err.error?.error || 'Erro ao cadastrar cliente.';
-          this.messageService.add({ severity: 'error', summary: 'Erro', detail: this.error });
-        }
-      });
+    const request$ = value.role === 'CLIENT'
+      ? this.authService.registerClient({
+          fullName: value.fullName.trim(), email: value.email.trim(), password: value.password,
+          phone: value.phone, neighborhood: value.neighborhood.trim(), city: value.city.trim(),
+          fullAddress: value.fullAddress.trim(),
+        })
+      : this.authService.registerProvider({
+          fullName: value.fullName.trim(), email: value.email.trim(), password: value.password,
+          phone: value.phone, bio: value.bio.trim(), city: value.city.trim(),
+          neighborhood: value.neighborhood.trim(), serviceRadiusKm: value.serviceRadiusKm,
+          propertyTypes: value.propertyTypes,
+          acceptsPets: value.acceptsPets,
+        });
+
+    request$.subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Cadastro realizado com sucesso!' });
+        this.router.navigate(['/']);
+      },
+      error: err => {
+        this.isLoading = false;
+        this.showError(err.error?.error || 'Erro ao realizar o cadastro.');
+      },
+    });
+  }
+
+  private updateConditionalValidators(role: 'CLIENT' | 'PROVIDER'): void {
+    const fullAddress = this.form.controls.fullAddress;
+    const propertyTypes = this.form.controls.propertyTypes;
+    role === 'CLIENT' ? fullAddress.setValidators(Validators.required) : fullAddress.clearValidators();
+    if (role === 'PROVIDER') {
+      propertyTypes.setValidators(Validators.required);
     } else {
-      this.authService.registerProvider({
-        fullName: this.fullName,
-        email: this.email,
-        password: this.password,
-        phone: normalizedPhone,
-        bio: this.bio,
-        city: this.city,
-        neighborhood: this.neighborhood,
-        serviceRadiusKm: this.serviceRadiusKm,
-        categoryIds: this.selectedCategoryIds
-      }).subscribe({
-        next: () => {
-          this.isLoading = false;
-          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Cadastro de profissional realizado!' });
-          this.router.navigate(['/']);
-        },
-        error: (err) => {
-          this.isLoading = false;
-          this.error = err.error?.error || 'Erro ao cadastrar profissional.';
-          this.messageService.add({ severity: 'error', summary: 'Erro', detail: this.error });
-        }
-      });
+      propertyTypes.clearValidators();
     }
+    fullAddress.updateValueAndValidity();
+    propertyTypes.updateValueAndValidity();
   }
 
-  private normalizePhone(value: string): string {
-    return value.replace(/\D/g, '');
+  toggleList(controlName: 'propertyTypes', value: string, checked: boolean): void {
+    const control = this.form.controls[controlName];
+    control.setValue(checked
+      ? Array.from(new Set([...control.value, value]))
+      : control.value.filter(item => item !== value));
+    control.markAsTouched();
   }
 
-  private isValidMobilePhone(phone: string): boolean {
-    return /^[1-9]{2}9\d{8}$/.test(phone);
+  private showError(message: string): void {
+    this.error = message;
+    this.messageService.add({ severity: 'error', summary: 'Erro', detail: message });
   }
 }
