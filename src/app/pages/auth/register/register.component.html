@@ -62,7 +62,7 @@
       </div>
 
       <ng-container *ngIf="isClientRegistration">
-        <div class="mb-3">
+        <div class="mb-3 w-100">
           <label class="form-label">{{ 'AUTH.FULL_ADDRESS' | translate }}</label>
           <input type="text" class="form-control" formControlName="fullAddress" [class.is-invalid]="form.controls.fullAddress.touched && form.controls.fullAddress.invalid">
           <div class="invalid-feedback">{{ 'AUTH.FULL_ADDRESS_ERROR' | translate }}</div>
@@ -78,15 +78,21 @@
           <label class="form-label">{{ 'AUTH.RADIUS' | translate }}</label>
           <input type="number" class="form-control" formControlName="serviceRadiusKm" min="1" max="100">
         </div>
-        <div class="mb-3">
+        <div class="mb-3 w-100">
           <label class="form-label d-block">{{ 'AUTH.WHERE_CLEAN' | translate }}</label>
-          <label *ngFor="let option of propertyTypeOptions" class="me-3">
-            <input type="checkbox" [checked]="form.controls.propertyTypes.value.includes(option.value)"
-              (change)="toggleList('propertyTypes', option.value, $any($event.target).checked)"> {{ option.label }}
-          </label>
+          <div class="d-flex flex-wrap gap-3 mt-1">
+            <label *ngFor="let option of propertyTypeOptions" class="d-flex align-items-center gap-1" style="font-size: 13px; color: var(--text-secondary); cursor: pointer;">
+              <input type="checkbox" [checked]="form.controls.propertyTypes.value.includes(option.value)"
+                (change)="toggleList('propertyTypes', option.value, $any($event.target).checked)">
+              {{ 'SEARCH.' + option.value | translate }}
+            </label>
+          </div>
         </div>
-        <div class="mb-3">
-          <label><input type="checkbox" formControlName="acceptsPets"> {{ 'AUTH.ACCEPTS_PETS' | translate }}</label>
+        <div class="mb-3 w-100">
+          <label class="d-flex align-items-center gap-2" style="font-size: 13px; color: var(--text-secondary); cursor: pointer;">
+            <input type="checkbox" formControlName="acceptsPets">
+            {{ 'AUTH.ACCEPTS_PETS' | translate }}
+          </label>
         </div>
       </ng-container>
 

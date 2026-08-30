@@ -30,7 +30,7 @@
 .request-card {
   background: var(--surface);
   border-radius: var(--radius-lg);
-  border: none;
+  border: 1px solid rgba(228, 231, 240, 0.9);
   box-shadow: var(--shadow-sm);
   transition: all 0.3s ease;
   overflow: hidden;
@@ -90,7 +90,7 @@
 
 .page-heading {
   padding: 26px 28px;
-  border: 1px solid rgba(228, 231, 240, 0.9);
+  border: none;
   border-radius: 22px;
   background:
     radial-gradient(circle at 91% 15%, rgba(91, 92, 226, 0.11), transparent 15rem),
