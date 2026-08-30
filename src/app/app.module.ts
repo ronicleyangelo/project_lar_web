@@ -10,6 +10,8 @@ import { AppComponent } from './app.component';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 @NgModule({
   declarations: [
@@ -23,9 +25,16 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     SharedModule,
     AppRoutingModule,
     ToastModule,
-    NgbModule
+    NgbModule,
   ],
-  providers: [MessageService],
+  providers: [
+    MessageService,
+    provideTranslateService({
+      lang: 'pt',
+      fallbackLang: 'pt'
+    }),
+    provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -1,0 +1,20 @@
+{
+  "HEADER": {
+    "SUBTITLE": "Trusted Services",
+    "EXPLORE": "Explore",
+    "MY_ORDERS": "My Orders",
+    "DASHBOARD": "Dashboard",
+    "OPPORTUNITIES": "Opportunities",
+    "PROFILE": "Profile",
+    "ADMIN": "Admin",
+    "SIGN_UP": "Sign Up",
+    "LOG_IN": "Log In",
+    "MY_ACCOUNT": "My Account",
+    "SECURITY_PRIVACY": "Security and privacy",
+    "MY_PROFILE": "My Profile",
+    "PROFESSIONAL_DATA": "Professional data",
+    "PROFESSIONAL_DASHBOARD": "Pro Dashboard",
+    "ORDERS_SCHEDULES": "Orders and schedules",
+    "LOG_OUT": "Log out"
+  }
+}

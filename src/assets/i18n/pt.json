@@ -1,0 +1,20 @@
+{
+  "HEADER": {
+    "SUBTITLE": "Serviços com confiança",
+    "EXPLORE": "Explorar",
+    "MY_ORDERS": "Meus Pedidos",
+    "DASHBOARD": "Painel",
+    "OPPORTUNITIES": "Oportunidades",
+    "PROFILE": "Perfil",
+    "ADMIN": "Admin",
+    "SIGN_UP": "Cadastrar-se",
+    "LOG_IN": "Entrar",
+    "MY_ACCOUNT": "Minha conta",
+    "SECURITY_PRIVACY": "Segurança e privacidade",
+    "MY_PROFILE": "Meu perfil",
+    "PROFESSIONAL_DATA": "Dados profissionais",
+    "PROFESSIONAL_DASHBOARD": "Painel profissional",
+    "ORDERS_SCHEDULES": "Pedidos e agendamentos",
+    "LOG_OUT": "Sair da conta"
+  }
+}
