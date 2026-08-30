@@ -28,7 +28,7 @@
           <td><div class="stacked-cell"><span>{{ provider.user.email }}</span><small>{{ provider.user.phone }}</small></div></td>
           <td><div class="stacked-cell"><span>{{ providerLocation(provider) }}</span><small>{{ provider.services.length }} {{ 'ADMIN.REGISTERED_SERVICE' | translate }}</small></div></td>
           <td><span class="activity-count">{{ provider.activities.length }}</span></td>
-          <td><span class="status-chip" [ngClass]="verificationStatusViews[provider.verificationStatus].badgeClass">{{ verificationStatusViews[provider.verificationStatus].label }}</span></td>
+          <td><span class="status-chip" [ngClass]="verificationStatusViews[provider.verificationStatus].badgeClass">{{ statusKey(provider.verificationStatus) | translate }}</span></td>
           <td>
             <div class="review-actions" *ngIf="verificationStatusViews[provider.verificationStatus].canReview; else noAction">
               <button class="action approve" [title]="'ADMIN.APPROVE_TITLE' | translate" [disabled]="isSubmittingReview" (click)="reviewProvider(provider, 'VERIFIED')"><span class="icon">check</span>{{ 'ADMIN.APPROVE' | translate }}</button>
@@ -50,7 +50,7 @@
     <p class="dialog-description">{{ reviewDialogDescription }}</p>
     <div class="correction-options" *ngIf="reviewStatus === 'CHANGES_REQUESTED'">
       <span class="field-caption">{{ 'ADMIN.WHAT_NEEDS_CORRECTION' | translate }}</span>
-      <div class="option-grid"><button type="button" *ngFor="let option of correctionOptions" [class.selected]="isCorrectionSelected(option.id)" [attr.aria-pressed]="isCorrectionSelected(option.id)" (click)="toggleCorrection(option.id)"><span class="icon">{{ option.icon }}</span><span>{{ option.label }}</span><span class="selection-icon icon">{{ isCorrectionSelected(option.id) ? 'check_circle' : 'radio_button_unchecked' }}</span></button></div>
+      <div class="option-grid"><button type="button" *ngFor="let option of correctionOptions" [class.selected]="isCorrectionSelected(option.id)" [attr.aria-pressed]="isCorrectionSelected(option.id)" (click)="toggleCorrection(option.id)"><span class="icon">{{ option.icon }}</span><span>{{ option.label | translate }}</span><span class="selection-icon icon">{{ isCorrectionSelected(option.id) ? 'check_circle' : 'radio_button_unchecked' }}</span></button></div>
       <small class="selection-error" *ngIf="reviewNote.touched && selectedCorrectionIds.size === 0">{{ 'ADMIN.SELECT_AT_LEAST_ONE' | translate }}</small>
     </div>
     <div class="dialog-field"><label for="review-note">{{ reviewStatus === 'CHANGES_REQUESTED' ? ('ADMIN.ADDITIONAL_GUIDANCE' | translate) : ('ADMIN.REJECTION_REASON' | translate) }}</label><textarea id="review-note" [rows]="reviewStatus === 'CHANGES_REQUESTED' ? 3 : 5" maxlength="500" [formControl]="reviewNote" [placeholder]="reviewStatus === 'CHANGES_REQUESTED' ? ('ADMIN.GUIDANCE_PLACEHOLDER' | translate) : ('ADMIN.REJECTION_PLACEHOLDER' | translate)"></textarea></div>

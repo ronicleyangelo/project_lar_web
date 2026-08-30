@@ -11,20 +11,21 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.authService.token;
-    
-    if (token) {
-      req = req.clone({
+    req = req.clone({
+      withCredentials: true,
+      ...(token ? {
         setHeaders: {
           Authorization: `Bearer ${token}`
         }
-      });
-    }
+      } : {}),
+    });
 
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         const isGoogleOnboarding = req.url.includes('/auth/google/complete');
         const isAccountSecurityAction = req.url.includes('/account/password') || req.url.includes('/account/deletion');
-        if (error.status === 401 && !isGoogleOnboarding && !isAccountSecurityAction) {
+        const isAnonymousSessionProbe = req.url.includes('/auth/me') && !this.authService.currentUserValue;
+        if (error.status === 401 && !isGoogleOnboarding && !isAccountSecurityAction && !isAnonymousSessionProbe) {
           this.authService.logout();
           this.router.navigate(['/auth/login']);
         }
