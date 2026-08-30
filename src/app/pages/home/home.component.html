@@ -1,0 +1,42 @@
+<main class="landing">
+  <section class="hero">
+    <div class="hero-content">
+      <span class="eyebrow">{{ 'HOME.EYEBROW' | translate }}</span>
+      <h1 [innerHTML]="'HOME.TITLE' | translate"></h1>
+      <p>{{ 'HOME.SUBTITLE' | translate }}</p>
+      <div class="hero-actions">
+        <a class="primary-action" routerLink="/auth/register">{{ 'HOME.CREATE_ACCOUNT' | translate }}<span class="icon">arrow_forward</span></a>
+        <a class="secondary-action" routerLink="/auth/login">{{ 'HOME.ALREADY_ACCOUNT' | translate }}</a>
+      </div>
+      <div class="trust-row">
+        <span><span class="icon">verified_user</span>{{ 'HOME.TRUST_VERIFIED' | translate }}</span>
+        <span><span class="icon">lock</span>{{ 'HOME.TRUST_PROTECTED' | translate }}</span>
+        <span><span class="icon">translate</span>{{ 'HOME.TRUST_LOCAL' | translate }}</span>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="visual-card client-card"><span class="visual-icon icon">home</span><strong>{{ 'HOME.NEED_CLEANING' | translate }}</strong><small>{{ 'HOME.NEED_CLEANING_DESC' | translate }}</small></div>
+      <div class="connection"><span></span><i class="icon">arrow_forward</i></div>
+      <div class="visual-card provider-card"><span class="visual-icon icon">cleaning_services</span><strong>{{ 'HOME.FIND_PRO' | translate }}</strong><small>{{ 'HOME.FIND_PRO_DESC' | translate }}</small></div>
+      <span class="shape shape-one"></span><span class="shape shape-two"></span>
+    </div>
+  </section>
+
+  <section class="how container">
+    <header><span class="eyebrow">{{ 'HOME.HOW_EYEBROW' | translate }}</span><h2>{{ 'HOME.HOW_TITLE' | translate }}</h2><p>{{ 'HOME.HOW_SUBTITLE' | translate }}</p></header>
+    <div class="steps">
+      <article><span class="step-number">01</span><span class="icon">manage_search</span><h3>{{ 'HOME.STEP_ONE_TITLE' | translate }}</h3><p>{{ 'HOME.STEP_ONE_DESC' | translate }}</p></article>
+      <article><span class="step-number">02</span><span class="icon">person_search</span><h3>{{ 'HOME.STEP_TWO_TITLE' | translate }}</h3><p>{{ 'HOME.STEP_TWO_DESC' | translate }}</p></article>
+      <article><span class="step-number">03</span><span class="icon">event_available</span><h3>{{ 'HOME.STEP_THREE_TITLE' | translate }}</h3><p>{{ 'HOME.STEP_THREE_DESC' | translate }}</p></article>
+    </div>
+  </section>
+
+  <section class="audiences">
+    <div class="container audience-grid">
+      <article class="audience client"><span class="icon">family_home</span><div><small>{{ 'HOME.FOR_CLIENTS' | translate }}</small><h2>{{ 'HOME.CLIENT_TITLE' | translate }}</h2><p>{{ 'HOME.CLIENT_DESC' | translate }}</p><a routerLink="/auth/register" [queryParams]="{role: 'CLIENT'}">{{ 'HOME.CLIENT_ACTION' | translate }}<span class="icon">arrow_forward</span></a></div></article>
+      <article class="audience professional"><span class="icon">work</span><div><small>{{ 'HOME.FOR_PROS' | translate }}</small><h2>{{ 'HOME.PRO_TITLE' | translate }}</h2><p>{{ 'HOME.PRO_DESC' | translate }}</p><a routerLink="/auth/register" [queryParams]="{role: 'PROVIDER'}">{{ 'HOME.PRO_ACTION' | translate }}<span class="icon">arrow_forward</span></a></div></article>
+    </div>
+  </section>
+
+  <section class="final-cta container"><span class="icon">roofing</span><h2>{{ 'HOME.CTA_TITLE' | translate }}</h2><p>{{ 'HOME.CTA_DESC' | translate }}</p><a routerLink="/auth/register">{{ 'HOME.CREATE_ACCOUNT' | translate }}</a></section>
+</main>

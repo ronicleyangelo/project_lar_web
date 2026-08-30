@@ -6,7 +6,14 @@ import { RoleGuard } from './core/guards/role.guard';
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./pages/search/search.module').then(m => m.SearchModule)
+    loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule),
+    pathMatch: 'full'
+  },
+  {
+    path: 'explore',
+    loadChildren: () => import('./pages/search/search.module').then(m => m.SearchModule),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { role: 'CLIENT' }
   },
   {
     path: 'client',

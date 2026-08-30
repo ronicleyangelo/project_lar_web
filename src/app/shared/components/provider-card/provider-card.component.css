@@ -80,6 +80,15 @@
   outline: none;
 }
 
+.btn-favorite.active {
+  color: var(--primary);
+}
+
+.btn-favorite:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
 .btn-favorite .icon:contains("favorite") {
   color: var(--primary);
 }
@@ -188,75 +197,6 @@
   padding: 4px 10px;
   border-radius: 12px;
   font-weight: 600;
-}
-
-/* ==================================
-   MATCH / COMPATIBILIDADE
-=================================== */
-.match-section {
-  margin-bottom: 22px;
-  padding: 12px 14px;
-  background: #f9faff;
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(91, 92, 226, 0.1);
-}
-
-.match-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 6px;
-}
-
-.match-title {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.btn-link {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--primary);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.btn-link:hover {
-  color: var(--primary-strong);
-}
-
-.match-info {
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 8px;
-}
-
-.match-text {
-  font-weight: 600;
-  color: var(--text-secondary);
-  font-size: 13px;
-}
-
-.progress-bar-container {
-  width: 100%;
-  height: 6px;
-  background: rgba(0,0,0,0.06);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent) 0%, var(--success) 100%);
-  border-radius: 4px;
-  transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* ==================================

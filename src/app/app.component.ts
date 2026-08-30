@@ -4,6 +4,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from './core/services/auth.service';
 import { User } from './core/models/user.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -16,9 +17,12 @@ export class AppComponent implements OnInit, OnDestroy {
   private userSub!: Subscription;
   private routeSub!: Subscription;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private translate: TranslateService) {}
 
   ngOnInit(): void {
+    const savedLang = localStorage.getItem('appLang') || 'pt';
+    this.translate.use(savedLang);
+
     this.userSub = this.authService.currentUser$.subscribe(
       (user) => this.currentUser = user
     );

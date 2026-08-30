@@ -26,6 +26,12 @@ export class HeaderComponent {
   get showRegisterAction(): boolean { return this.authPage === 'register'; }
   get accountDisplayName(): string { return this.currentUser?.profile?.fullName || this.currentUser?.email || ''; }
   get accountEmail(): string { return this.currentUser?.email || ''; }
+  get homeLink(): string {
+    if (this.isProvider) return '/provider/opportunities';
+    if (this.isClient) return '/explore';
+    if (this.isAdmin) return '/admin';
+    return '/';
+  }
 
   get avatarUrl(): string | null {
     const profile = this.currentUser?.profile;
@@ -38,7 +44,11 @@ export class HeaderComponent {
   }
 
   get roleLabel(): string {
-    const labels: Record<string, string> = { CLIENT: 'Cliente', PROVIDER: 'Professional', ADMIN: 'Administrador' };
+    if (this.translate.currentLang() === 'en') {
+      const labels: Record<string, string> = { CLIENT: 'Client', PROVIDER: 'Professional', ADMIN: 'Administrator' };
+      return labels[this.currentUser?.role || ''] || '';
+    }
+    const labels: Record<string, string> = { CLIENT: 'Cliente', PROVIDER: 'Profissional', ADMIN: 'Administrador' };
     return labels[this.currentUser?.role || ''] || '';
   }
 
@@ -70,6 +80,7 @@ export class HeaderComponent {
   }
 
   changeLanguage(lang: string) {
+    localStorage.setItem('appLang', lang);
     this.translate.use(lang);
     this.closeMenus();
   }

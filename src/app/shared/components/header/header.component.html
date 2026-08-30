@@ -2,7 +2,7 @@
   <div class="header-container">
     
     <!-- BRAND -->
-    <a class="brand-group" routerLink="/" aria-label="Ir para o início">
+    <a class="brand-group" [routerLink]="homeLink" [attr.aria-label]="'HEADER.HOME_ARIA' | translate">
       <div class="brand-logo">
         <span class="icon">roofing</span>
       </div>
@@ -14,7 +14,10 @@
 
     <!-- NAVIGATION -->
     <nav *ngIf="!authPage" class="main-nav d-none d-md-flex">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+      <a *ngIf="isAnonymous" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+        {{ 'HEADER.HOME' | translate }}
+      </a>
+      <a *ngIf="isClient" routerLink="/explore" routerLinkActive="active" class="nav-item">
         {{ 'HEADER.EXPLORE' | translate }}
       </a>
       <a *ngIf="isClient" routerLink="/client" routerLinkActive="active" class="nav-item">
@@ -98,6 +101,24 @@
             <div class="item-text">
               <strong>{{ 'HEADER.MY_ACCOUNT' | translate }}</strong>
               <small>{{ 'HEADER.SECURITY_PRIVACY' | translate }}</small>
+            </div>
+          </a>
+          <a *ngIf="isClient" routerLink="/explore" class="dropdown-item" (click)="closeMenus()">
+            <span class="icon">search</span>
+            <div class="item-text">
+              <strong>{{ 'HEADER.FIND_PROFESSIONALS' | translate }}</strong>
+              <small>{{ 'HEADER.FIND_PROFESSIONALS_DESC' | translate }}</small>
+            </div>
+          </a>
+          <a *ngIf="isClient" routerLink="/client/profile" class="dropdown-item" (click)="closeMenus()">
+            <span class="icon">edit</span>
+            <div class="item-text"><strong>{{ 'HEADER.MY_PROFILE' | translate }}</strong><small>{{ 'HEADER.CLIENT_PROFILE_DESC' | translate }}</small></div>
+          </a>
+          <a *ngIf="isClient" routerLink="/client" class="dropdown-item" (click)="closeMenus()">
+            <span class="icon">assignment</span>
+            <div class="item-text">
+              <strong>{{ 'HEADER.MY_ORDERS' | translate }}</strong>
+              <small>{{ 'HEADER.CLIENT_ORDERS_DESC' | translate }}</small>
             </div>
           </a>
           <a *ngIf="isProvider" routerLink="/provider/profile" class="dropdown-item" (click)="closeMenus()">

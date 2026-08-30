@@ -3,36 +3,36 @@
   <div class="auth-card card">
     <div class="card-body p-4">
       <div class="auth-intro text-center">
-        <h3 class="auth-title">Acesse sua conta</h3>
-        <p>Acesse seus pedidos, propostas e agendamentos.</p>
+        <h3 class="auth-title">{{ 'AUTH.LOGIN_TITLE' | translate }}</h3>
+        <p>{{ 'AUTH.LOGIN_INTRO' | translate }}</p>
       </div>
       <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
       <form [formGroup]="form" (ngSubmit)="onLogin()" novalidate>
         <div class="mb-3">
-          <label class="form-label" for="loginEmail">Email</label>
-          <input id="loginEmail" type="email" class="form-control" formControlName="email" placeholder="voce@email.com" autocomplete="email"
+          <label class="form-label" for="loginEmail">{{ 'AUTH.EMAIL' | translate }}</label>
+          <input id="loginEmail" type="email" class="form-control" formControlName="email" [placeholder]="'AUTH.EMAIL_PLACEHOLDER' | translate" autocomplete="email"
             [class.is-invalid]="form.controls.email.touched && form.controls.email.invalid">
-          <div class="invalid-feedback" *ngIf="form.controls.email.touched && form.controls.email.hasError('required')">Informe seu e-mail.</div>
-          <div class="invalid-feedback" *ngIf="form.controls.email.touched && form.controls.email.hasError('email')">Informe um e-mail válido.</div>
+          <div class="invalid-feedback" *ngIf="form.controls.email.touched && form.controls.email.hasError('required')">{{ 'AUTH.EMAIL_REQUIRED' | translate }}</div>
+          <div class="invalid-feedback" *ngIf="form.controls.email.touched && form.controls.email.hasError('email')">{{ 'AUTH.EMAIL_INVALID' | translate }}</div>
         </div>
         <div class="mb-4">
-          <label class="form-label" for="loginPassword">Senha</label>
-          <input id="loginPassword" type="password" class="form-control" formControlName="password" placeholder="Digite sua senha" autocomplete="current-password"
+          <label class="form-label" for="loginPassword">{{ 'AUTH.PASSWORD' | translate }}</label>
+          <input id="loginPassword" type="password" class="form-control" formControlName="password" [placeholder]="'AUTH.PASSWORD_PLACEHOLDER' | translate" autocomplete="current-password"
             [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid">
-          <div class="invalid-feedback" *ngIf="form.controls.password.touched && form.controls.password.invalid">Informe sua senha.</div>
+          <div class="invalid-feedback" *ngIf="form.controls.password.touched && form.controls.password.invalid">{{ 'AUTH.PASSWORD_REQUIRED' | translate }}</div>
         </div>
         <button type="submit" class="btn btn-primary w-100 auth-btn" [disabled]="isLoading || form.invalid">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-          {{ isLoading ? 'Entrando...' : 'Login' }}
+          {{ isLoading ? ('AUTH.LOGIN_LOADING' | translate) : ('AUTH.LOGIN_BTN' | translate) }}
         </button>
       </form>
-      <div class="auth-divider"><span>ou</span></div>
+      <div class="auth-divider"><span>{{ 'AUTH.OR' | translate }}</span></div>
       <div id="google-signin-button" class="google-button-container" [class.google-loading]="isLoading"></div>
       <p *ngIf="googleUnavailable" class="google-unavailable">
-        Login Google indisponível. Configure o Client ID do ambiente.
+        {{ 'AUTH.GOOGLE_UNAVAILABLE' | translate }}
       </p>
       <div class="mt-3 text-center">
-        <a routerLink="/auth/register" class="auth-link">Não tem conta? Cadastre-se</a>
+        <a routerLink="/auth/register" class="auth-link">{{ 'AUTH.NO_ACCOUNT' | translate }}</a>
       </div>
     </div>
   </div>

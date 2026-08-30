@@ -111,11 +111,11 @@ export class CompleteGoogleRegistrationComponent implements OnInit {
       propertyTypes: value.role === 'PROVIDER' ? value.propertyTypes : undefined,
       acceptsPets: value.role === 'PROVIDER' ? value.acceptsPets : undefined,
     }).subscribe({
-      next: () => {
+      next: response => {
         sessionStorage.removeItem('lar_google_onboarding');
         sessionStorage.removeItem('lar_google_onboarding_draft');
         this.messageService.add({ severity: 'success', summary: 'Conta criada', detail: 'Seu cadastro foi concluído!' });
-        this.router.navigate(['/']);
+        this.router.navigate([response.user.role === 'PROVIDER' ? '/provider/profile' : '/explore']);
       },
       error: err => {
         this.isLoading = false;

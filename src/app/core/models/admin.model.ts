@@ -32,6 +32,6 @@ export interface AdminProvider {
   user: { email: string; phone: string; status: string; emailVerified?: boolean; phoneVerified?: boolean; createdAt?: string };
   services: Array<{ basePrice: number; description?: string | null; category: { name: string } }>;
   coverageAreas: Array<{ city: string; neighborhood: string }>;
-  activities: Array<{ extraPrice?: number | null; activity: { name: string; description?: string | null } }>;
+  activities: Array<{ extraPrice?: number | null; activity: { code?: string; name: string; description?: string | null } }>;
   availabilities?: Array<{ dayOfWeek: number; startTime: string; endTime: string }>;
 }

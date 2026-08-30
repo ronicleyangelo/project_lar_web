@@ -49,7 +49,7 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
       next: response => {
         this.isLoading = false;
         this.messageService.add({ severity: 'success', summary: 'Bem-vindo', detail: 'Login realizado com sucesso!' });
-        this.router.navigate([response.user.status === 'DELETION_PENDING' ? '/account' : '/']);
+        this.router.navigate([response.user.status === 'DELETION_PENDING' ? '/account' : this.destinationFor(response.user.role)]);
       },
       error: err => {
         this.isLoading = false;
@@ -118,7 +118,7 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
           return;
         }
         this.messageService.add({ severity: 'success', summary: 'Bem-vindo', detail: 'Login com Google realizado!' });
-        this.router.navigate([response.user?.status === 'DELETION_PENDING' ? '/account' : '/']);
+        this.router.navigate([response.user?.status === 'DELETION_PENDING' ? '/account' : this.destinationFor(response.user?.role)]);
       },
       error: err => {
         this.isLoading = false;
@@ -130,5 +130,11 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
   private showGoogleError(message: string): void {
     this.error = message;
     this.messageService.add({ severity: 'error', summary: 'Erro no Google', detail: message });
+  }
+
+  private destinationFor(role?: string): string {
+    if (role === 'PROVIDER') return '/provider/opportunities';
+    if (role === 'ADMIN') return '/admin';
+    return '/explore';
   }
 }

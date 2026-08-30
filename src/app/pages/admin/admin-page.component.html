@@ -1,10 +1,10 @@
 <div class="admin-page container py-5">
   <section class="dashboard-heading">
-    <div><span class="page-eyebrow">Central de operação</span><h2>Visão geral da plataforma</h2><p>Acompanhe usuários, pedidos, serviços e a análise dos profissionais.</p></div>
-    <div class="admin-badge"><span class="icon">shield_person</span><span><strong>Área restrita</strong><small>Acesso administrativo</small></span></div>
+    <div><span class="page-eyebrow">{{ 'ADMIN.EYEBROW' | translate }}</span><h2>{{ 'ADMIN.TITLE' | translate }}</h2><p>{{ 'ADMIN.SUBTITLE' | translate }}</p></div>
+    <div class="admin-badge"><span class="icon">shield_person</span><span><strong>{{ 'ADMIN.RESTRICTED_AREA' | translate }}</strong><small>{{ 'ADMIN.ADMIN_ACCESS' | translate }}</small></span></div>
   </section>
 
-  <section class="metrics-grid" aria-label="Indicadores da plataforma">
+  <section class="metrics-grid" [attr.aria-label]="'ADMIN.METRICS_ARIA' | translate">
     <article class="metric-card" *ngFor="let card of metricCards" [attr.data-tone]="card.tone">
       <span class="metric-icon icon">{{ card.icon }}</span>
       <div class="metric-title">{{ card.label }}</div>
@@ -15,31 +15,31 @@
 
   <section class="review-section">
     <div class="section-heading">
-      <div><span class="page-eyebrow">Segurança e qualidade</span><h3>Verificação de profissionais</h3><p>Analise os dados cadastrados antes de liberar o perfil na busca.</p></div>
-      <span class="pending-count"><strong>{{ adminMetrics.pendingReviews }}</strong> pendentes</span>
+      <div><span class="page-eyebrow">{{ 'ADMIN.SECURITY_QUALITY' | translate }}</span><h3>{{ 'ADMIN.VERIFICATION_TITLE' | translate }}</h3><p>{{ 'ADMIN.VERIFICATION_SUBTITLE' | translate }}</p></div>
+      <span class="pending-count"><strong>{{ adminMetrics.pendingReviews }}</strong> {{ 'ADMIN.PENDING' | translate }}</span>
     </div>
 
-    <div class="loading-admin" *ngIf="isLoading"><span class="spinner-border"></span> Carregando profissionais...</div>
+    <div class="loading-admin" *ngIf="isLoading"><span class="spinner-border"></span> {{ 'ADMIN.LOADING_PROS' | translate }}</div>
     <p-table *ngIf="!isLoading" [value]="adminProviders" [paginator]="adminProviders.length > 8" [rows]="8" responsiveLayout="scroll" styleClass="providers-table">
-      <ng-template pTemplate="header"><tr><th>Profissional</th><th>Contato</th><th>Atendimento</th><th>Atividades</th><th>Status</th><th>Ações</th></tr></ng-template>
+      <ng-template pTemplate="header"><tr><th>{{ 'ADMIN.TH_PROFESSIONAL' | translate }}</th><th>{{ 'ADMIN.TH_CONTACT' | translate }}</th><th>{{ 'ADMIN.TH_SERVICE' | translate }}</th><th>{{ 'ADMIN.TH_ACTIVITIES' | translate }}</th><th>{{ 'ADMIN.TH_STATUS' | translate }}</th><th>{{ 'ADMIN.TH_ACTIONS' | translate }}</th></tr></ng-template>
       <ng-template pTemplate="body" let-provider>
         <tr>
-          <td><a class="provider-cell provider-link" [routerLink]="['/admin/providers', provider.id]"><span class="provider-avatar"><img *ngIf="provider.photoUrl; else initials" [src]="provider.photoUrl" alt=""><ng-template #initials>{{ providerInitials(provider) }}</ng-template></span><div><strong>{{ provider.fullName }}</strong><small>Ver perfil completo</small></div></a></td>
+          <td><a class="provider-cell provider-link" [routerLink]="['/admin/providers', provider.id]"><span class="provider-avatar"><img *ngIf="provider.photoUrl; else initials" [src]="provider.photoUrl" alt=""><ng-template #initials>{{ providerInitials(provider) }}</ng-template></span><div><strong>{{ provider.fullName }}</strong><small>{{ 'ADMIN.VIEW_FULL_PROFILE' | translate }}</small></div></a></td>
           <td><div class="stacked-cell"><span>{{ provider.user.email }}</span><small>{{ provider.user.phone }}</small></div></td>
-          <td><div class="stacked-cell"><span>{{ providerLocation(provider) }}</span><small>{{ provider.services.length }} serviço cadastrado</small></div></td>
+          <td><div class="stacked-cell"><span>{{ providerLocation(provider) }}</span><small>{{ provider.services.length }} {{ 'ADMIN.REGISTERED_SERVICE' | translate }}</small></div></td>
           <td><span class="activity-count">{{ provider.activities.length }}</span></td>
           <td><span class="status-chip" [ngClass]="verificationStatusViews[provider.verificationStatus].badgeClass">{{ verificationStatusViews[provider.verificationStatus].label }}</span></td>
           <td>
             <div class="review-actions" *ngIf="verificationStatusViews[provider.verificationStatus].canReview; else noAction">
-              <button class="action approve" title="Aprovar profissional" [disabled]="isSubmittingReview" (click)="reviewProvider(provider, 'VERIFIED')"><span class="icon">check</span>Aprovar</button>
-              <button class="action correction" title="Solicitar correção" [disabled]="isSubmittingReview" (click)="openReviewDialog(provider, 'CHANGES_REQUESTED')"><span class="icon">edit_note</span>Correção</button>
-              <button class="action reject" title="Reprovar profissional" [disabled]="isSubmittingReview" (click)="openReviewDialog(provider, 'REJECTED')"><span class="icon">close</span>Reprovar</button>
+              <button class="action approve" [title]="'ADMIN.APPROVE_TITLE' | translate" [disabled]="isSubmittingReview" (click)="reviewProvider(provider, 'VERIFIED')"><span class="icon">check</span>{{ 'ADMIN.APPROVE' | translate }}</button>
+              <button class="action correction" [title]="'ADMIN.CORRECTION_TITLE' | translate" [disabled]="isSubmittingReview" (click)="openReviewDialog(provider, 'CHANGES_REQUESTED')"><span class="icon">edit_note</span>{{ 'ADMIN.CORRECTION' | translate }}</button>
+              <button class="action reject" [title]="'ADMIN.REJECT_TITLE' | translate" [disabled]="isSubmittingReview" (click)="openReviewDialog(provider, 'REJECTED')"><span class="icon">close</span>{{ 'ADMIN.REJECT' | translate }}</button>
             </div>
-            <ng-template #noAction><span class="no-action">Nenhuma ação pendente</span></ng-template>
+            <ng-template #noAction><span class="no-action">{{ 'ADMIN.NO_ACTION_PENDING' | translate }}</span></ng-template>
           </td>
         </tr>
       </ng-template>
-      <ng-template pTemplate="emptymessage"><tr><td colspan="6"><div class="empty-admin"><span class="icon">person_search</span>Nenhum profissional cadastrado.</div></td></tr></ng-template>
+      <ng-template pTemplate="emptymessage"><tr><td colspan="6"><div class="empty-admin"><span class="icon">person_search</span>{{ 'ADMIN.NO_PROS_REGISTERED' | translate }}</div></td></tr></ng-template>
     </p-table>
   </section>
 
@@ -49,12 +49,12 @@
     </ng-template>
     <p class="dialog-description">{{ reviewDialogDescription }}</p>
     <div class="correction-options" *ngIf="reviewStatus === 'CHANGES_REQUESTED'">
-      <span class="field-caption">O que precisa ser corrigido?</span>
+      <span class="field-caption">{{ 'ADMIN.WHAT_NEEDS_CORRECTION' | translate }}</span>
       <div class="option-grid"><button type="button" *ngFor="let option of correctionOptions" [class.selected]="isCorrectionSelected(option.id)" [attr.aria-pressed]="isCorrectionSelected(option.id)" (click)="toggleCorrection(option.id)"><span class="icon">{{ option.icon }}</span><span>{{ option.label }}</span><span class="selection-icon icon">{{ isCorrectionSelected(option.id) ? 'check_circle' : 'radio_button_unchecked' }}</span></button></div>
-      <small class="selection-error" *ngIf="reviewNote.touched && selectedCorrectionIds.size === 0">Selecione pelo menos um item.</small>
+      <small class="selection-error" *ngIf="reviewNote.touched && selectedCorrectionIds.size === 0">{{ 'ADMIN.SELECT_AT_LEAST_ONE' | translate }}</small>
     </div>
-    <div class="dialog-field"><label for="review-note">{{ reviewStatus === 'CHANGES_REQUESTED' ? 'Orientação adicional (opcional)' : 'Motivo da reprovação' }}</label><textarea id="review-note" [rows]="reviewStatus === 'CHANGES_REQUESTED' ? 3 : 5" maxlength="500" [formControl]="reviewNote" [placeholder]="reviewStatus === 'CHANGES_REQUESTED' ? 'Ex.: informe uma cidade válida e ajuste o raio para sua região.' : 'Descreva objetivamente o motivo da reprovação...'"></textarea></div>
-    <div class="note-meta"><small *ngIf="reviewNote.touched && reviewNote.hasError('required')">A mensagem é obrigatória.</small><small *ngIf="reviewNote.touched && reviewNote.hasError('minlength')">Escreva pelo menos 10 caracteres.</small><span>{{ reviewNote.value.length }}/500</span></div>
-    <div class="dialog-actions"><button type="button" class="dialog-cancel" [disabled]="isSubmittingReview" (click)="closeReviewDialog()">Cancelar</button><button type="button" class="dialog-submit" [class.danger]="reviewStatus === 'REJECTED'" [disabled]="!canSubmitReview || isSubmittingReview" (click)="submitReviewNote()">{{ isSubmittingReview ? 'Salvando...' : (reviewStatus === 'CHANGES_REQUESTED' ? 'Enviar solicitação' : 'Confirmar reprovação') }}</button></div>
+    <div class="dialog-field"><label for="review-note">{{ reviewStatus === 'CHANGES_REQUESTED' ? ('ADMIN.ADDITIONAL_GUIDANCE' | translate) : ('ADMIN.REJECTION_REASON' | translate) }}</label><textarea id="review-note" [rows]="reviewStatus === 'CHANGES_REQUESTED' ? 3 : 5" maxlength="500" [formControl]="reviewNote" [placeholder]="reviewStatus === 'CHANGES_REQUESTED' ? ('ADMIN.GUIDANCE_PLACEHOLDER' | translate) : ('ADMIN.REJECTION_PLACEHOLDER' | translate)"></textarea></div>
+    <div class="note-meta"><small *ngIf="reviewNote.touched && reviewNote.hasError('required')">{{ 'ADMIN.MESSAGE_REQUIRED' | translate }}</small><small *ngIf="reviewNote.touched && reviewNote.hasError('minlength')">{{ 'ADMIN.MIN_CHARACTERS' | translate }}</small><span>{{ reviewNote.value.length }}/500</span></div>
+    <div class="dialog-actions"><button type="button" class="dialog-cancel" [disabled]="isSubmittingReview" (click)="closeReviewDialog()">{{ 'ADMIN.CANCEL' | translate }}</button><button type="button" class="dialog-submit" [class.danger]="reviewStatus === 'REJECTED'" [disabled]="!canSubmitReview || isSubmittingReview" (click)="submitReviewNote()">{{ isSubmittingReview ? ('ADMIN.SAVING' | translate) : (reviewStatus === 'CHANGES_REQUESTED' ? ('ADMIN.SEND_REQUEST' | translate) : ('ADMIN.CONFIRM_REJECTION' | translate)) }}</button></div>
   </p-dialog>
 </div>

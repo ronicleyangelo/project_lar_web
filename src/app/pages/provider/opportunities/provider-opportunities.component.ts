@@ -4,8 +4,10 @@ import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs/operators';
 
 import { ServiceRequest } from '../../../core/models/service-request.model';
+import { ServiceActivity } from '../../../core/models/service-activity.model';
 import { QuoteService } from '../../../core/services/quote.service';
 import { RequestService } from '../../../core/services/request.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-provider-opportunities',
@@ -41,20 +43,19 @@ export class ProviderOpportunitiesComponent implements OnInit {
     private readonly requestService: RequestService,
     private readonly quoteService: QuoteService,
     private readonly messageService: MessageService,
+    public readonly translate: TranslateService
   ) {}
 
   ngOnInit(): void {
     this.loadOpportunities();
   }
 
-  get activities(): string[] {
-    return Array.from(
-      new Set(
-        this.requests.flatMap(request =>
-          (request.activities ?? []).map(item => item.activity.name),
-        ),
-      ),
-    ).sort();
+  get activities(): ServiceActivity[] {
+    const unique = new Map<string, ServiceActivity>();
+    this.requests.forEach(request =>
+      request.activities?.forEach(item => unique.set(item.activity.id, item.activity)),
+    );
+    return Array.from(unique.values()).sort((a, b) => a.name.localeCompare(b.name));
   }
 
   get filteredRequests(): ServiceRequest[] {
@@ -65,7 +66,7 @@ export class ProviderOpportunitiesComponent implements OnInit {
     return this.requests.filter(request =>
       (!city || this.normalize(request.city).includes(city)) &&
       (!neighborhood || this.normalize(request.neighborhood).includes(neighborhood)) &&
-      (!filters.activity || request.activities?.some(item => item.activity.name === filters.activity)) &&
+      (!filters.activity || request.activities?.some(item => item.activity.id === filters.activity)) &&
       (!filters.date || request.scheduledDate.slice(0, 10) === filters.date) &&
       (!filters.minBudget || (request.budgetLimit ?? 0) >= filters.minBudget),
     );

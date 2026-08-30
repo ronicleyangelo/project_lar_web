@@ -11,4 +11,5 @@ export class MobileNavComponent {
   get isClient(): boolean { return this.currentUser?.role === 'CLIENT'; }
   get isProvider(): boolean { return this.currentUser?.role === 'PROVIDER'; }
   get isAdmin(): boolean { return this.currentUser?.role === 'ADMIN'; }
+  get isAnonymous(): boolean { return !this.currentUser; }
 }

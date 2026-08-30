@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Recommendation } from '../../../core/models/recommendation.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-provider-card',
@@ -9,12 +10,17 @@ import { Recommendation } from '../../../core/models/recommendation.model';
 export class ProviderCardComponent implements OnChanges {
   @Input() recommendation!: Recommendation;
   @Input() searchNeighborhood: string = '';
+  @Input() isFavorite = false;
+  @Input() favoritePending = false;
   
   @Output() requestQuote = new EventEmitter<void>();
-  @Output() showBreakdown = new EventEmitter<Recommendation>();
+  @Output() favoriteChange = new EventEmitter<string>();
 
-  isFavorite: boolean = false;
   displayTags: string[] = [];
+
+  constructor(public readonly translate: TranslateService) {}
+
+  get currencyCode(): 'BRL' | 'USD' { return this.translate.currentLang() === 'en' ? 'USD' : 'BRL'; }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['recommendation']) {
@@ -24,14 +30,7 @@ export class ProviderCardComponent implements OnChanges {
 
   toggleFavorite(event: Event) {
     event.stopPropagation();
-    this.isFavorite = !this.isFavorite;
-  }
-
-  get matchText(): string {
-    const score = this.recommendation?.totalScore || 0;
-    if (score >= 85) return 'Excelente combinação';
-    if (score >= 70) return 'Boa combinação';
-    return 'Compatível';
+    if (!this.favoritePending) this.favoriteChange.emit(this.recommendation.provider.id);
   }
 
   private setupTags() {
@@ -47,7 +46,7 @@ export class ProviderCardComponent implements OnChanges {
     
     // Adiciona flag de pets se for true
     if (provider.acceptsPets) {
-      tags.push('Aceita pets');
+      tags.push('PETS');
     }
     
     // Limita a exibição a 3 tags para manter o card limpo

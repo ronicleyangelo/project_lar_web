@@ -1,12 +1,12 @@
 <div class="container py-5">
   <div class="page-header">
     <div>
-      <span class="page-eyebrow">Área do cliente</span>
-      <h2>Meus Pedidos</h2>
-      <p class="page-subtitle">Acompanhe solicitações, propostas e serviços em um só lugar.</p>
+      <span class="page-eyebrow">{{ 'CLIENT.EYEBROW' | translate }}</span>
+      <h2>{{ 'CLIENT.TITLE' | translate }}</h2>
+      <p class="page-subtitle">{{ 'CLIENT.SUBTITLE' | translate }}</p>
     </div>
     <button class="btn btn-primary" (click)="openNewRequestModal(newReqModal)">
-      <span class="icon">add_circle</span> Novo Pedido
+      <span class="icon">add_circle</span> {{ 'CLIENT.NEW_REQUEST' | translate }}
     </button>
   </div>
 
@@ -17,31 +17,31 @@
           <div class="d-flex justify-content-between align-items-start mb-2">
             <div class="d-flex gap-2 align-items-center">
               <span class="badge bg-info text-white">{{ req.category.name || req.categoryId }}</span>
-              <span class="badge" [ngClass]="requestStatusViews[req.status].badgeClass">{{ requestStatusViews[req.status].label || req.status }}</span>
+              <span class="badge" [ngClass]="requestStatusViews[req.status].badgeClass">{{ 'STATUS_REQUEST.' + req.status | translate }}</span>
             </div>
-            <span class="text-muted small">{{ req.scheduledDate | date:'dd/MM/yyyy' }} &middot; {{ req.timeSlot }}</span>
+            <span class="text-muted small">{{ req.scheduledDate | date: (translate.currentLang() === 'en' ? 'MM/dd/yyyy' : 'dd/MM/yyyy') }} &middot; {{ req.timeSlot === 'Manhã (08:00 - 12:00)' ? ('CLIENT.MORNING' | translate) : (req.timeSlot === 'Tarde (13:00 - 17:00)' ? ('CLIENT.AFTERNOON' | translate) : ('CLIENT.FULL_DAY' | translate)) }}</span>
           </div>
 
           <h5>{{ req.description }}</h5>
-          <div class="d-flex flex-wrap gap-1 mb-3" *ngIf="req.activities?.length"><span class="badge bg-light text-dark" *ngFor="let item of req.activities">{{ item.activity.name }}</span></div>
+          <div class="d-flex flex-wrap gap-1 mb-3" *ngIf="req.activities?.length"><span class="badge bg-light text-dark" *ngFor="let item of req.activities">{{ item.activity | activityLabel:'name' }}</span></div>
           
           <div class="privacy-notice mb-3">
             <span class="icon">lock</span>
-            <small>Seu endereço está protegido. Ele será compartilhado apenas com o profissional aprovado.</small>
+            <small>{{ 'CLIENT.ADDRESS_PROTECTED' | translate }}</small>
           </div>
 
           <div class="quotes-box" *ngIf="req.quotes && req.quotes.length > 0">
-            <h6><span class="icon" style="font-size: 16px;">receipt_long</span> Orçamentos Recebidos ({{ req.quotes.length }})</h6>
+            <h6><span class="icon" style="font-size: 16px;">receipt_long</span> {{ 'CLIENT.QUOTES_RECEIVED' | translate }} ({{ req.quotes.length }})</h6>
             <div class="quote-item d-flex justify-content-between align-items-center mb-2" *ngFor="let q of req.quotes">
               <div>
                 <strong class="d-block">{{ q.provider.fullName || 'Profissional' }}</strong>
                 <p class="mb-0 small text-muted">{{ q.message }}</p>
-                <small class="text-muted">Duração: {{ q.estimatedDuration }}</small>
+                <small class="text-muted">{{ 'CLIENT.DURATION' | translate }}: {{ q.estimatedDuration }}</small>
               </div>
               <div class="text-end">
                 <div class="quote-price mb-1">R$ {{ q.price }}</div>
                 <button class="btn btn-sm btn-primary" *ngIf="requestStatusViews[req.status]?.canAcceptQuote" [disabled]="isAcceptingQuote(q.id)" (click)="acceptQuote(q.id)">
-                  <span class="icon" style="font-size: 16px;">check_circle</span> Aceitar
+                  <span class="icon" style="font-size: 16px;">check_circle</span> {{ 'CLIENT.ACCEPT' | translate }}
                 </button>
               </div>
             </div>
@@ -52,25 +52,25 @@
   </div>
 
   <ng-template #noRequests>
-    <app-empty-state icon="assignment" message="Você ainda não publicou nenhum pedido de serviço."></app-empty-state>
+    <app-empty-state icon="assignment" [message]="'CLIENT.NO_REQUESTS' | translate"></app-empty-state>
   </ng-template>
 
-  <h2 class="section-divider mt-5 mb-4">Meus Agendamentos</h2>
+  <h2 class="section-divider mt-5 mb-4">{{ 'CLIENT.MY_APPOINTMENTS' | translate }}</h2>
   <div class="row g-4" *ngIf="appointments.length > 0; else noAppointments">
     <div class="col-12 col-md-6" *ngFor="let app of appointments">
       <div class="card appointment-card">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0">Agendamento</h5>
-            <span class="badge" [ngClass]="appointmentStatusViews[app.status].badgeClass">{{ appointmentStatusViews[app.status].label || app.status }}</span>
+            <h5 class="mb-0">{{ 'CLIENT.APPOINTMENT' | translate }}</h5>
+            <span class="badge" [ngClass]="appointmentStatusViews[app.status].badgeClass">{{ 'STATUS_APPOINTMENT.' + app.status | translate }}</span>
           </div>
           <p class="text-muted small mb-3">ID: {{ app.id | slice:0:8 }}...</p>
           <div class="d-flex gap-2">
             <button class="btn btn-primary btn-sm" *ngIf="appointmentStatusViews[app.status]?.canConfirm" [disabled]="isConfirmingAppointment(app.id)" (click)="confirmCompletion(app.id)">
-              <span class="icon" style="font-size: 16px;">task_alt</span> Confirmar conclusao
+              <span class="icon" style="font-size: 16px;">task_alt</span> {{ 'CLIENT.CONFIRM_COMPLETION' | translate }}
             </button>
             <button class="btn btn-gold btn-sm" *ngIf="appointmentStatusViews[app.status]?.canReview && !app.review" (click)="openRating(app.id)">
-              <span class="icon" style="font-size: 16px;">star</span> Avaliar
+              <span class="icon" style="font-size: 16px;">star</span> {{ 'CLIENT.REVIEW' | translate }}
             </button>
           </div>
         </div>
@@ -79,67 +79,67 @@
   </div>
 
   <ng-template #noAppointments>
-    <app-empty-state icon="event" message="Nenhum agendamento encontrado."></app-empty-state>
+    <app-empty-state icon="event" [message]="'CLIENT.NO_APPOINTMENTS' | translate"></app-empty-state>
   </ng-template>
 </div>
 
 <ng-template #newReqModal let-modal>
   <div class="modal-header d-flex justify-content-between align-items-center pb-3" style="background: linear-gradient(90deg, var(--dark-blue-deep) 0%, #0c2340 100%); border-bottom: 2px solid var(--gold-primary); border-radius: var(--radius-md) var(--radius-md) 0 0;">
-    <h4 class="modal-title m-0 text-white fw-bold fs-5">Novo Pedido de Serviço</h4>
+    <h4 class="modal-title m-0 text-white fw-bold fs-5">{{ 'CLIENT.NEW_REQUEST_TITLE' | translate }}</h4>
     <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body p-4 bg-surface">
     <div class="mb-3">
-      <label class="form-label text-muted small fw-bold">CATEGORIA</label>
+      <label class="form-label text-muted small fw-bold">{{ 'CLIENT.CATEGORY' | translate }}</label>
       <select class="form-select" [(ngModel)]="newReqCategoryId">
         <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
       </select>
     </div>
     <div class="row g-3">
       <div class="col-6">
-        <label class="form-label text-muted small fw-bold">DATA PREFERENCIAL</label>
+        <label class="form-label text-muted small fw-bold">{{ 'CLIENT.PREF_DATE' | translate }}</label>
         <input type="date" class="form-control" [(ngModel)]="newReqDate">
       </div>
       <div class="col-6">
-        <label class="form-label text-muted small fw-bold">HORÁRIO</label>
+        <label class="form-label text-muted small fw-bold">{{ 'CLIENT.TIME' | translate }}</label>
         <select class="form-select" [(ngModel)]="newReqTimeSlot">
-          <option>Manhã (08:00 - 12:00)</option>
-          <option>Tarde (13:00 - 17:00)</option>
-          <option>Integral</option>
+          <option value="Manhã (08:00 - 12:00)">{{ 'CLIENT.MORNING' | translate }}</option>
+          <option value="Tarde (13:00 - 17:00)">{{ 'CLIENT.AFTERNOON' | translate }}</option>
+          <option value="Integral">{{ 'CLIENT.FULL_DAY' | translate }}</option>
         </select>
       </div>
     </div>
     <div class="row g-3 mt-0">
       <div class="col-6">
-        <label class="form-label text-muted small fw-bold">CIDADE</label>
+        <label class="form-label text-muted small fw-bold">{{ 'CLIENT.CITY' | translate }}</label>
         <input type="text" class="form-control" [(ngModel)]="newReqCity">
       </div>
       <div class="col-6">
-        <label class="form-label text-muted small fw-bold">BAIRRO</label>
+        <label class="form-label text-muted small fw-bold">{{ 'CLIENT.NEIGHBORHOOD' | translate }}</label>
         <input type="text" class="form-control" [(ngModel)]="newReqNeighborhood">
       </div>
     </div>
     <div class="mb-3 mt-3">
-      <label class="form-label text-muted small fw-bold">ATIVIDADES DESEJADAS</label>
+      <label class="form-label text-muted small fw-bold">{{ 'CLIENT.DESIRED_ACTIVITIES' | translate }}</label>
       <div class="row g-2">
-        <label class="col-6" *ngFor="let activity of activities"><span class="d-flex gap-2 align-items-start border rounded p-2 h-100"><input type="checkbox" class="mt-1" [checked]="newReqActivityIds.includes(activity.id)" (change)="toggleRequestActivity(activity.id, $any($event.target).checked)"><span><strong class="d-block small">{{ activity.name }}</strong><small class="text-muted">{{ activity.description }}</small></span></span></label>
+        <label class="col-6" *ngFor="let activity of activities"><span class="d-flex gap-2 align-items-start border rounded p-2 h-100"><input type="checkbox" class="mt-1" [checked]="newReqActivityIds.includes(activity.id)" (change)="toggleRequestActivity(activity.id, $any($event.target).checked)"><span><strong class="d-block small">{{ activity | activityLabel:'name' }}</strong><small class="text-muted">{{ activity | activityLabel:'description' }}</small></span></span></label>
       </div>
     </div>
     <div class="mb-3 mt-3">
-      <label class="form-label text-muted small fw-bold">ORÇAMENTO MÁXIMO (OPCIONAL)</label>
+      <label class="form-label text-muted small fw-bold">{{ 'CLIENT.MAX_BUDGET' | translate }}</label>
       <div class="input-group">
         <span class="input-group-text">R$</span>
         <input type="number" min="0" class="form-control" [(ngModel)]="newReqBudget" placeholder="Ex.: 250">
       </div>
     </div>
     <div class="mb-3 mt-3">
-      <label class="form-label text-muted small fw-bold">DESCRIÇÃO DO SERVIÇO</label>
-      <textarea class="form-control" rows="3" [(ngModel)]="newReqDescription" placeholder="Descreva o que precisa..."></textarea>
+      <label class="form-label text-muted small fw-bold">{{ 'CLIENT.SERVICE_DESC' | translate }}</label>
+      <textarea class="form-control" rows="3" [(ngModel)]="newReqDescription" [placeholder]="'CLIENT.DESC_PLACEHOLDER' | translate"></textarea>
     </div>
   </div>
   <div class="modal-footer bg-surface border-top-0 pt-0 pb-4 px-4" style="border-radius: 0 0 var(--radius-md) var(--radius-md);">
     <button class="btn btn-primary w-100" [disabled]="isCreatingRequest" (click)="submitNewRequest()">
-      <span class="icon">publish</span> Publicar Pedido
+      <span class="icon">publish</span> {{ 'CLIENT.PUBLISH' | translate }}
     </button>
   </div>
 </ng-template>

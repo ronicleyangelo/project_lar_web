@@ -7,6 +7,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { EditableProviderProfile } from '../../../core/models/provider-profile.model';
 import { ActivityService } from '../../../core/services/activity.service';
 import { ServiceActivity } from '../../../core/models/service-activity.model';
+import { TranslateService } from '@ngx-translate/core';
 
 const MOBILE_PHONE_PATTERN = /^[1-9]{2}9\d{8}$/;
 type VerificationStatus = EditableProviderProfile['verificationStatus'];
@@ -59,6 +60,7 @@ export class ProviderProfileComponent implements OnInit {
     private activityService: ActivityService,
     private authService: AuthService,
     private messageService: MessageService,
+    public translate: TranslateService
   ) {}
 
   ngOnInit(): void {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -46,9 +46,15 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    const requestedRole = this.route.snapshot.queryParamMap.get('role');
+    if (requestedRole === 'CLIENT' || requestedRole === 'PROVIDER') {
+      this.form.controls.role.setValue(requestedRole);
+      this.updateConditionalValidators(requestedRole);
+    }
     this.form.controls.role.valueChanges.subscribe(role => this.updateConditionalValidators(role));
   }
 
@@ -89,10 +95,10 @@ export class RegisterComponent implements OnInit {
         });
 
     request$.subscribe({
-      next: () => {
+      next: response => {
         this.isLoading = false;
         this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Cadastro realizado com sucesso!' });
-        this.router.navigate(['/']);
+        this.router.navigate([response.user.role === 'PROVIDER' ? '/provider/profile' : '/explore']);
       },
       error: err => {
         this.isLoading = false;

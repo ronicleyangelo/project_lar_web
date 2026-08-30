@@ -8,17 +8,17 @@
       <div class="header-info">
         <div class="name-row">
           <h4>{{ recommendation.provider.fullName }}</h4>
-          <button class="btn-favorite" (click)="toggleFavorite($event)" title="Favoritar profissional">
+          <button class="btn-favorite" type="button" [class.active]="isFavorite" [disabled]="favoritePending" (click)="toggleFavorite($event)" [title]="(isFavorite ? 'PROVIDER_CARD.REMOVE_FAVORITE' : 'PROVIDER_CARD.FAVORITE') | translate" [attr.aria-pressed]="isFavorite">
             <span class="icon">{{ isFavorite ? 'favorite' : 'favorite_border' }}</span>
           </button>
         </div>
         
         <div class="provider-badges">
           <span class="badge-verified" *ngIf="recommendation.provider.isVerified">
-            <span class="icon">check_circle</span> Verificado
+            <span class="icon">check_circle</span> {{ 'PROVIDER_CARD.VERIFIED' | translate }}
           </span>
           <span class="badge-new" *ngIf="recommendation.isNewProvider">
-            Novo
+            {{ 'PROVIDER_CARD.NEW' | translate }}
           </span>
         </div>
       </div>
@@ -29,14 +29,14 @@
       <ng-container *ngIf="recommendation.provider.reviewCount > 0; else noReviews">
         <div class="reputation-stats">
           <span class="star-rating">⭐ {{ recommendation.provider.trustScore | number:'1.1-1' }}</span>
-          <span class="review-count">({{ recommendation.provider.reviewCount }} avaliações)</span>
+          <span class="review-count">({{ recommendation.provider.reviewCount }} {{ 'PROVIDER_CARD.REVIEWS' | translate }})</span>
         </div>
       </ng-container>
       
       <ng-template #noReviews>
         <div class="reputation-new">
-          <span class="sparkle">✨</span> Novo na plataforma<br/>
-          <span class="no-reviews-text">Ainda sem avaliações</span>
+          <span class="sparkle">✨</span> {{ 'PROVIDER_CARD.NEW_ON_PLATFORM' | translate }}<br/>
+          <span class="no-reviews-text">{{ 'PROVIDER_CARD.NO_REVIEWS' | translate }}</span>
         </div>
       </ng-template>
     </div>
@@ -46,25 +46,7 @@
 
     <!-- TAGS DE CARACTERÍSTICAS -->
     <div class="characteristics-tags" *ngIf="displayTags.length > 0">
-      <span class="char-tag" *ngFor="let tag of displayTags">{{ tag }}</span>
-    </div>
-
-    <!-- MATCH / COMPATIBILIDADE -->
-    <div class="match-section">
-      <div class="match-header">
-        <span class="match-title">Compatibilidade com sua faxina</span>
-        <button class="btn-link" (click)="showBreakdown.emit(recommendation)">Por que?</button>
-      </div>
-      
-      <div class="match-info">
-        <span class="match-percentage">{{ recommendation.totalScore }}%</span>
-        <span class="match-text">· {{ matchText }}</span>
-      </div>
-      
-      <div class="progress-bar-container">
-        <!-- A cor da barra pode mudar baseada no score se desejar, mas padrão será success -->
-        <div class="progress-bar-fill" [style.width.%]="recommendation.totalScore"></div>
-      </div>
+      <span class="char-tag" *ngFor="let tag of displayTags">{{ ('PROVIDER_CARD.PROPERTY_TYPES.' + tag) | translate }}</span>
     </div>
 
     <!-- LOCALIZAÇÃO, PREÇO E CTA -->
@@ -74,22 +56,22 @@
         <div class="radius-info">
           <span class="icon">location_on</span>
           <ng-container *ngIf="recommendation.distanceKm !== null; else radiusFallback">
-            A {{ recommendation.distanceKm }} km de {{ searchNeighborhood }}
+            {{ 'PROVIDER_CARD.DISTANCE_FROM' | translate:{ distance: recommendation.distanceKm, location: searchNeighborhood } }}
           </ng-container>
           <ng-template #radiusFallback>
-            Atende {{ recommendation.provider.city || searchNeighborhood }}
+            {{ 'PROVIDER_CARD.SERVES' | translate }} {{ recommendation.provider.city || searchNeighborhood }}
           </ng-template>
         </div>
         
         <div class="price-info" *ngIf="recommendation.provider.services?.[0] as service">
-          <span class="price-label">Valor</span>
-          <span class="price-value">R$ {{ service.basePrice }}/h</span>
+          <span class="price-label">{{ 'PROVIDER_CARD.PRICE' | translate }}</span>
+          <span class="price-value">{{ service.basePrice | currency:currencyCode:'symbol':'1.0-2' }}{{ 'SEARCH.PER_HOUR_SHORT' | translate }}</span>
         </div>
         
       </div>
 
       <button class="btn-request-quote" (click)="requestQuote.emit()">
-        Solicitar faxina
+        {{ 'PROVIDER_CARD.REQUEST_CLEANING' | translate }}
       </button>
     </div>
 

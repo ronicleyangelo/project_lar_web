@@ -8,6 +8,9 @@ import { AuthService } from '../../core/services/auth.service';
 import { Recommendation, SearchParams } from '../../core/models/recommendation.model';
 import { ActivityService } from '../../core/services/activity.service';
 import { ServiceActivity } from '../../core/models/service-activity.model';
+import { TranslateService } from '@ngx-translate/core';
+import { FavoriteService } from '../../core/services/favorite.service';
+import { Observable } from 'rxjs';
 
 type SortOption = 'recommended' | 'distance' | 'price' | 'rating';
 
@@ -23,11 +26,11 @@ export class SearchPageComponent implements OnInit {
   sortBy: SortOption = 'recommended';
   recommendations: Recommendation[] = [];
   activities: ServiceActivity[] = [];
-  selectedProviderBreakdown: Recommendation | null = null;
-  showBreakdown = false;
+  favoriteProviderIds = new Set<string>();
+  pendingFavoriteIds = new Set<string>();
 
   readonly form = this.formBuilder.nonNullable.group({
-    city: ['', Validators.required],
+    city: [''],
     neighborhood: [''],
     propertyType: [''],
     hasPets: [false],
@@ -42,15 +45,24 @@ export class SearchPageComponent implements OnInit {
     private activityService: ActivityService,
     private recommendationService: RecommendationService,
     private authService: AuthService,
-    private router: Router
+    private favoriteService: FavoriteService,
+    private router: Router,
+    public readonly translate: TranslateService
   ) {}
 
   ngOnInit(): void {
-    this.categoryService.getAll().subscribe(categories => this.categoryId = categories[0]?.id || '');
+    this.categoryService.getAll().subscribe(categories => {
+      this.categoryId = categories[0]?.id || '';
+    });
     this.activityService.list().subscribe(activities => this.activities = activities);
-    const profile = this.authService.currentUserValue?.profile;
-    if (profile?.city && profile?.neighborhood) this.form.patchValue({ city: profile.city, neighborhood: profile.neighborhood });
+    if (this.authService.currentUserValue?.role === 'CLIENT') {
+      this.favoriteService.list().subscribe({
+        next: providerIds => this.favoriteProviderIds = new Set(providerIds),
+      });
+    }
   }
+
+  get currencyCode(): 'BRL' | 'USD' { return this.translate.currentLang() === 'en' ? 'USD' : 'BRL'; }
 
   get displayedRecommendations(): Recommendation[] {
     const items = [...this.recommendations];
@@ -76,9 +88,9 @@ export class SearchPageComponent implements OnInit {
   get showSearchIntro(): boolean { return !this.isSearching && !this.hasSearched; }
 
   runSearch(): void {
-    if (this.form.invalid || !this.categoryId) {
+    if (!this.categoryId) {
       this.form.markAllAsTouched();
-      this.searchError = this.categoryId ? 'Informe a cidade para realizar a busca.' : 'A categoria de limpeza ainda não está disponível.';
+      this.searchError = 'A categoria de limpeza ainda não está disponível.';
       return;
     }
     this.searchError = '';
@@ -113,8 +125,30 @@ export class SearchPageComponent implements OnInit {
     const control = this.form.controls.activityIds;
     control.setValue(checked ? Array.from(new Set([...control.value, id])) : control.value.filter(item => item !== id));
   }
-  onShowBreakdown(item: Recommendation): void { this.selectedProviderBreakdown = item; this.showBreakdown = true; }
   onRequestQuote(): void { this.router.navigate([this.authService.currentUserValue ? '/client' : '/auth/login']); }
+
+  isFavorite(providerId: string): boolean { return this.favoriteProviderIds.has(providerId); }
+  isFavoritePending(providerId: string): boolean { return this.pendingFavoriteIds.has(providerId); }
+
+  toggleFavorite(providerId: string): void {
+    if (this.authService.currentUserValue?.role !== 'CLIENT') {
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+    if (this.pendingFavoriteIds.has(providerId)) return;
+    this.pendingFavoriteIds.add(providerId);
+    const request: Observable<unknown> = this.favoriteProviderIds.has(providerId)
+      ? this.favoriteService.remove(providerId)
+      : this.favoriteService.add(providerId);
+    request.pipe(finalize(() => { this.pendingFavoriteIds.delete(providerId); })).subscribe({
+      next: () => {
+        const next = new Set(this.favoriteProviderIds);
+        next.has(providerId) ? next.delete(providerId) : next.add(providerId);
+        this.favoriteProviderIds = next;
+      },
+      error: (error: any) => this.searchError = error?.error?.error || this.translate.instant('PROVIDER_CARD.FAVORITE_ERROR'),
+    });
+  }
 
   private basePrice(item: Recommendation): number {
     return item.provider.services?.find(service => service.categoryId === this.categoryId)?.basePrice ?? Infinity;

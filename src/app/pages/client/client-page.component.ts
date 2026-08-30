@@ -14,6 +14,7 @@ import { Category } from '../../core/models/category.model';
 import { ServiceRequest, CreateRequestPayload } from '../../core/models/service-request.model';
 import { Appointment, CreateReviewPayload } from '../../core/models/appointment.model';
 import { APPOINTMENT_STATUS_VIEWS, REQUEST_STATUS_VIEWS } from '../../core/presentation/lifecycle-view';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-client-page',
@@ -54,7 +55,8 @@ export class ClientPageComponent implements OnInit {
     private activityService: ActivityService,
     public authService: AuthService,
     private modalService: NgbModal,
-    private messageService: MessageService
+    private messageService: MessageService,
+    public translate: TranslateService
   ) {}
 
   ngOnInit(): void {

@@ -1,8 +1,8 @@
 <section class="opportunity-hero">
   <div class="container">
-    <span>Área profissional</span>
-    <h1>Oportunidades de serviço</h1>
-    <p>Pedidos compatíveis com seu perfil, atividades e região de atendimento.</p>
+    <span>{{ 'PROVIDER.HERO_EYEBROW' | translate }}</span>
+    <h1>{{ 'PROVIDER.HERO_TITLE' | translate }}</h1>
+    <p>{{ 'PROVIDER.HERO_SUBTITLE' | translate }}</p>
   </div>
 </section>
 
@@ -10,55 +10,55 @@
   <aside class="filters-card">
     <div class="filter-title">
       <div>
-        <span>Filtros</span>
-        <h2>Encontre o serviço ideal</h2>
+        <span>{{ 'PROVIDER.FILTERS_TITLE' | translate }}</span>
+        <h2>{{ 'PROVIDER.FILTERS_SUBTITLE' | translate }}</h2>
       </div>
       <span class="icon">tune</span>
     </div>
 
     <form [formGroup]="filters">
       <label>
-        Cidade
-        <input type="text" formControlName="city" placeholder="Ex.: Serra">
+        {{ 'PROVIDER.CITY_FILTER' | translate }}
+        <input type="text" formControlName="city" [placeholder]="'PROVIDER.CITY_PLACEHOLDER' | translate">
       </label>
       <label>
-        Bairro
-        <input type="text" formControlName="neighborhood" placeholder="Todos os bairros">
+        {{ 'PROVIDER.NEIGHBORHOOD_FILTER' | translate }}
+        <input type="text" formControlName="neighborhood" [placeholder]="'PROVIDER.NEIGHBORHOOD_PLACEHOLDER' | translate">
       </label>
       <label>
-        Atividade
+        {{ 'PROVIDER.ACTIVITY_FILTER' | translate }}
         <select formControlName="activity">
-          <option value="">Todas as atividades</option>
-          <option *ngFor="let activity of activities" [value]="activity">{{ activity }}</option>
+          <option value="">{{ 'PROVIDER.ALL_ACTIVITIES' | translate }}</option>
+          <option *ngFor="let activity of activities" [value]="activity.id">{{ activity | activityLabel:'name' }}</option>
         </select>
       </label>
       <label>
-        Data do serviço
+        {{ 'PROVIDER.DATE_FILTER' | translate }}
         <input type="date" formControlName="date">
       </label>
       <label>
-        Orçamento mínimo
+        {{ 'PROVIDER.MIN_BUDGET_FILTER' | translate }}
         <input type="number" min="0" step="25" formControlName="minBudget" placeholder="R$ 0">
       </label>
-      <button type="button" class="clear" (click)="clearFilters()">Limpar filtros</button>
+      <button type="button" class="clear" (click)="clearFilters()">{{ 'PROVIDER.CLEAR_FILTERS' | translate }}</button>
     </form>
   </aside>
 
   <section class="results">
     <div class="results-heading">
       <div>
-        <span>Pedidos disponíveis</span>
-        <h2>{{ filteredRequests.length }} oportunidades encontradas</h2>
+        <span>{{ 'PROVIDER.AVAILABLE_REQUESTS_TITLE' | translate }}</span>
+        <h2>{{ filteredRequests.length }} {{ 'PROVIDER.OPPORTUNITIES_FOUND' | translate }}</h2>
       </div>
       <button type="button" (click)="loadOpportunities()">
         <span class="icon">refresh</span>
-        Atualizar
+        {{ 'PROVIDER.REFRESH' | translate }}
       </button>
     </div>
 
     <div class="loading" *ngIf="isLoading">
       <span class="spinner-border"></span>
-      Buscando oportunidades compatíveis...
+      {{ 'PROVIDER.SEARCHING' | translate }}
     </div>
 
     <div class="opportunity-list" *ngIf="!isLoading && filteredRequests.length">
@@ -76,34 +76,34 @@
         <div class="request-data">
           <div>
             <span class="icon">location_on</span>
-            <span><small>Região</small><strong>{{ request.neighborhood }}, {{ request.city }}</strong></span>
+            <span><small>{{ 'PROVIDER.REGION' | translate }}</small><strong>{{ request.neighborhood }}, {{ request.city }}</strong></span>
           </div>
           <div>
             <span class="icon">calendar_month</span>
-            <span><small>Data e período</small><strong>{{ request.scheduledDate | date:'dd/MM/yyyy' }} · {{ request.timeSlot }}</strong></span>
+            <span><small>{{ 'PROVIDER.DATE_PERIOD' | translate }}</small><strong>{{ request.scheduledDate | date: (translate.currentLang() === 'en' ? 'MM/dd/yyyy' : 'dd/MM/yyyy') }} · {{ request.timeSlot === 'Manhã (08:00 - 12:00)' ? ('CLIENT.MORNING' | translate) : (request.timeSlot === 'Tarde (13:00 - 17:00)' ? ('CLIENT.AFTERNOON' | translate) : ('CLIENT.FULL_DAY' | translate)) }}</strong></span>
           </div>
           <div>
             <span class="icon">schedule</span>
-            <span><small>Duração sugerida</small><strong>{{ suggestedHours(request) }} horas</strong></span>
+            <span><small>{{ 'PROVIDER.SUGGESTED_DURATION' | translate }}</small><strong>{{ suggestedHours(request) }} {{ 'PROVIDER.HOURS' | translate }}</strong></span>
           </div>
           <div>
             <span class="icon">payments</span>
-            <span><small>Orçamento do cliente</small><strong>{{ request.budgetLimit ? (request.budgetLimit | currency:'BRL') : 'A combinar' }}</strong></span>
+            <span><small>{{ 'PROVIDER.CLIENT_BUDGET' | translate }}</small><strong>{{ request.budgetLimit ? (request.budgetLimit | currency:'BRL') : ('PROVIDER.TO_BE_AGREED' | translate) }}</strong></span>
           </div>
         </div>
 
         <div class="activities">
-          <span *ngFor="let item of request.activities">{{ item.activity.name }}</span>
+          <span *ngFor="let item of request.activities">{{ item.activity | activityLabel:'name' }}</span>
         </div>
 
         <div class="privacy">
           <span class="icon">lock</span>
-          Endereço completo protegido até a proposta ser aceita.
+          {{ 'PROVIDER.PROTECTED_ADDRESS' | translate }}
         </div>
 
         <button class="quote-button" type="button" (click)="openQuote(request)">
           <span class="icon">send</span>
-          Enviar proposta
+          {{ 'PROVIDER.SEND_PROPOSAL' | translate }}
         </button>
       </article>
     </div>
@@ -111,7 +111,7 @@
     <app-empty-state
       *ngIf="!isLoading && !filteredRequests.length"
       icon="work_off"
-      message="Nenhuma oportunidade corresponde aos filtros neste momento."
+      [message]="'PROVIDER.EMPTY_OPPORTUNITIES' | translate"
     ></app-empty-state>
   </section>
 </main>
@@ -128,7 +128,7 @@
     <div class="quote-heading">
       <span class="icon">request_quote</span>
       <div>
-        <strong>Enviar proposta</strong>
+        <strong>{{ 'PROVIDER.SEND_PROPOSAL' | translate }}</strong>
         <small>{{ selectedRequest?.neighborhood }}, {{ selectedRequest?.city }}</small>
       </div>
     </div>
@@ -137,11 +137,11 @@
   <form [formGroup]="quoteForm" (ngSubmit)="submitQuote()">
     <div class="quote-grid">
       <label>
-        Valor total (R$)
+        {{ 'PROVIDER.TOTAL_VALUE' | translate }}
         <input type="number" min="25" step="5" formControlName="price">
       </label>
       <label>
-        Duração estimada
+        {{ 'PROVIDER.ESTIMATED_DURATION' | translate }}
         <select formControlName="duration">
           <option value="2 horas">2 horas</option>
           <option value="3 horas">3 horas</option>
@@ -153,17 +153,17 @@
       </label>
     </div>
 
-    <small class="price-help">O valor mínimo permitido é R$ 25. Confira as atividades antes de enviar.</small>
+    <small class="price-help">{{ 'PROVIDER.MIN_VALUE_HELP' | translate }}</small>
 
     <label>
-      Mensagem ao cliente
+      {{ 'PROVIDER.MESSAGE_TO_CLIENT' | translate }}
       <textarea rows="4" formControlName="message" maxlength="500"></textarea>
     </label>
 
     <div class="dialog-actions">
-      <button type="button" class="cancel" (click)="quoteDialogVisible = false">Cancelar</button>
+      <button type="button" class="cancel" (click)="quoteDialogVisible = false">{{ 'PROVIDER.CANCEL' | translate }}</button>
       <button type="submit" class="submit" [disabled]="quoteForm.invalid || isSending">
-        {{ isSending ? 'Enviando...' : 'Enviar proposta' }}
+        {{ isSending ? ('PROVIDER.SENDING' | translate) : ('PROVIDER.SEND_PROPOSAL' | translate) }}
       </button>
     </div>
   </form>

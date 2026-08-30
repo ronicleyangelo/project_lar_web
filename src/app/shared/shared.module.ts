@@ -17,24 +17,24 @@ import { TranslatePipe, TranslateDirective } from '@ngx-translate/core';
 import { HeaderComponent } from './components/header/header.component';
 import { MobileNavComponent } from './components/mobile-nav/mobile-nav.component';
 import { ProviderCardComponent } from './components/provider-card/provider-card.component';
-import { ScoreBreakdownDialogComponent } from './components/score-breakdown-dialog/score-breakdown-dialog.component';
 import { ScoreGaugeComponent } from './components/score-gauge/score-gauge.component';
 import { RatingDialogComponent } from './components/rating-dialog/rating-dialog.component';
 import { EmptyStateComponent } from './components/empty-state/empty-state.component';
 import { AuthBackgroundComponent } from './components/auth-background/auth-background.component';
 import { TruncatePipe } from './pipes/truncate.pipe';
+import { ActivityLabelPipe } from './pipes/activity-label.pipe';
 
 @NgModule({
   declarations: [
     HeaderComponent,
     MobileNavComponent,
     ProviderCardComponent,
-    ScoreBreakdownDialogComponent,
     ScoreGaugeComponent,
     RatingDialogComponent,
     EmptyStateComponent,
     AuthBackgroundComponent,
-    TruncatePipe
+    TruncatePipe,
+    ActivityLabelPipe
   ],
   imports: [
     CommonModule,
@@ -72,12 +72,12 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     HeaderComponent,
     MobileNavComponent,
     ProviderCardComponent,
-    ScoreBreakdownDialogComponent,
     ScoreGaugeComponent,
     RatingDialogComponent,
     EmptyStateComponent,
     AuthBackgroundComponent,
-    TruncatePipe
+    TruncatePipe,
+    ActivityLabelPipe
   ]
 })
 export class SharedModule { }
