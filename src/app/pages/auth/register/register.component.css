@@ -36,10 +36,17 @@
   padding: 24px 30px !important;
 }
 
+.auth-card .card-body form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 16px;
+  width: 100%;
+}
+
 .auth-intro,
-.auth-card .card-body > .d-flex,
-.auth-card .card-body > .alert,
-.auth-card .card-body > .auth-btn,
+.auth-card .card-body form > .d-flex,
+.auth-card .card-body form > .alert,
+.auth-card .card-body form > .auth-btn,
 .auth-card .card-body > .mt-3 { width: 100%; }
 
 .auth-intro {

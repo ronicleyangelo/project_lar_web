@@ -43,18 +43,18 @@
       <!-- LANGUAGE SWITCHER -->
       <div class="dropdown-wrapper">
         <button class="btn-lang" (click)="toggleLangMenu($event)" [attr.aria-expanded]="langMenuOpen">
-          <span class="flag">{{ translate.currentLang() === 'en' ? '🇺🇸' : '🇧🇷' }}</span>
+          <img class="flag-icon" [src]="translate.currentLang() === 'en' ? 'assets/flags/us.svg' : 'assets/flags/br.svg'" alt="Flag">
           <span class="lang-code">{{ translate.currentLang() === 'en' ? 'EN' : 'PT' }}</span>
           <span class="icon chevron" [class.open]="langMenuOpen">expand_more</span>
         </button>
 
         <div *ngIf="langMenuOpen" class="dropdown-menu lang-menu" (click)="$event.stopPropagation()">
           <button type="button" class="dropdown-item" [class.active]="translate.currentLang() === 'pt'" (click)="changeLanguage('pt')">
-            <span class="flag">🇧🇷</span> Português
+            <img class="flag-icon" src="assets/flags/br.svg" alt="BR"> Português
             <span class="icon check-icon" *ngIf="translate.currentLang() === 'pt'">check</span>
           </button>
           <button type="button" class="dropdown-item" [class.active]="translate.currentLang() === 'en'" (click)="changeLanguage('en')">
-            <span class="flag">🇺🇸</span> English
+            <img class="flag-icon" src="assets/flags/us.svg" alt="US"> English
             <span class="icon check-icon" *ngIf="translate.currentLang() === 'en'">check</span>
           </button>
         </div>
