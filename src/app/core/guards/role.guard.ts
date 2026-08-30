@@ -17,7 +17,9 @@ export class RoleGuard implements CanActivate {
       return true;
     }
 
-    this.router.navigate(['/']);
-    return false;
+    if (currentUser?.role === 'CLIENT') return this.router.createUrlTree(['/explore']);
+    if (currentUser?.role === 'PROVIDER') return this.router.createUrlTree(['/provider/opportunities']);
+    if (currentUser?.role === 'ADMIN') return this.router.createUrlTree(['/admin']);
+    return this.router.createUrlTree(['/auth/login']);
   }
 }

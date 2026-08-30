@@ -60,10 +60,6 @@ export class AuthService {
 
   /** Confirma que o token ainda representa uma conta existente no servidor. */
   restoreSession(): Observable<User | null> {
-    if (!this.token || !this.currentUserValue) {
-      return of(null);
-    }
-
     return this.http.get<any>(`${this.apiUrl}/me`).pipe(
       map(user => ({
         id: user.id,
