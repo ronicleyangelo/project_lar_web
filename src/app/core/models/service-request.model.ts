@@ -15,6 +15,7 @@ export interface ServiceRequest {
   status: string;
   quotes?: Quote[];
   approxDistanceKm?: number;
+  activities?: Array<{ activity: import('./service-activity.model').ServiceActivity }>;
 }
 
 export interface Quote {
@@ -36,6 +37,7 @@ export interface CreateRequestPayload {
   timeSlot: string;
   budgetLimit?: number;
   description: string;
+  activityIds: string[];
 }
 
 export interface CreateRequestResponse {

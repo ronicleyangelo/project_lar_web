@@ -46,10 +46,10 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     }
     this.isLoading = true;
     this.authService.login(this.form.getRawValue()).subscribe({
-      next: () => {
+      next: response => {
         this.isLoading = false;
         this.messageService.add({ severity: 'success', summary: 'Bem-vindo', detail: 'Login realizado com sucesso!' });
-        this.router.navigate(['/']);
+        this.router.navigate([response.user.status === 'DELETION_PENDING' ? '/account' : '/']);
       },
       error: err => {
         this.isLoading = false;
@@ -118,7 +118,7 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
           return;
         }
         this.messageService.add({ severity: 'success', summary: 'Bem-vindo', detail: 'Login com Google realizado!' });
-        this.router.navigate(['/']);
+        this.router.navigate([response.user?.status === 'DELETION_PENDING' ? '/account' : '/']);
       },
       error: err => {
         this.isLoading = false;

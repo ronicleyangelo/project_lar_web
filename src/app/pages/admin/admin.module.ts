@@ -1,21 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../shared/shared.module';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminPageComponent } from './admin-page.component';
 import { TableModule } from 'primeng/table';
-import { InputSwitchModule } from 'primeng/inputswitch';
+import { AdminProviderDetailComponent } from './admin-provider-detail.component';
 
 @NgModule({
-  declarations: [AdminPageComponent],
+  declarations: [AdminPageComponent, AdminProviderDetailComponent],
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     SharedModule,
     AdminRoutingModule,
-    TableModule,
-    InputSwitchModule
+    TableModule
   ]
 })
 export class AdminModule { }

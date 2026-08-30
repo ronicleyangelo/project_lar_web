@@ -1,0 +1,170 @@
+<section class="opportunity-hero">
+  <div class="container">
+    <span>Área profissional</span>
+    <h1>Oportunidades de serviço</h1>
+    <p>Pedidos compatíveis com seu perfil, atividades e região de atendimento.</p>
+  </div>
+</section>
+
+<main class="opportunities-page container">
+  <aside class="filters-card">
+    <div class="filter-title">
+      <div>
+        <span>Filtros</span>
+        <h2>Encontre o serviço ideal</h2>
+      </div>
+      <span class="icon">tune</span>
+    </div>
+
+    <form [formGroup]="filters">
+      <label>
+        Cidade
+        <input type="text" formControlName="city" placeholder="Ex.: Serra">
+      </label>
+      <label>
+        Bairro
+        <input type="text" formControlName="neighborhood" placeholder="Todos os bairros">
+      </label>
+      <label>
+        Atividade
+        <select formControlName="activity">
+          <option value="">Todas as atividades</option>
+          <option *ngFor="let activity of activities" [value]="activity">{{ activity }}</option>
+        </select>
+      </label>
+      <label>
+        Data do serviço
+        <input type="date" formControlName="date">
+      </label>
+      <label>
+        Orçamento mínimo
+        <input type="number" min="0" step="25" formControlName="minBudget" placeholder="R$ 0">
+      </label>
+      <button type="button" class="clear" (click)="clearFilters()">Limpar filtros</button>
+    </form>
+  </aside>
+
+  <section class="results">
+    <div class="results-heading">
+      <div>
+        <span>Pedidos disponíveis</span>
+        <h2>{{ filteredRequests.length }} oportunidades encontradas</h2>
+      </div>
+      <button type="button" (click)="loadOpportunities()">
+        <span class="icon">refresh</span>
+        Atualizar
+      </button>
+    </div>
+
+    <div class="loading" *ngIf="isLoading">
+      <span class="spinner-border"></span>
+      Buscando oportunidades compatíveis...
+    </div>
+
+    <div class="opportunity-list" *ngIf="!isLoading && filteredRequests.length">
+      <article *ngFor="let request of filteredRequests" class="opportunity-card">
+        <div class="card-top">
+          <span class="category">{{ request.category.name }}</span>
+          <span class="distance">
+            <span class="icon">near_me</span>
+            {{ request.approxDistanceKm || 0 | number:'1.0-1' }} km aprox.
+          </span>
+        </div>
+
+        <h3>{{ request.description }}</h3>
+
+        <div class="request-data">
+          <div>
+            <span class="icon">location_on</span>
+            <span><small>Região</small><strong>{{ request.neighborhood }}, {{ request.city }}</strong></span>
+          </div>
+          <div>
+            <span class="icon">calendar_month</span>
+            <span><small>Data e período</small><strong>{{ request.scheduledDate | date:'dd/MM/yyyy' }} · {{ request.timeSlot }}</strong></span>
+          </div>
+          <div>
+            <span class="icon">schedule</span>
+            <span><small>Duração sugerida</small><strong>{{ suggestedHours(request) }} horas</strong></span>
+          </div>
+          <div>
+            <span class="icon">payments</span>
+            <span><small>Orçamento do cliente</small><strong>{{ request.budgetLimit ? (request.budgetLimit | currency:'BRL') : 'A combinar' }}</strong></span>
+          </div>
+        </div>
+
+        <div class="activities">
+          <span *ngFor="let item of request.activities">{{ item.activity.name }}</span>
+        </div>
+
+        <div class="privacy">
+          <span class="icon">lock</span>
+          Endereço completo protegido até a proposta ser aceita.
+        </div>
+
+        <button class="quote-button" type="button" (click)="openQuote(request)">
+          <span class="icon">send</span>
+          Enviar proposta
+        </button>
+      </article>
+    </div>
+
+    <app-empty-state
+      *ngIf="!isLoading && !filteredRequests.length"
+      icon="work_off"
+      message="Nenhuma oportunidade corresponde aos filtros neste momento."
+    ></app-empty-state>
+  </section>
+</main>
+
+<p-dialog
+  [(visible)]="quoteDialogVisible"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '520px', maxWidth: 'calc(100vw - 32px)' }"
+  styleClass="quote-dialog"
+>
+  <ng-template pTemplate="header">
+    <div class="quote-heading">
+      <span class="icon">request_quote</span>
+      <div>
+        <strong>Enviar proposta</strong>
+        <small>{{ selectedRequest?.neighborhood }}, {{ selectedRequest?.city }}</small>
+      </div>
+    </div>
+  </ng-template>
+
+  <form [formGroup]="quoteForm" (ngSubmit)="submitQuote()">
+    <div class="quote-grid">
+      <label>
+        Valor total (R$)
+        <input type="number" min="25" step="5" formControlName="price">
+      </label>
+      <label>
+        Duração estimada
+        <select formControlName="duration">
+          <option value="2 horas">2 horas</option>
+          <option value="3 horas">3 horas</option>
+          <option value="4 horas">4 horas</option>
+          <option value="5 horas">5 horas</option>
+          <option value="6 horas">6 horas</option>
+          <option value="8 horas">8 horas</option>
+        </select>
+      </label>
+    </div>
+
+    <small class="price-help">O valor mínimo permitido é R$ 25. Confira as atividades antes de enviar.</small>
+
+    <label>
+      Mensagem ao cliente
+      <textarea rows="4" formControlName="message" maxlength="500"></textarea>
+    </label>
+
+    <div class="dialog-actions">
+      <button type="button" class="cancel" (click)="quoteDialogVisible = false">Cancelar</button>
+      <button type="submit" class="submit" [disabled]="quoteForm.invalid || isSending">
+        {{ isSending ? 'Enviando...' : 'Enviar proposta' }}
+      </button>
+    </div>
+  </form>
+</p-dialog>

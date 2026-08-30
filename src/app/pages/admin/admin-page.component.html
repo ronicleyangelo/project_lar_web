@@ -1,56 +1,60 @@
-<div class="container py-5">
-  <div class="dashboard-heading mb-4">
-    <span class="page-eyebrow">Visão geral</span>
-    <h2>Dashboard Administrativo</h2>
-    <p>Acompanhe os principais indicadores e valide profissionais da plataforma.</p>
-  </div>
-  
-  <div class="row g-3 mb-5">
-    <div class="col-6 col-md-3">
-      <div class="metric-card">
-        <div class="metric-title">Total Usuários</div>
-        <div class="metric-value">{{ adminMetrics.totalUsers || 0 }}</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="metric-card">
-        <div class="metric-title">Profissionais</div>
-        <div class="metric-value">{{ adminMetrics.totalProviders || 0 }}</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="metric-card">
-        <div class="metric-title">Pedidos Abertos</div>
-        <div class="metric-value">{{ adminMetrics.openRequests || 0 }}</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="metric-card">
-        <div class="metric-title">Agendamentos</div>
-        <div class="metric-value">{{ adminMetrics.completedAppointments || 0 }}</div>
-      </div>
-    </div>
-  </div>
+<div class="admin-page container py-5">
+  <section class="dashboard-heading">
+    <div><span class="page-eyebrow">Central de operação</span><h2>Visão geral da plataforma</h2><p>Acompanhe usuários, pedidos, serviços e a análise dos profissionais.</p></div>
+    <div class="admin-badge"><span class="icon">shield_person</span><span><strong>Área restrita</strong><small>Acesso administrativo</small></span></div>
+  </section>
 
-  <h4 class="mb-3">Verificação de Profissionais</h4>
-  <p-table [value]="adminProviders" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+  <section class="metrics-grid" aria-label="Indicadores da plataforma">
+    <article class="metric-card" *ngFor="let card of metricCards" [attr.data-tone]="card.tone">
+      <span class="metric-icon icon">{{ card.icon }}</span>
+      <div class="metric-title">{{ card.label }}</div>
+      <div class="metric-value">{{ card.value }}</div>
+      <div class="metric-detail">{{ card.detail }}</div>
+    </article>
+  </section>
+
+  <section class="review-section">
+    <div class="section-heading">
+      <div><span class="page-eyebrow">Segurança e qualidade</span><h3>Verificação de profissionais</h3><p>Analise os dados cadastrados antes de liberar o perfil na busca.</p></div>
+      <span class="pending-count"><strong>{{ adminMetrics.pendingReviews }}</strong> pendentes</span>
+    </div>
+
+    <div class="loading-admin" *ngIf="isLoading"><span class="spinner-border"></span> Carregando profissionais...</div>
+    <p-table *ngIf="!isLoading" [value]="adminProviders" [paginator]="adminProviders.length > 8" [rows]="8" responsiveLayout="scroll" styleClass="providers-table">
+      <ng-template pTemplate="header"><tr><th>Profissional</th><th>Contato</th><th>Atendimento</th><th>Atividades</th><th>Status</th><th>Ações</th></tr></ng-template>
+      <ng-template pTemplate="body" let-provider>
+        <tr>
+          <td><a class="provider-cell provider-link" [routerLink]="['/admin/providers', provider.id]"><span class="provider-avatar"><img *ngIf="provider.photoUrl; else initials" [src]="provider.photoUrl" alt=""><ng-template #initials>{{ providerInitials(provider) }}</ng-template></span><div><strong>{{ provider.fullName }}</strong><small>Ver perfil completo</small></div></a></td>
+          <td><div class="stacked-cell"><span>{{ provider.user.email }}</span><small>{{ provider.user.phone }}</small></div></td>
+          <td><div class="stacked-cell"><span>{{ providerLocation(provider) }}</span><small>{{ provider.services.length }} serviço cadastrado</small></div></td>
+          <td><span class="activity-count">{{ provider.activities.length }}</span></td>
+          <td><span class="status-chip" [ngClass]="verificationStatusViews[provider.verificationStatus].badgeClass">{{ verificationStatusViews[provider.verificationStatus].label }}</span></td>
+          <td>
+            <div class="review-actions" *ngIf="verificationStatusViews[provider.verificationStatus].canReview; else noAction">
+              <button class="action approve" title="Aprovar profissional" [disabled]="isSubmittingReview" (click)="reviewProvider(provider, 'VERIFIED')"><span class="icon">check</span>Aprovar</button>
+              <button class="action correction" title="Solicitar correção" [disabled]="isSubmittingReview" (click)="openReviewDialog(provider, 'CHANGES_REQUESTED')"><span class="icon">edit_note</span>Correção</button>
+              <button class="action reject" title="Reprovar profissional" [disabled]="isSubmittingReview" (click)="openReviewDialog(provider, 'REJECTED')"><span class="icon">close</span>Reprovar</button>
+            </div>
+            <ng-template #noAction><span class="no-action">Nenhuma ação pendente</span></ng-template>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage"><tr><td colspan="6"><div class="empty-admin"><span class="icon">person_search</span>Nenhum profissional cadastrado.</div></td></tr></ng-template>
+    </p-table>
+  </section>
+
+  <p-dialog [(visible)]="reviewDialogVisible" [modal]="true" [draggable]="false" [resizable]="false" [closable]="!isSubmittingReview" [style]="{width: '520px', maxWidth: 'calc(100vw - 32px)'}" styleClass="review-dialog" (onHide)="closeReviewDialog()">
     <ng-template pTemplate="header">
-      <tr>
-        <th>Nome</th>
-        <th>Contato</th>
-        <th>Serviços</th>
-        <th>Verificado (Selo)</th>
-      </tr>
+      <div class="dialog-heading"><span class="dialog-icon icon">{{ reviewStatus === 'CHANGES_REQUESTED' ? 'edit_note' : 'person_off' }}</span><div><strong>{{ reviewDialogTitle }}</strong><small>{{ selectedProvider?.fullName }}</small></div></div>
     </ng-template>
-    <ng-template pTemplate="body" let-provider>
-      <tr>
-        <td>{{ provider.fullName }}</td>
-        <td>{{ provider.user?.email || '—' }}</td>
-        <td>{{ provider.services?.length || 0 }} cadastrados</td>
-        <td>
-          <p-inputSwitch [(ngModel)]="provider.isVerified" (onChange)="toggleVerifyProvider(provider)"></p-inputSwitch>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+    <p class="dialog-description">{{ reviewDialogDescription }}</p>
+    <div class="correction-options" *ngIf="reviewStatus === 'CHANGES_REQUESTED'">
+      <span class="field-caption">O que precisa ser corrigido?</span>
+      <div class="option-grid"><button type="button" *ngFor="let option of correctionOptions" [class.selected]="isCorrectionSelected(option.id)" [attr.aria-pressed]="isCorrectionSelected(option.id)" (click)="toggleCorrection(option.id)"><span class="icon">{{ option.icon }}</span><span>{{ option.label }}</span><span class="selection-icon icon">{{ isCorrectionSelected(option.id) ? 'check_circle' : 'radio_button_unchecked' }}</span></button></div>
+      <small class="selection-error" *ngIf="reviewNote.touched && selectedCorrectionIds.size === 0">Selecione pelo menos um item.</small>
+    </div>
+    <div class="dialog-field"><label for="review-note">{{ reviewStatus === 'CHANGES_REQUESTED' ? 'Orientação adicional (opcional)' : 'Motivo da reprovação' }}</label><textarea id="review-note" [rows]="reviewStatus === 'CHANGES_REQUESTED' ? 3 : 5" maxlength="500" [formControl]="reviewNote" [placeholder]="reviewStatus === 'CHANGES_REQUESTED' ? 'Ex.: informe uma cidade válida e ajuste o raio para sua região.' : 'Descreva objetivamente o motivo da reprovação...'"></textarea></div>
+    <div class="note-meta"><small *ngIf="reviewNote.touched && reviewNote.hasError('required')">A mensagem é obrigatória.</small><small *ngIf="reviewNote.touched && reviewNote.hasError('minlength')">Escreva pelo menos 10 caracteres.</small><span>{{ reviewNote.value.length }}/500</span></div>
+    <div class="dialog-actions"><button type="button" class="dialog-cancel" [disabled]="isSubmittingReview" (click)="closeReviewDialog()">Cancelar</button><button type="button" class="dialog-submit" [class.danger]="reviewStatus === 'REJECTED'" [disabled]="!canSubmitReview || isSubmittingReview" (click)="submitReviewNote()">{{ isSubmittingReview ? 'Salvando...' : (reviewStatus === 'CHANGES_REQUESTED' ? 'Enviar solicitação' : 'Confirmar reprovação') }}</button></div>
+  </p-dialog>
 </div>

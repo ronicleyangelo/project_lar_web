@@ -39,6 +39,8 @@ export class CompleteGoogleRegistrationComponent implements OnInit {
   get role(): 'CLIENT' | 'PROVIDER' {
     return this.form.controls.role.value;
   }
+  get isClientRegistration(): boolean { return this.role === 'CLIENT'; }
+  get isProviderRegistration(): boolean { return this.role === 'PROVIDER'; }
 
   constructor(
     private authService: AuthService,
@@ -72,8 +74,9 @@ export class CompleteGoogleRegistrationComponent implements OnInit {
     const formatted = digits.length > 7
       ? `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
       : digits.length > 2 ? `(${digits.slice(0, 2)}) ${digits.slice(2)}` : digits;
-    this.form.controls.phone.setValue(digits);
+    this.form.controls.phone.setValue(digits, { emitEvent: true });
     this.form.controls.phone.markAsTouched();
+    this.form.controls.phone.updateValueAndValidity();
     input.value = formatted;
   }
 

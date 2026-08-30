@@ -2,7 +2,9 @@ export interface User {
   id: string;
   email: string;
   phone: string;
+  avatarUrl?: string | null;
   role: 'CLIENT' | 'PROVIDER' | 'ADMIN';
+  status?: 'ACTIVE' | 'SUSPENDED' | 'PENDING' | 'DELETION_PENDING';
   profile?: ClientProfile | ProviderProfile;
 }
 

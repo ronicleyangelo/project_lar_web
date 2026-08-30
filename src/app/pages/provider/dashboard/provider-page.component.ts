@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { RequestService } from '../../core/services/request.service';
-import { QuoteService } from '../../core/services/quote.service';
-import { AppointmentService } from '../../core/services/appointment.service';
-import { ServiceRequest, SendQuotePayload } from '../../core/models/service-request.model';
-import { Appointment } from '../../core/models/appointment.model';
+import { RequestService } from '../../../core/services/request.service';
+import { QuoteService } from '../../../core/services/quote.service';
+import { AppointmentService } from '../../../core/services/appointment.service';
+import { ServiceRequest, SendQuotePayload } from '../../../core/models/service-request.model';
+import { Appointment } from '../../../core/models/appointment.model';
+import { APPOINTMENT_STATUS_VIEWS } from '../../../core/presentation/lifecycle-view';
 
 @Component({
   selector: 'app-provider-page',
@@ -14,6 +15,7 @@ import { Appointment } from '../../core/models/appointment.model';
   styleUrls: ['./provider-page.component.css']
 })
 export class ProviderPageComponent implements OnInit {
+  readonly appointmentStatusViews = APPOINTMENT_STATUS_VIEWS;
   openProviderRequests: ServiceRequest[] = [];
   appointments: Appointment[] = [];
   quoteRequestId = '';

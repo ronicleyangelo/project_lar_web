@@ -23,7 +23,8 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         const isGoogleOnboarding = req.url.includes('/auth/google/complete');
-        if (error.status === 401 && !isGoogleOnboarding) {
+        const isAccountSecurityAction = req.url.includes('/account/password') || req.url.includes('/account/deletion');
+        if (error.status === 401 && !isGoogleOnboarding && !isAccountSecurityAction) {
           this.authService.logout();
           this.router.navigate(['/auth/login']);
         }

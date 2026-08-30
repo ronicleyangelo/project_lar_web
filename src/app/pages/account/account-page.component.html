@@ -1,0 +1,80 @@
+<div class="account-page container py-5">
+  <div class="page-heading">
+    <div><span class="eyebrow">Configurações</span><h1>Minha conta</h1><p>Gerencie acesso, privacidade e seus dados.</p></div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state"><span class="spinner-border"></span> Carregando sua conta...</div>
+
+  <div *ngIf="!isLoading && account" class="settings-stack">
+    <section *ngIf="isDeletionPending" class="deletion-notice">
+      <div><strong>Exclusão da conta agendada</strong><p>Sua conta será excluída em {{ account.scheduledDeletionAt | date:'dd/MM/yyyy' }}. Até lá, você pode cancelar a solicitação.</p></div>
+      <button type="button" class="btn btn-outline-danger" (click)="cancelAccountDeletion()" [disabled]="isDeleting">{{ isDeleting ? 'Cancelando...' : 'Cancelar exclusão' }}</button>
+    </section>
+    <section class="settings-card">
+      <div class="section-icon"><span class="icon">alternate_email</span></div>
+      <div class="section-content">
+        <h2>E-mail e acesso</h2>
+        <p>Identidade usada para acessar sua conta.</p>
+        <div class="identity-row">
+          <div><span class="label">E-mail</span><strong>{{ account.email }}</strong></div>
+          <span class="status-badge" [class.success]="account.emailVerified">{{ emailStatusLabel }}</span>
+        </div>
+        <div class="connection-row">
+          <span class="google-mark">G</span>
+          <div><strong>Login com Google</strong><small>{{ googleConnectionLabel }}</small></div>
+          <span class="connection-status" [class.connected]="account.googleLinked">{{ googleStatusLabel }}</span>
+        </div>
+        <small class="hint">Para proteger o vínculo com o Google, a alteração de e-mail requer um fluxo de verificação que será disponibilizado futuramente.</small>
+      </div>
+    </section>
+
+    <section class="settings-card">
+      <div class="section-icon"><span class="icon">lock</span></div>
+      <div class="section-content">
+        <h2>{{ passwordTitle }}</h2>
+        <p>{{ passwordDescription }}</p>
+        <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" class="form-grid">
+          <div class="field" *ngIf="account.hasPassword"><label>Senha atual</label><input type="password" class="form-control" formControlName="currentPassword" autocomplete="current-password"></div>
+          <div class="field"><label>Nova senha</label><input type="password" class="form-control" formControlName="newPassword" autocomplete="new-password"><small>Mínimo de 8 caracteres.</small></div>
+          <div class="field"><label>Confirmar nova senha</label><input type="password" class="form-control" formControlName="confirmPassword" autocomplete="new-password"></div>
+          <button type="submit" class="btn btn-primary" [disabled]="isSavingPassword || passwordForm.invalid">{{ passwordButtonLabel }}</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="settings-card">
+      <div class="section-icon"><span class="icon">privacy_tip</span></div>
+      <div class="section-content">
+        <h2>Privacidade</h2><p>Escolha como seus dados são utilizados no Projeto Lar.</p>
+        <form [formGroup]="privacyForm" (ngSubmit)="savePrivacy()">
+          <label class="switch-row"><span><strong>Perfil visível</strong><small>Permitir que clientes encontrem seu perfil profissional.</small></span><input type="checkbox" formControlName="profileVisible"></label>
+          <label class="switch-row"><span><strong>Recomendações personalizadas</strong><small>Usar localização e preferências para recomendar oportunidades.</small></span><input type="checkbox" formControlName="allowRecommendations"></label>
+          <button type="submit" class="btn btn-primary" [disabled]="privacyForm.pristine || isSavingPrivacy">{{ isSavingPrivacy ? 'Salvando...' : 'Salvar privacidade' }}</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="settings-card danger-card">
+      <div class="section-icon"><span class="icon">delete_forever</span></div>
+      <div class="section-content">
+        <h2>Excluir conta</h2><p>Solicite a exclusão com 30 dias para mudar de ideia. Serviços ou disputas em andamento precisam ser resolvidos primeiro.</p>
+        <button *ngIf="canRequestDeletion" type="button" class="danger-link" (click)="deletionDialogVisible = true">Solicitar exclusão da conta</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<p-dialog header="Solicitar exclusão da conta" [(visible)]="deletionDialogVisible" [modal]="true" [draggable]="false" [resizable]="false" [style]="{width: '520px', maxWidth: 'calc(100vw - 32px)'}">
+  <div class="dialog-warning">
+    <span class="icon">warning</span>
+    <div><strong>Você terá 30 dias para cancelar</strong><p>Seu perfil ficará indisponível imediatamente. Depois desse prazo, os dados elegíveis serão removidos ou anonimizados conforme as obrigações legais.</p></div>
+  </div>
+  <form [formGroup]="deleteForm" (ngSubmit)="requestAccountDeletion()" class="dialog-form">
+    <div class="field"><label>Digite EXCLUIR MINHA CONTA</label><input class="form-control" formControlName="confirmation" autocomplete="off"></div>
+    <div class="field" *ngIf="account?.hasPassword"><label>Senha atual</label><input type="password" class="form-control" formControlName="currentPassword" autocomplete="current-password"></div>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-light" (click)="deletionDialogVisible = false">Voltar</button>
+      <button type="submit" class="danger-button" [disabled]="isDeleting">{{ isDeleting ? 'Agendando...' : 'Agendar exclusão' }}</button>
+    </div>
+  </form>
+</p-dialog>

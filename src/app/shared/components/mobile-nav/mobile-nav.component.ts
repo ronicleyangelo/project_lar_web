@@ -8,4 +8,7 @@ import { User } from '../../../core/models/user.model';
 })
 export class MobileNavComponent {
   @Input() currentUser: User | null = null;
+  get isClient(): boolean { return this.currentUser?.role === 'CLIENT'; }
+  get isProvider(): boolean { return this.currentUser?.role === 'PROVIDER'; }
+  get isAdmin(): boolean { return this.currentUser?.role === 'ADMIN'; }
 }

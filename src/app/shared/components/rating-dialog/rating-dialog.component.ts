@@ -27,7 +27,7 @@ export class RatingDialogComponent {
   }
 
   onSubmit() {
-    if (this.submitting || !this.isFormValid()) return;
+    if (this.submitting || !this.isFormValid) return;
     this.submitReview.emit({
       appointmentId: this.appointmentId,
       qualityRating: this.quality,
@@ -39,7 +39,7 @@ export class RatingDialogComponent {
     });
   }
 
-  isFormValid(): boolean {
+  get isFormValid(): boolean {
     return this.quality > 0 && this.punctuality > 0 && 
            this.communication > 0 && this.care > 0 && 
            this.costBenefit > 0;

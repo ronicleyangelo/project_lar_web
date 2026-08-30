@@ -35,7 +35,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0">Agendamento</h5>
-            <span class="badge" [ngClass]="app.status === 'COMPLETED' ? 'bg-success text-white' : 'bg-info text-white'">{{ app.status }}</span>
+            <span class="badge" [ngClass]="appointmentStatusViews[app.status].badgeClass">{{ appointmentStatusViews[app.status].label || app.status }}</span>
           </div>
           <p class="text-muted small mb-2">ID: {{ app.id | slice:0:8 }}...</p>
           
@@ -45,10 +45,10 @@
           </div>
 
           <div class="d-flex gap-2">
-            <button class="btn btn-outline-primary btn-sm w-100 mb-2" *ngIf="app.status === 'SCHEDULED'" [disabled]="isAppointmentActionRunning(app.id)" (click)="startAppointment(app.id)">
+            <button class="btn btn-outline-primary btn-sm w-100 mb-2" *ngIf="appointmentStatusViews[app.status]?.canStart" [disabled]="isAppointmentActionRunning(app.id)" (click)="startAppointment(app.id)">
               <span class="icon" style="font-size: 16px;">play_arrow</span> Iniciar servico
             </button>
-            <button class="btn btn-primary btn-sm w-100" *ngIf="app.status === 'SCHEDULED' || app.status === 'IN_PROGRESS'" [disabled]="isAppointmentActionRunning(app.id)" (click)="completeAppointment(app.id)">
+            <button class="btn btn-primary btn-sm w-100" *ngIf="appointmentStatusViews[app.status]?.canComplete" [disabled]="isAppointmentActionRunning(app.id)" (click)="completeAppointment(app.id)">
               <span class="icon" style="font-size: 16px;">task_alt</span> Informar execucao
             </button>
           </div>

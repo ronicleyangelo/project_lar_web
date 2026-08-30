@@ -4,6 +4,7 @@ export interface Recommendation {
   provider: ProviderProfile;
   totalScore: number;
   isNewProvider: boolean;
+  distanceKm: number | null;
   breakdown: ScoreBreakdown;
 }
 
@@ -23,4 +24,8 @@ export interface SearchParams {
   neighborhood: string;
   minBudget?: number;
   maxBudget?: number;
+  propertyType?: string;
+  hasPets?: boolean;
+  minRating?: number;
+  activityIds?: string[];
 }

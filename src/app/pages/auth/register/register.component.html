@@ -61,7 +61,7 @@
         <div class="invalid-feedback">Informe a cidade.</div>
       </div>
 
-      <ng-container *ngIf="registerRole === 'CLIENT'">
+      <ng-container *ngIf="isClientRegistration">
         <div class="mb-3">
           <label class="form-label">Endereço Completo (Protegido)</label>
           <input type="text" class="form-control" formControlName="fullAddress" [class.is-invalid]="form.controls.fullAddress.touched && form.controls.fullAddress.invalid">
@@ -69,7 +69,7 @@
         </div>
       </ng-container>
 
-      <ng-container *ngIf="registerRole === 'PROVIDER'">
+      <ng-container *ngIf="isProviderRegistration">
         <div class="mb-3">
           <label class="form-label">Bio / Qualificações</label>
           <textarea class="form-control" rows="2" formControlName="bio"></textarea>
@@ -90,7 +90,7 @@
         </div>
       </ng-container>
 
-      <button type="submit" class="btn btn-primary w-100 auth-btn mt-3" [disabled]="isLoading || form.invalid">
+      <button type="submit" class="btn btn-primary w-100 auth-btn mt-3" [disabled]="isLoading">
         <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
         {{ isLoading ? 'Cadastrando...' : 'Cadastrar' }}
       </button>

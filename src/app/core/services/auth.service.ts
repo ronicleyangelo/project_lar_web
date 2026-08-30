@@ -69,7 +69,9 @@ export class AuthService {
         id: user.id,
         email: user.email,
         phone: user.phone,
+        avatarUrl: user.avatarUrl,
         role: user.role,
+        status: user.status,
         profile: user.role === 'CLIENT' ? user.clientProfile : user.providerProfile
       } as User)),
       tap(user => {
@@ -86,6 +88,8 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('lar_token');
     localStorage.removeItem('lar_user');
+    sessionStorage.removeItem('lar_google_onboarding');
+    sessionStorage.removeItem('lar_google_onboarding_draft');
     this.currentUserSubject.next(null);
   }
 

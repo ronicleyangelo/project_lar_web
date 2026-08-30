@@ -1,0 +1,98 @@
+<div class="profile-page container py-5">
+  <div class="profile-heading">
+    <div>
+      <span class="eyebrow">Perfil profissional</span>
+      <h1>Suas informações</h1>
+      <p>Mantenha seus dados atualizados para receber pedidos compatíveis.</p>
+    </div>
+    <a routerLink="/provider" class="btn btn-outline"><span class="icon">arrow_back</span> Voltar ao painel</a>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <span class="spinner-border"></span> Carregando perfil...
+  </div>
+
+  <form *ngIf="!isLoading" [formGroup]="form" (ngSubmit)="save()" class="profile-layout" novalidate>
+    <aside class="profile-summary card">
+      <div class="avatar-wrap">
+        <img *ngIf="form.controls.photoUrl.value; else avatarFallback" [src]="form.controls.photoUrl.value" alt="Foto do profissional">
+        <ng-template #avatarFallback><span class="icon">person</span></ng-template>
+      </div>
+      <h2>{{ form.controls.fullName.value || 'Profissional' }}</h2>
+      <p>{{ profile?.email }}</p>
+      <span class="verification" [class.verified]="verificationView.verified">
+        <span class="icon">{{ verificationView.icon }}</span>
+        {{ verificationView.label }}
+      </span>
+      <p class="verification-help">{{ verificationView.help }}</p>
+      <p class="verification-help review-note" *ngIf="profile?.verificationNote"><strong>Mensagem da equipe:</strong> {{ profile?.verificationNote }}</p>
+      <button *ngIf="verificationView.canSubmit" type="button" class="btn btn-outline submit-review" [disabled]="isSubmittingReview" (click)="submitForReview()">{{ isSubmittingReview ? 'Enviando...' : 'Enviar para análise' }}</button>
+      <div class="stats">
+        <div><strong>{{ profile?.trustScore || 0 | number:'1.1-1' }}</strong><span>Nota</span></div>
+        <div><strong>{{ profile?.reviewCount || 0 }}</strong><span>Avaliações</span></div>
+      </div>
+    </aside>
+
+    <section class="profile-form card">
+      <h2>Dados pessoais</h2>
+      <div class="form-grid two-columns">
+        <div class="field">
+          <label for="profileName">Nome completo</label>
+          <input id="profileName" class="form-control" formControlName="fullName" [class.is-invalid]="form.controls.fullName.touched && form.controls.fullName.invalid">
+          <div class="invalid-feedback">Informe seu nome completo.</div>
+        </div>
+        <div class="field">
+          <label for="profilePhone">Telefone / WhatsApp</label>
+          <input id="profilePhone" class="form-control" formControlName="phone" (input)="onPhoneInput($event)" maxlength="15" autocomplete="tel-national">
+          <div class="validation" *ngIf="form.controls.phone.touched && form.controls.phone.invalid">Informe um celular válido com DDD.</div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="profilePhoto">URL da foto</label>
+        <input id="profilePhoto" class="form-control" formControlName="photoUrl" placeholder="https://...">
+      </div>
+      <div class="field">
+        <label for="profileBio">Bio / qualificações</label>
+        <textarea id="profileBio" class="form-control" rows="4" formControlName="bio" placeholder="Conte sua experiência com faxinas residenciais."></textarea>
+      </div>
+
+      <h2>Atendimento</h2>
+      <div class="form-grid location-grid">
+        <div class="field"><label>Bairro</label><input class="form-control" formControlName="neighborhood"></div>
+        <div class="field"><label>Cidade</label><input class="form-control" formControlName="city"></div>
+        <div class="field"><label>Raio (km)</label><input type="number" min="1" max="100" class="form-control" formControlName="serviceRadiusKm"></div>
+        <div class="field"><label>Valor por hora (R$)</label><input type="number" min="25" class="form-control" formControlName="basePrice"><small>Valor mínimo atual: R$ 25 por hora.</small></div>
+      </div>
+
+      <label class="section-label">Onde você realiza faxinas?</label>
+      <div class="property-grid">
+        <label *ngFor="let option of propertyTypeOptions" class="check-option">
+          <input type="checkbox" [checked]="form.controls.propertyTypes.value.includes(option.value)" (change)="togglePropertyType(option.value, $any($event.target).checked)">
+          {{ option.label }}
+        </label>
+      </div>
+      <div class="validation" *ngIf="form.controls.propertyTypes.touched && form.controls.propertyTypes.invalid">Selecione ao menos um tipo de imóvel.</div>
+
+      <label class="pet-option"><input type="checkbox" formControlName="acceptsPets"> Aceito trabalhar em residências com pets</label>
+
+      <h2>Atividades que você realiza</h2>
+      <p class="activities-help">Marque somente o que você realmente oferece. Os clientes verão essa informação antes de contratar.</p>
+      <div class="activity-grid">
+        <label *ngFor="let activity of activities" class="activity-option" [class.selected]="form.controls.activityIds.value.includes(activity.id)">
+          <input type="checkbox" [checked]="form.controls.activityIds.value.includes(activity.id)" (change)="toggleActivity(activity.id, $any($event.target).checked)">
+          <span><strong>{{ activity.name }}</strong><small>{{ activity.description }}</small></span>
+        </label>
+      </div>
+      <div class="validation" *ngIf="form.controls.activityIds.touched && form.controls.activityIds.invalid">Selecione ao menos uma atividade.</div>
+
+      <div class="form-actions">
+        <div class="save-copy"><strong>{{ form.dirty ? 'Você possui alterações não salvas' : 'Suas informações estão atualizadas' }}</strong><small>Clique em salvar para validar e registrar os dados.</small></div>
+        <button type="submit" class="btn btn-primary" [disabled]="isSaving">
+          <span *ngIf="isSaving" class="spinner-border spinner-border-sm"></span>
+          <span class="icon" *ngIf="!isSaving">save</span>
+          {{ isSaving ? 'Salvando...' : 'Salvar alterações' }}
+        </button>
+      </div>
+    </section>
+  </form>
+</div>

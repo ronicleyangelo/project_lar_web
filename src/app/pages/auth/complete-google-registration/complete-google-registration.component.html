@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      <div class="form-row" [class.provider-location-row]="role === 'PROVIDER'">
+      <div class="form-row" [class.provider-location-row]="isProviderRegistration">
         <div class="form-field">
           <label class="form-label">Bairro</label>
           <input class="form-control" formControlName="neighborhood" autocomplete="address-level3" [class.is-invalid]="form.controls.neighborhood.touched && form.controls.neighborhood.invalid">
@@ -45,20 +45,20 @@
           <input class="form-control" formControlName="city" autocomplete="address-level2" [class.is-invalid]="form.controls.city.touched && form.controls.city.invalid">
           <div class="invalid-feedback">Informe a cidade.</div>
         </div>
-        <div class="form-field" *ngIf="role === 'PROVIDER'">
+        <div class="form-field" *ngIf="isProviderRegistration">
           <label class="form-label">Raio (km)</label>
           <input type="number" class="form-control" min="1" max="100" formControlName="serviceRadiusKm" [class.is-invalid]="form.controls.serviceRadiusKm.touched && form.controls.serviceRadiusKm.invalid">
           <div class="invalid-feedback">Use um valor entre 1 e 100 km.</div>
         </div>
       </div>
 
-      <ng-container *ngIf="role === 'CLIENT'">
+      <ng-container *ngIf="isClientRegistration">
         <label class="form-label">Endereço completo (protegido)</label>
         <input class="form-control mb-3" formControlName="fullAddress" autocomplete="street-address" [class.is-invalid]="form.controls.fullAddress.touched && form.controls.fullAddress.invalid">
         <div class="invalid-feedback mb-3">Informe o endereço completo.</div>
       </ng-container>
 
-      <ng-container *ngIf="role === 'PROVIDER'">
+      <ng-container *ngIf="isProviderRegistration">
         <label class="form-label">Bio / qualificações</label>
         <textarea class="form-control mb-3" rows="2" formControlName="bio"></textarea>
 
@@ -78,7 +78,7 @@
         </label>
       </ng-container>
 
-      <button type="submit" class="btn btn-primary w-100 auth-btn" [disabled]="isLoading || form.invalid">
+      <button type="submit" class="btn btn-primary w-100 auth-btn" [disabled]="isLoading">
         <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
         {{ isLoading ? 'Finalizando...' : 'Concluir cadastro' }}
       </button>
