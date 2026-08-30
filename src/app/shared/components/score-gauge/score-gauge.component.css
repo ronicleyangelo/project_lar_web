@@ -1,0 +1,10 @@
+.gauge-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-chart {
+  width: 100%;
+  height: 100%;
+}

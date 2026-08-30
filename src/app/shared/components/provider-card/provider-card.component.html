@@ -1,40 +1,97 @@
 <div class="provider-card" [class.verified-border]="recommendation.provider.isVerified">
   <div class="card-body-inner">
+    
+    <!-- HEADER DO PROFISSIONAL -->
     <div class="provider-header">
       <img [src]="recommendation.provider.photoUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'" class="provider-avatar" alt="Avatar" />
-      <div>
-        <h4>{{ recommendation.provider.fullName }}</h4>
-        <div class="provider-tags">
-          <p-tag *ngIf="recommendation.provider.isVerified" severity="success" value="Verificado" icon="pi pi-check-circle"></p-tag>
-          <p-tag *ngIf="recommendation.isNewProvider" severity="warn" value="Novo" icon="pi pi-star"></p-tag>
+      
+      <div class="header-info">
+        <div class="name-row">
+          <h4>{{ recommendation.provider.fullName }}</h4>
+          <button class="btn-favorite" (click)="toggleFavorite($event)" title="Favoritar profissional">
+            <span class="icon">{{ isFavorite ? 'favorite' : 'favorite_border' }}</span>
+          </button>
+        </div>
+        
+        <div class="provider-badges">
+          <span class="badge-verified" *ngIf="recommendation.provider.isVerified">
+            <span class="icon">check_circle</span> Verificado
+          </span>
+          <span class="badge-new" *ngIf="recommendation.isNewProvider">
+            Novo
+          </span>
         </div>
       </div>
-      <div class="trust-score">
-        <p-rating [ngModel]="recommendation.provider.trustScore" [readonly]="true" [stars]="5"></p-rating>
-        <span class="review-count d-block mt-1">({{ recommendation.provider.reviewCount }} avaliações)</span>
+    </div>
+
+    <!-- REPUTAÇÃO -->
+    <div class="reputation-section">
+      <ng-container *ngIf="recommendation.provider.reviewCount > 0; else noReviews">
+        <div class="reputation-stats">
+          <span class="star-rating">⭐ {{ recommendation.provider.trustScore | number:'1.1-1' }}</span>
+          <span class="review-count">({{ recommendation.provider.reviewCount }} avaliações)</span>
+        </div>
+      </ng-container>
+      
+      <ng-template #noReviews>
+        <div class="reputation-new">
+          <span class="sparkle">✨</span> Novo na plataforma<br/>
+          <span class="no-reviews-text">Ainda sem avaliações</span>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- BIO -->
+    <p class="provider-bio" *ngIf="recommendation.provider.bio">{{ recommendation.provider.bio | truncate:100 }}</p>
+
+    <!-- TAGS DE CARACTERÍSTICAS -->
+    <div class="characteristics-tags" *ngIf="displayTags.length > 0">
+      <span class="char-tag" *ngFor="let tag of displayTags">{{ tag }}</span>
+    </div>
+
+    <!-- MATCH / COMPATIBILIDADE -->
+    <div class="match-section">
+      <div class="match-header">
+        <span class="match-title">Compatibilidade com sua faxina</span>
+        <button class="btn-link" (click)="showBreakdown.emit(recommendation)">Por que?</button>
+      </div>
+      
+      <div class="match-info">
+        <span class="match-percentage">{{ recommendation.totalScore }}%</span>
+        <span class="match-text">· {{ matchText }}</span>
+      </div>
+      
+      <div class="progress-bar-container">
+        <!-- A cor da barra pode mudar baseada no score se desejar, mas padrão será success -->
+        <div class="progress-bar-fill" [style.width.%]="recommendation.totalScore"></div>
       </div>
     </div>
 
-    <p class="provider-bio">{{ recommendation.provider.bio | truncate:120 }}</p>
-
-    <div class="ranking-breakdown">
-      <span class="score-pill">
-        <span class="icon" style="font-size: 14px;">trending_up</span>
-        Match: <strong>{{ recommendation.totalScore }}%</strong>
-      </span>
-      <button class="btn-link" (click)="showBreakdown.emit(recommendation)">
-        <span class="icon" style="font-size: 14px;">visibility</span> Ver detalhes
-      </button>
-    </div>
-
+    <!-- LOCALIZAÇÃO, PREÇO E CTA -->
     <div class="card-footer-custom">
-      <span class="radius-info">
-        <span class="icon">location_on</span>
-        {{ recommendation.provider.serviceRadiusKm }} km · {{ searchNeighborhood }}
-      </span>
+      <div class="location-price-group">
+        
+        <div class="radius-info">
+          <span class="icon">location_on</span>
+          <ng-container *ngIf="recommendation.distanceKm !== null; else radiusFallback">
+            A {{ recommendation.distanceKm }} km de {{ searchNeighborhood }}
+          </ng-container>
+          <ng-template #radiusFallback>
+            Atende {{ recommendation.provider.city || searchNeighborhood }}
+          </ng-template>
+        </div>
+        
+        <div class="price-info" *ngIf="recommendation.provider.services?.[0] as service">
+          <span class="price-label">Valor</span>
+          <span class="price-value">R$ {{ service.basePrice }}/h</span>
+        </div>
+        
+      </div>
+
       <button class="btn-request-quote" (click)="requestQuote.emit()">
-        <span class="icon" style="font-size: 16px;">send</span> Solicitar
+        Solicitar faxina
       </button>
     </div>
+
   </div>
 </div>
