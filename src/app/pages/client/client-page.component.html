@@ -17,12 +17,13 @@
           <div class="d-flex justify-content-between align-items-start mb-2">
             <div class="d-flex gap-2 align-items-center">
               <span class="badge bg-info text-white">{{ req.category.name || req.categoryId }}</span>
-              <span class="badge" [ngClass]="req.status === 'OPEN' ? 'bg-warning text-dark' : 'bg-success text-white'">{{ req.status }}</span>
+              <span class="badge" [ngClass]="requestStatusViews[req.status].badgeClass">{{ requestStatusViews[req.status].label || req.status }}</span>
             </div>
-            <span class="text-muted small">{{ req.scheduledDate }} &middot; {{ req.timeSlot }}</span>
+            <span class="text-muted small">{{ req.scheduledDate | date:'dd/MM/yyyy' }} &middot; {{ req.timeSlot }}</span>
           </div>
 
           <h5>{{ req.description }}</h5>
+          <div class="d-flex flex-wrap gap-1 mb-3" *ngIf="req.activities?.length"><span class="badge bg-light text-dark" *ngFor="let item of req.activities">{{ item.activity.name }}</span></div>
           
           <div class="privacy-notice mb-3">
             <span class="icon">lock</span>
@@ -39,7 +40,7 @@
               </div>
               <div class="text-end">
                 <div class="quote-price mb-1">R$ {{ q.price }}</div>
-                <button class="btn btn-sm btn-primary" *ngIf="req.status === 'OPEN' || req.status === 'QUOTED'" [disabled]="isAcceptingQuote(q.id)" (click)="acceptQuote(q.id)">
+                <button class="btn btn-sm btn-primary" *ngIf="requestStatusViews[req.status]?.canAcceptQuote" [disabled]="isAcceptingQuote(q.id)" (click)="acceptQuote(q.id)">
                   <span class="icon" style="font-size: 16px;">check_circle</span> Aceitar
                 </button>
               </div>
@@ -61,14 +62,14 @@
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0">Agendamento</h5>
-            <span class="badge" [ngClass]="app.status === 'COMPLETED' ? 'bg-success text-white' : 'bg-info text-white'">{{ app.status }}</span>
+            <span class="badge" [ngClass]="appointmentStatusViews[app.status].badgeClass">{{ appointmentStatusViews[app.status].label || app.status }}</span>
           </div>
           <p class="text-muted small mb-3">ID: {{ app.id | slice:0:8 }}...</p>
           <div class="d-flex gap-2">
-            <button class="btn btn-primary btn-sm" *ngIf="app.status === 'AWAITING_CONFIRMATION'" [disabled]="isConfirmingAppointment(app.id)" (click)="confirmCompletion(app.id)">
+            <button class="btn btn-primary btn-sm" *ngIf="appointmentStatusViews[app.status]?.canConfirm" [disabled]="isConfirmingAppointment(app.id)" (click)="confirmCompletion(app.id)">
               <span class="icon" style="font-size: 16px;">task_alt</span> Confirmar conclusao
             </button>
-            <button class="btn btn-gold btn-sm" *ngIf="app.status === 'COMPLETED' && !app.review" (click)="openRating(app.id)">
+            <button class="btn btn-gold btn-sm" *ngIf="appointmentStatusViews[app.status]?.canReview && !app.review" (click)="openRating(app.id)">
               <span class="icon" style="font-size: 16px;">star</span> Avaliar
             </button>
           </div>
@@ -116,6 +117,12 @@
       <div class="col-6">
         <label class="form-label text-muted small fw-bold">BAIRRO</label>
         <input type="text" class="form-control" [(ngModel)]="newReqNeighborhood">
+      </div>
+    </div>
+    <div class="mb-3 mt-3">
+      <label class="form-label text-muted small fw-bold">ATIVIDADES DESEJADAS</label>
+      <div class="row g-2">
+        <label class="col-6" *ngFor="let activity of activities"><span class="d-flex gap-2 align-items-start border rounded p-2 h-100"><input type="checkbox" class="mt-1" [checked]="newReqActivityIds.includes(activity.id)" (change)="toggleRequestActivity(activity.id, $any($event.target).checked)"><span><strong class="d-block small">{{ activity.name }}</strong><small class="text-muted">{{ activity.description }}</small></span></span></label>
       </div>
     </div>
     <div class="mb-3 mt-3">

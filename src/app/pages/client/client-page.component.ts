@@ -8,9 +8,12 @@ import { AppointmentService } from '../../core/services/appointment.service';
 import { ReviewService } from '../../core/services/review.service';
 import { CategoryService } from '../../core/services/category.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ActivityService } from '../../core/services/activity.service';
+import { ServiceActivity } from '../../core/models/service-activity.model';
 import { Category } from '../../core/models/category.model';
 import { ServiceRequest, CreateRequestPayload } from '../../core/models/service-request.model';
 import { Appointment, CreateReviewPayload } from '../../core/models/appointment.model';
+import { APPOINTMENT_STATUS_VIEWS, REQUEST_STATUS_VIEWS } from '../../core/presentation/lifecycle-view';
 
 @Component({
   selector: 'app-client-page',
@@ -18,9 +21,13 @@ import { Appointment, CreateReviewPayload } from '../../core/models/appointment.
   styleUrls: ['./client-page.component.css']
 })
 export class ClientPageComponent implements OnInit {
+  readonly appointmentStatusViews = APPOINTMENT_STATUS_VIEWS;
+  readonly requestStatusViews = REQUEST_STATUS_VIEWS;
   clientRequests: ServiceRequest[] = [];
   appointments: Appointment[] = [];
   categories: Category[] = [];
+  activities: ServiceActivity[] = [];
+  newReqActivityIds: string[] = [];
 
   newReqCategoryId = '';
   newReqDate = '';
@@ -44,6 +51,7 @@ export class ClientPageComponent implements OnInit {
     private appointmentService: AppointmentService,
     private reviewService: ReviewService,
     private categoryService: CategoryService,
+    private activityService: ActivityService,
     public authService: AuthService,
     private modalService: NgbModal,
     private messageService: MessageService
@@ -53,6 +61,10 @@ export class ClientPageComponent implements OnInit {
     this.loadClientRequests();
     this.loadAppointments();
     this.loadCategories();
+    this.activityService.list().subscribe({ next: activities => {
+      this.activities = activities;
+      this.newReqActivityIds = activities.filter(item => item.includedByDefault).map(item => item.id);
+    }, error: error => this.showError(error, 'Não foi possível carregar as atividades.') });
   }
 
   loadClientRequests(): void {
@@ -89,8 +101,8 @@ export class ClientPageComponent implements OnInit {
 
   submitNewRequest(): void {
     if (this.isCreatingRequest) return;
-    if (!this.newReqCategoryId || !this.newReqDescription.trim() || !this.newReqCity.trim() || !this.newReqNeighborhood.trim()) {
-      this.messageService.add({ severity: 'warn', summary: 'Campos obrigatórios', detail: 'Preencha categoria, localização e descrição.' });
+    if (!this.newReqCategoryId || !this.newReqDescription.trim() || !this.newReqCity.trim() || !this.newReqNeighborhood.trim() || !this.newReqActivityIds.length) {
+      this.messageService.add({ severity: 'warn', summary: 'Campos obrigatórios', detail: 'Preencha localização, descrição e selecione ao menos uma atividade.' });
       return;
     }
 
@@ -101,7 +113,8 @@ export class ClientPageComponent implements OnInit {
       scheduledDate: this.newReqDate || new Date().toISOString().split('T')[0],
       timeSlot: this.newReqTimeSlot,
       budgetLimit: this.newReqBudget,
-      description: this.newReqDescription.trim()
+      description: this.newReqDescription.trim(),
+      activityIds: this.newReqActivityIds,
     };
 
     this.isCreatingRequest = true;
@@ -124,6 +137,10 @@ export class ClientPageComponent implements OnInit {
       },
       error: error => this.showError(error, 'Não foi possível publicar o pedido.')
     });
+  }
+
+  toggleRequestActivity(id: string, checked: boolean): void {
+    this.newReqActivityIds = checked ? Array.from(new Set([...this.newReqActivityIds, id])) : this.newReqActivityIds.filter(item => item !== id);
   }
 
   acceptQuote(quoteId: string): void {
