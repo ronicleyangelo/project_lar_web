@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({
@@ -9,7 +9,19 @@ import { AuthService } from '../services/auth.service';
 export class RoleGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate(route: ActivatedRouteSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+  canActivate(route: ActivatedRouteSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> {
+    if (this.authService.currentUserValue) {
+      return this.validateRole(route);
+    }
+
+    // AuthGuard e RoleGuard podem ser avaliados na mesma navegação. Depois de
+    // um F5, ambos precisam aguardar /auth/me para não redirecionar antes da hora.
+    return this.authService.restoreSession().pipe(
+      map(() => this.validateRole(route))
+    );
+  }
+
+  private validateRole(route: ActivatedRouteSnapshot): boolean | UrlTree {
     const currentUser = this.authService.currentUserValue;
     const expectedRole = route.data['role'];
 

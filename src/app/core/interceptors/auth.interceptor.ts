@@ -26,7 +26,7 @@ export class AuthInterceptor implements HttpInterceptor {
         const isAccountSecurityAction = req.url.includes('/account/password') || req.url.includes('/account/deletion');
         const isAnonymousSessionProbe = req.url.includes('/auth/me') && !this.authService.currentUserValue;
         if (error.status === 401 && !isGoogleOnboarding && !isAccountSecurityAction && !isAnonymousSessionProbe) {
-          this.authService.logout();
+          this.authService.logout().subscribe();
           this.router.navigate(['/auth/login']);
         }
         return throwError(() => error);

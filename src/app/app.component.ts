@@ -26,7 +26,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.userSub = this.authService.currentUser$.subscribe(
       (user) => this.currentUser = user
     );
-    this.authService.restoreSession().subscribe();
     this.updateAuthPage(this.router.url);
     this.routeSub = this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd)
@@ -39,8 +38,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onLogout(): void {
-    this.authService.logout();
-    this.router.navigate(['/auth/login'], { replaceUrl: true });
+    this.authService.logout().subscribe(() => {
+      this.router.navigate(['/auth/login'], { replaceUrl: true });
+    });
   }
 
   private updateAuthPage(url: string): void {

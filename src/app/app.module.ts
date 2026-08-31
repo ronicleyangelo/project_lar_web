@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
@@ -12,6 +12,12 @@ import { MessageService } from 'primeng/api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { firstValueFrom } from 'rxjs';
+import { AuthService } from './core/services/auth.service';
+
+function initializeAuth(authService: AuthService): () => Promise<unknown> {
+  return () => firstValueFrom(authService.restoreSession());
+}
 
 @NgModule({
   declarations: [
@@ -29,6 +35,12 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
   ],
   providers: [
     MessageService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeAuth,
+      deps: [AuthService],
+      multi: true,
+    },
     provideTranslateService({
       lang: 'pt',
       fallbackLang: 'pt'
