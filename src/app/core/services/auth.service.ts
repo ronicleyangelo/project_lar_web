@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, finalize, map, of, shareReplay, tap } from 'rxjs';
 import { User, LoginPayload, RegisterClientPayload, RegisterProviderPayload, AuthResponse, GoogleAuthResponse, CompleteGoogleRegistrationPayload } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 
@@ -9,10 +9,13 @@ export class AuthService {
   private readonly apiUrl = `${environment.apiUrl}/auth`;
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
+  private sessionVersion = 0;
+  private restoreSessionRequest?: Observable<User | null>;
 
   constructor(private http: HttpClient) {
-    const storedUser = localStorage.getItem('lar_user');
-    this.currentUserSubject = new BehaviorSubject<User | null>(storedUser ? JSON.parse(storedUser) : null);
+    // A sessão é controlada pelo cookie HttpOnly, não pelo cache do navegador.
+    localStorage.removeItem('lar_user');
+    this.currentUserSubject = new BehaviorSubject<User | null>(null);
     this.currentUser$ = this.currentUserSubject.asObservable();
   }
 
@@ -21,6 +24,8 @@ export class AuthService {
   }
 
   public get token(): string | null {
+    // Fallback para navegadores que bloqueiam o cookie entre o frontend e a API.
+    // A identidade do usuário continua sendo buscada em /auth/me após o F5.
     return localStorage.getItem('lar_token');
   }
 
@@ -60,7 +65,14 @@ export class AuthService {
 
   /** Confirma que o token ainda representa uma conta existente no servidor. */
   restoreSession(): Observable<User | null> {
-    return this.http.get<any>(`${this.apiUrl}/me`).pipe(
+    if (this.currentUserValue) return of(this.currentUserValue);
+    // Sem token não existe sessão para restaurar. Evita um /auth/me 401 normal
+    // ao abrir ou atualizar a aplicação depois de sair da conta.
+    if (!this.token) return of(null);
+    if (this.restoreSessionRequest) return this.restoreSessionRequest;
+
+    const requestSessionVersion = this.sessionVersion;
+    this.restoreSessionRequest = this.http.get<any>(`${this.apiUrl}/me`).pipe(
       map(user => ({
         id: user.id,
         email: user.email,
@@ -71,17 +83,35 @@ export class AuthService {
         profile: user.role === 'CLIENT' ? user.clientProfile : user.providerProfile
       } as User)),
       tap(user => {
-        localStorage.setItem('lar_user', JSON.stringify(user));
-        this.currentUserSubject.next(user);
+        if (requestSessionVersion === this.sessionVersion) {
+          this.currentUserSubject.next(user);
+        }
       }),
       catchError(() => {
-        this.logout();
+        if (requestSessionVersion === this.sessionVersion) {
+          this.clearLocalSession();
+        }
         return of(null);
-      })
+      }),
+      finalize(() => this.restoreSessionRequest = undefined),
+      shareReplay({ bufferSize: 1, refCount: false })
+    );
+
+    return this.restoreSessionRequest;
+  }
+
+  logout(): Observable<void> {
+    this.clearLocalSession();
+
+    // A exclusão local não basta: o cookie HttpOnly só pode ser removido pelo
+    // servidor. O caller aguarda esta requisição antes de navegar/recarregar.
+    return this.http.post<void>(`${this.apiUrl}/logout`, {}).pipe(
+      catchError(() => of(void 0))
     );
   }
 
-  logout(): void {
+  private clearLocalSession(): void {
+    this.sessionVersion++;
     localStorage.removeItem('lar_token');
     localStorage.removeItem('lar_user');
     sessionStorage.removeItem('lar_google_onboarding');
@@ -90,8 +120,8 @@ export class AuthService {
   }
 
   private setSession(token: string, user: User): void {
+    this.sessionVersion++;
     localStorage.setItem('lar_token', token);
-    localStorage.setItem('lar_user', JSON.stringify(user));
     this.currentUserSubject.next(user);
   }
 }
