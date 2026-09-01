@@ -56,7 +56,8 @@
     "CTA_TITLE": "Ready to get started?",
     "CTA_DESC": "Create your free account and find the right option for you."
   },
-  "CLIENT_PROFILE": { "EYEBROW": "Client profile", "TITLE": "My details", "SUBTITLE": "Keep your information updated to request services.", "BACK": "Back to orders", "LOADING": "Loading profile...", "PROTECTED": "Protected address", "PROTECTED_DESC": "The full address is only released after you accept a proposal.", "PERSONAL_DATA": "Personal data and location", "FULL_NAME": "Full name", "PHONE": "Phone / WhatsApp", "CITY": "City", "NEIGHBORHOOD": "Neighborhood", "ADDRESS": "Full address", "ADDRESS_HELP": "This information is not displayed publicly.", "UNSAVED": "You have unsaved changes.", "UPDATED": "Information is up to date.", "SAVING": "Saving...", "SAVE": "Save changes" },
+  "CLIENT_PROFILE": { "EYEBROW": "Client profile", "TITLE": "My details", "SUBTITLE": "Keep your information updated to request services.", "BACK": "Back to orders", "LOADING": "Loading profile...", "PROTECTED": "Protected address", "PROTECTED_DESC": "The full address is only released after you accept a proposal.", "PERSONAL_DATA": "Personal data and location", "FULL_NAME": "Full Name",
+      "FULL_NAME_PLACEHOLDER": "Ex.: Mary Smith", "PHONE": "Phone / WhatsApp", "CITY": "City", "NEIGHBORHOOD": "Neighborhood", "ADDRESS": "Full address", "ADDRESS_HELP": "This information is not displayed publicly.", "UNSAVED": "You have unsaved changes.", "UPDATED": "Information is up to date.", "SAVING": "Saving...", "SAVE": "Save changes" },
   "SEARCH": {
     "HERO_EYEBROW": "House Cleaning",
     "HERO_TITLE": "Find professionals <span>near you</span>",
@@ -227,7 +228,8 @@
       "SCORE": "Score",
       "REVIEWS": "Reviews",
       "PERSONAL_DATA": "Personal data",
-      "FULL_NAME": "Full name",
+      "FULL_NAME": "Full Name",
+      "FULL_NAME_PLACEHOLDER": "Ex.: Mary Smith",
       "FULL_NAME_VALIDATION": "Enter your full name.",
       "PHONE_WHATSAPP": "Phone / WhatsApp",
       "PHONE_VALIDATION": "Enter a valid mobile with area code.",
@@ -288,6 +290,7 @@
     "ROLE_CLIENT": "I am a Client",
     "ROLE_PROVIDER": "I am a Professional",
     "FULL_NAME": "Full Name",
+      "FULL_NAME_PLACEHOLDER": "Ex.: Mary Smith",
     "FULL_NAME_ERROR": "Enter a name with at least 3 characters.",
     "PASSWORD_ERROR": "Password must be at least 8 characters long.",
     "PHONE": "Phone / WhatsApp",
@@ -303,6 +306,7 @@
     "FULL_ADDRESS_ERROR": "Enter the full address.",
     "BIO": "Bio / Qualifications",
     "RADIUS": "Radius (km)",
+      "RADIUS_PLACEHOLDER": "Ex.: 10",
     "WHERE_CLEAN": "Where do you clean?",
     "ACCEPTS_PETS": "I accept working in homes with pets",
     "REGISTER_LOADING": "Registering...",
@@ -353,7 +357,8 @@
     "PROVIDER_PHOTO": "Professional photo",
     "PROFESSIONAL_REVIEW": "Professional review",
     "IDENTITY_CONTACT": "Identity and contact",
-    "FULL_NAME": "Full name",
+    "FULL_NAME": "Full Name",
+      "FULL_NAME_PLACEHOLDER": "Ex.: Mary Smith",
     "PHONE_WHATSAPP": "Phone / WhatsApp",
     "EMAIL": "Email",
     "ACCOUNT_CREATED": "Account created",
@@ -483,6 +488,7 @@
     "PROFILE_SUBTITLE": "Update your information, service radius, and preferences.",
     "PERSONAL_DATA": "Personal Data",
     "FULL_NAME": "Full Name",
+      "FULL_NAME_PLACEHOLDER": "Ex.: Mary Smith",
     "PHONE": "Phone / WhatsApp",
     "LOCATION": "Location and Attendance",
     "CITY": "Base city",
@@ -551,3 +557,5 @@
     "DISPUTED": "Disputed"
   }
 }
+
+

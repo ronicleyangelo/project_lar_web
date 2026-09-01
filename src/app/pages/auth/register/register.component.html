@@ -24,7 +24,7 @@
 
       <div class="mb-3">
         <label class="form-label">{{ 'AUTH.FULL_NAME' | translate }}</label>
-        <input type="text" class="form-control" formControlName="fullName" [class.is-invalid]="form.controls.fullName.touched && form.controls.fullName.invalid">
+        <input type="text" class="form-control" formControlName="fullName" [placeholder]="'AUTH.FULL_NAME_PLACEHOLDER' | translate" [class.is-invalid]="form.controls.fullName.touched && form.controls.fullName.invalid">
         <div class="invalid-feedback">{{ 'AUTH.FULL_NAME_ERROR' | translate }}</div>
       </div>
       <div class="mb-3">
@@ -64,7 +64,7 @@
       <ng-container *ngIf="isClientRegistration">
         <div class="mb-3 w-100">
           <label class="form-label">{{ 'AUTH.FULL_ADDRESS' | translate }}</label>
-          <input type="text" class="form-control" formControlName="fullAddress" [class.is-invalid]="form.controls.fullAddress.touched && form.controls.fullAddress.invalid">
+          <input type="text" class="form-control" formControlName="fullAddress" [placeholder]="'AUTH.FULL_ADDRESS_PLACEHOLDER' | translate" [class.is-invalid]="form.controls.fullAddress.touched && form.controls.fullAddress.invalid">
           <div class="invalid-feedback">{{ 'AUTH.FULL_ADDRESS_ERROR' | translate }}</div>
         </div>
       </ng-container>
@@ -72,11 +72,11 @@
       <ng-container *ngIf="isProviderRegistration">
         <div class="mb-3">
           <label class="form-label">{{ 'AUTH.BIO' | translate }}</label>
-          <textarea class="form-control" rows="2" formControlName="bio"></textarea>
+          <textarea class="form-control" rows="2" formControlName="bio" [placeholder]="'AUTH.BIO_PLACEHOLDER' | translate"></textarea>
         </div>
         <div class="mb-3">
           <label class="form-label">{{ 'AUTH.RADIUS' | translate }}</label>
-          <input type="number" class="form-control" formControlName="serviceRadiusKm" min="1" max="100">
+          <input type="number" class="form-control" formControlName="serviceRadiusKm" min="1" max="100" [placeholder]="'AUTH.RADIUS_PLACEHOLDER' | translate">
         </div>
         <div class="mb-3 w-100">
           <label class="form-label d-block">{{ 'AUTH.WHERE_CLEAN' | translate }}</label>
