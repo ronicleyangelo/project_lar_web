@@ -118,9 +118,9 @@
     "PROPERTY_TYPES": { "HOUSE": "Casa", "APARTMENT": "Apartamento", "CONDOMINIUM": "Condomínio", "PETS": "Aceita pets" }
   },
   "CLIENT": {
-    "EYEBROW": "Área do cliente",
-    "TITLE": "Meus Pedidos",
-    "SUBTITLE": "Acompanhe solicitações, propostas e serviços em um só lugar.",
+    "EYEBROW": "Gestão de Serviços",
+    "TITLE": "Meus Serviços",
+    "SUBTITLE": "Gestão completa de solicitações, propostas e andamento de serviços.",
     "NEW_REQUEST": "Novo Pedido",
     "ADDRESS_PROTECTED": "Seu endereço está protegido. Ele será compartilhado apenas com o profissional aprovado.",
     "QUOTES_RECEIVED": "Orçamentos Recebidos",
@@ -556,5 +556,6 @@
     "DISPUTED": "Em disputa"
   }
 }
+
 
 

@@ -76,3 +76,29 @@
 }
 
 
+
+::ng-deep .p-datatable-lg .p-datatable-header {
+  background: transparent;
+  border: none;
+}
+::ng-deep .p-datatable-lg .p-datatable-thead > tr > th {
+  background: var(--surface);
+  border-bottom: 2px solid var(--border-light);
+  color: var(--text-muted);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1rem 1rem;
+}
+::ng-deep .p-datatable-lg .p-datatable-tbody > tr > td {
+  border-bottom: 1px solid var(--border-light);
+  padding: 1.25rem 1rem;
+  vertical-align: middle;
+}
+::ng-deep .p-datatable-lg .p-datatable-tbody > tr.p-highlight {
+  background-color: rgba(91, 92, 226, 0.04);
+}
+::ng-deep .p-datatable-lg .p-datatable-row-expansion > td {
+  padding: 0 !important;
+}
+

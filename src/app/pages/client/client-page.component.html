@@ -8,45 +8,80 @@
 </app-page-hero>
 
 <div class="container py-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h3 class="fw-bold m-0 text-dark" style="font-size: 20px;">Pedidos em Aberto</h3>
+  </div>
 
-  <div class="row g-4" *ngIf="clientRequests.length > 0; else noRequests">
-    <div class="col-12" *ngFor="let req of clientRequests; let i = index" [style.animation-delay]="(i * 0.08) + 's'" style="animation: fadeInUp 0.4s ease both;">
-      <div class="card request-card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-2">
-            <div class="d-flex gap-2 align-items-center">
-              <span class="badge bg-info text-white">{{ req.category.name || req.categoryId }}</span>
-              <span class="badge" [ngClass]="requestStatusViews[req.status].badgeClass">{{ 'STATUS_REQUEST.' + req.status | translate }}</span>
-            </div>
-            <span class="text-muted small">{{ req.scheduledDate | date: (translate.currentLang() === 'en' ? 'MM/dd/yyyy' : 'dd/MM/yyyy') }} &middot; {{ req.timeSlot === 'Manhã (08:00 - 12:00)' ? ('CLIENT.MORNING' | translate) : (req.timeSlot === 'Tarde (13:00 - 17:00)' ? ('CLIENT.AFTERNOON' | translate) : ('CLIENT.FULL_DAY' | translate)) }}</span>
-          </div>
-
-          <h5>{{ req.description }}</h5>
-          <div class="d-flex flex-wrap gap-1 mb-3" *ngIf="req.activities?.length"><span class="badge bg-light text-dark" *ngFor="let item of req.activities">{{ item.activity | activityLabel:'name' }}</span></div>
-          
-          <div class="privacy-notice mb-3">
-            <span class="icon">lock</span>
-            <small>{{ 'CLIENT.ADDRESS_PROTECTED' | translate }}</small>
-          </div>
-
-          <div class="quotes-box" *ngIf="req.quotes && req.quotes.length > 0">
-            <h6><span class="icon" style="font-size: 16px;">receipt_long</span> {{ 'CLIENT.QUOTES_RECEIVED' | translate }} ({{ req.quotes.length }})</h6>
-            <div class="quote-item d-flex justify-content-between align-items-center mb-2" *ngFor="let q of req.quotes">
-              <div>
-                <strong class="d-block">{{ q.provider.fullName || 'Profissional' }}</strong>
-                <p class="mb-0 small text-muted">{{ q.message }}</p>
-                <small class="text-muted">{{ 'CLIENT.DURATION' | translate }}: {{ q.estimatedDuration }}</small>
-              </div>
-              <div class="text-end">
-                <div class="quote-price mb-1">R$ {{ q.price }}</div>
-                <button class="btn btn-sm btn-primary" *ngIf="requestStatusViews[req.status]?.canAcceptQuote" [disabled]="isAcceptingQuote(q.id)" (click)="acceptQuote(q.id)">
-                  <span class="icon" style="font-size: 16px;">check_circle</span> {{ 'CLIENT.ACCEPT' | translate }}
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+    <div class="table-responsive" *ngIf="clientRequests.length > 0; else noRequests">
+      <table class="table table-hover align-middle mb-0" style="background: white;">
+        <thead class="table-light">
+          <tr>
+            <th style="width: 40px;"></th>
+            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Serviço</th>
+            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Data / Horário</th>
+            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Status</th>
+            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Privacidade</th>
+            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Propostas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let req of clientRequests">
+            <tr [class.bg-light]="expandedRowId === req.id">
+              <td>
+                <button type="button" class="btn btn-sm btn-link text-dark p-0 text-decoration-none" (click)="toggleRow(req.id)" *ngIf="(req.quotes?.length || 0) > 0">
+                  <span class="icon">{{ expandedRowId === req.id ? 'expand_less' : 'expand_more' }}</span>
                 </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+              </td>
+              <td>
+                <div class="fw-bold text-dark">{{ req.category.name || req.categoryId }}</div>
+                <div class="text-muted small text-truncate" style="max-width: 250px;">{{ req.description }}</div>
+              </td>
+              <td>
+                <div class="fw-bold text-dark">{{ req.scheduledDate | date: 'dd/MM/yyyy' }}</div>
+                <div class="text-muted small">{{ req.timeSlot }}</div>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="requestStatusViews[req.status].badgeClass">{{ 'STATUS_REQUEST.' + req.status | translate }}</span>
+              </td>
+              <td>
+                <span class="badge bg-light text-dark border"><span class="icon" style="font-size: 11px;">lock</span> Endereço Protegido</span>
+              </td>
+              <td>
+                <span class="badge bg-primary text-white" *ngIf="(req.quotes?.length || 0) > 0">{{ req.quotes.length }} Proposta(s)</span>
+                <span class="text-muted small" *ngIf="!req.quotes || req.quotes.length === 0">Nenhuma</span>
+              </td>
+            </tr>
+            <!-- Row Expansion -->
+            <tr *ngIf="expandedRowId === req.id" class="bg-light">
+              <td colspan="6" class="p-0 border-0">
+                <div class="p-4 border-bottom">
+                  <h6 class="fw-bold mb-3"><span class="icon align-middle" style="font-size: 18px;">receipt_long</span> Propostas Recebidas</h6>
+                  <div class="row g-3">
+                    <div class="col-12 col-md-6" *ngFor="let q of req.quotes">
+                      <div class="card border-0 shadow-sm rounded-3">
+                        <div class="card-body">
+                          <div class="d-flex justify-content-between mb-2">
+                            <strong class="text-dark">{{ q.provider.fullName || 'Profissional' }}</strong>
+                            <div class="fw-bold text-primary">R$ {{ q.price }}</div>
+                          </div>
+                          <p class="text-muted small mb-2">{{ q.message }}</p>
+                          <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted"><span class="icon align-middle" style="font-size: 14px;">schedule</span> {{ q.estimatedDuration }}</small>
+                            <button class="btn btn-sm btn-primary" *ngIf="requestStatusViews[req.status]?.canAcceptQuote" [disabled]="isAcceptingQuote(q.id)" (click)="acceptQuote(q.id)">
+                              <span class="icon" style="font-size: 14px;">check_circle</span> Aceitar
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -54,35 +89,62 @@
     <app-empty-state icon="assignment" [message]="'CLIENT.NO_REQUESTS' | translate"></app-empty-state>
   </ng-template>
 
-  <h2 class="section-divider mt-5 mb-4">{{ 'CLIENT.MY_APPOINTMENTS' | translate }}</h2>
-  <div class="row g-4" *ngIf="appointments.length > 0; else noAppointments">
-    <div class="col-12 col-md-6" *ngFor="let app of appointments">
-      <div class="card appointment-card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0">{{ 'CLIENT.APPOINTMENT' | translate }}</h5>
-            <span class="badge" [ngClass]="appointmentStatusViews[app.status].badgeClass">{{ 'STATUS_APPOINTMENT.' + app.status | translate }}</span>
-          </div>
-          <p class="text-muted small mb-3">ID: {{ app.id | slice:0:8 }}...</p>
-          <div class="d-flex gap-2">
-            <button class="btn btn-primary btn-sm" *ngIf="appointmentStatusViews[app.status]?.canConfirm" [disabled]="isConfirmingAppointment(app.id)" (click)="confirmCompletion(app.id)">
-              <span class="icon" style="font-size: 16px;">task_alt</span> {{ 'CLIENT.CONFIRM_COMPLETION' | translate }}
-            </button>
-            <button class="btn btn-gold btn-sm" *ngIf="appointmentStatusViews[app.status]?.canReview && !app.review" (click)="openRating(app.id)">
-              <span class="icon" style="font-size: 16px;">star</span> {{ 'CLIENT.REVIEW' | translate }}
-            </button>
-          </div>
-        </div>
-      </div>
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h3 class="fw-bold m-0 text-dark" style="font-size: 20px;">Serviços Agendados</h3>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+    <div class="table-responsive" *ngIf="appointments.length > 0; else noAppointments">
+      <table class="table table-hover align-middle mb-0" style="background: white;">
+        <thead class="table-light">
+          <tr>
+            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600; padding-left: 1.5rem;">Serviço</th>
+            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Profissional</th>
+            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Data / Horário</th>
+            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Status</th>
+            <th class="text-uppercase text-muted text-end" style="font-size: 13px; font-weight: 600; padding-right: 1.5rem;">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let app of appointments">
+            <td style="padding-left: 1.5rem;">
+              <div class="fw-bold text-dark">Faxina Residencial</div>
+              <div class="text-muted small">ID: {{ app.id | slice:0:8 }}</div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary-soft text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-weight: bold;">
+                  {{ app.provider?.fullName?.charAt(0) || 'P' }}
+                </div>
+                <span class="fw-bold text-dark">{{ app.provider?.fullName || 'Profissional' }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="fw-bold text-dark">{{ app.scheduledAt | date: 'dd/MM/yyyy HH:mm' }}</div>
+              
+            </td>
+            <td>
+              <span class="badge" [ngClass]="appointmentStatusViews[app.status].badgeClass">{{ 'STATUS_APPOINTMENT.' + app.status | translate }}</span>
+            </td>
+            <td class="text-end" style="padding-right: 1.5rem;">
+              <button class="btn btn-primary btn-sm me-2" *ngIf="appointmentStatusViews[app.status]?.canConfirm" [disabled]="isConfirmingAppointment(app.id)" (click)="confirmCompletion(app.id)">
+                <span class="icon" style="font-size: 14px;">task_alt</span> Confirmar
+              </button>
+              <button class="btn btn-gold btn-sm" *ngIf="appointmentStatusViews[app.status]?.canReview && !app.review" (click)="openRating(app.id)">
+                <span class="icon" style="font-size: 14px;">star</span> Avaliar
+              </button>
+              <span class="text-muted small" *ngIf="!appointmentStatusViews[app.status]?.canConfirm && (!appointmentStatusViews[app.status]?.canReview || app.review)">-</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
   <ng-template #noAppointments>
     <app-empty-state icon="event" [message]="'CLIENT.NO_APPOINTMENTS' | translate"></app-empty-state>
   </ng-template>
-</div>
-
-<ng-template #newReqModal let-modal>
+</div><ng-template #newReqModal let-modal>
   <div class="modal-header d-flex justify-content-between align-items-center pb-3" style="background: linear-gradient(90deg, var(--dark-blue-deep) 0%, #0c2340 100%); border-bottom: 2px solid var(--gold-primary); border-radius: var(--radius-md) var(--radius-md) 0 0;">
     <h4 class="modal-title m-0 text-white fw-bold fs-5">{{ 'CLIENT.NEW_REQUEST_TITLE' | translate }}</h4>
     <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="modal.dismiss()"></button>
@@ -102,7 +164,7 @@
       <div class="col-6">
         <label class="form-label text-muted small fw-bold">{{ 'CLIENT.TIME' | translate }}</label>
         <select class="form-select" [(ngModel)]="newReqTimeSlot">
-          <option value="Manhã (08:00 - 12:00)">{{ 'CLIENT.MORNING' | translate }}</option>
+          <option value="Manh (08:00 - 12:00)">{{ 'CLIENT.MORNING' | translate }}</option>
           <option value="Tarde (13:00 - 17:00)">{{ 'CLIENT.AFTERNOON' | translate }}</option>
           <option value="Integral">{{ 'CLIENT.FULL_DAY' | translate }}</option>
         </select>
@@ -150,3 +212,5 @@
   [submitting]="isSubmittingReview"
   (submitReview)="onSubmitReview($event)">
 </app-rating-dialog>
+
+
