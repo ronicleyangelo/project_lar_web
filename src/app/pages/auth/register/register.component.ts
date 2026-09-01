@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../core/services/auth.service';
+import { LegalDialogService } from '../../../core/services/legal-dialog.service';
 
 const MOBILE_PHONE_PATTERN = /^[1-9]{2}9\d{8}$/;
 
@@ -25,6 +26,8 @@ export class RegisterComponent implements OnInit {
     serviceRadiusKm: [10, [Validators.required, Validators.min(1), Validators.max(100)]],
     propertyTypes: [['HOUSE', 'APARTMENT'] as string[], Validators.required],
     acceptsPets: [true],
+    acceptPrivacy: [false, Validators.requiredTrue],
+    acceptTerms: [false, Validators.requiredTrue],
   });
 
   readonly propertyTypeOptions = [
@@ -47,6 +50,7 @@ export class RegisterComponent implements OnInit {
     private messageService: MessageService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
+    public legalDialogs: LegalDialogService,
   ) {}
 
   ngOnInit(): void {
@@ -85,6 +89,7 @@ export class RegisterComponent implements OnInit {
           fullName: value.fullName.trim(), email: value.email.trim(), password: value.password,
           phone: value.phone, neighborhood: value.neighborhood.trim(), city: value.city.trim(),
           fullAddress: value.fullAddress.trim(),
+          acceptPrivacy: value.acceptPrivacy, acceptTerms: value.acceptTerms,
         })
       : this.authService.registerProvider({
           fullName: value.fullName.trim(), email: value.email.trim(), password: value.password,
@@ -92,6 +97,7 @@ export class RegisterComponent implements OnInit {
           neighborhood: value.neighborhood.trim(), serviceRadiusKm: value.serviceRadiusKm,
           propertyTypes: value.propertyTypes,
           acceptsPets: value.acceptsPets,
+          acceptPrivacy: value.acceptPrivacy, acceptTerms: value.acceptTerms,
         });
 
     request$.subscribe({

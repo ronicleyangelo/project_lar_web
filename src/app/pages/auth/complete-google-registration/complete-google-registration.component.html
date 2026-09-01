@@ -78,6 +78,17 @@
         </label>
       </ng-container>
 
+      <div class="legal-consents mb-3">
+        <label class="d-flex gap-2 align-items-start">
+          <input type="checkbox" formControlName="acceptPrivacy">
+          <span>Li e aceito a <button type="button" class="btn-link p-0 align-baseline" (click)="legalDialogs.open('privacy')">Política de Privacidade</button>.</span>
+        </label>
+        <label class="d-flex gap-2 align-items-start mt-2">
+          <input type="checkbox" formControlName="acceptTerms">
+          <span>Li e aceito os <button type="button" class="btn-link p-0 align-baseline" (click)="legalDialogs.open('terms')">Termos de Uso</button>.</span>
+        </label>
+      </div>
+
       <button type="submit" class="btn btn-primary w-100 auth-btn" [disabled]="isLoading">
         <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
         {{ isLoading ? 'Finalizando...' : 'Concluir cadastro' }}

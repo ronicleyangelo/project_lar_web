@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, finalize, map, of, shareReplay, tap } from 'rxjs';
 import { User, LoginPayload, RegisterClientPayload, RegisterProviderPayload, AuthResponse, GoogleAuthResponse, CompleteGoogleRegistrationPayload } from '../models/user.model';
 import { environment } from '../../../environments/environment';
@@ -87,8 +87,8 @@ export class AuthService {
           this.currentUserSubject.next(user);
         }
       }),
-      catchError(() => {
-        if (requestSessionVersion === this.sessionVersion) {
+      catchError((error: HttpErrorResponse) => {
+        if (requestSessionVersion === this.sessionVersion && (error.status === 401 || error.status === 403)) {
           this.clearLocalSession();
         }
         return of(null);

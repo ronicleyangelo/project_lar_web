@@ -45,6 +45,21 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'privacidade',
+    redirectTo: '',
+    pathMatch: 'full'
+  },
+  {
+    path: 'termos',
+    redirectTo: '',
+    pathMatch: 'full'
+  },
+  {
+    path: 'sobre',
+    redirectTo: '',
+    pathMatch: 'full'
+  },
+  {
     path: '**',
     redirectTo: ''
   }

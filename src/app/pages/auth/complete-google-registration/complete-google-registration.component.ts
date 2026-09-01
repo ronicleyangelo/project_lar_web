@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../core/services/auth.service';
 import { GoogleProfile } from '../../../core/models/user.model';
+import { LegalDialogService } from '../../../core/services/legal-dialog.service';
 
 const MOBILE_PHONE_PATTERN = /^[1-9]{2}9\d{8}$/;
 
@@ -24,6 +25,8 @@ export class CompleteGoogleRegistrationComponent implements OnInit {
     serviceRadiusKm: [10, [Validators.required, Validators.min(1), Validators.max(100)]],
     propertyTypes: [['HOUSE', 'APARTMENT'] as string[], Validators.required],
     acceptsPets: [true],
+    acceptPrivacy: [false, Validators.requiredTrue],
+    acceptTerms: [false, Validators.requiredTrue],
   });
 
   profile?: GoogleProfile;
@@ -47,6 +50,7 @@ export class CompleteGoogleRegistrationComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private formBuilder: FormBuilder,
+    public legalDialogs: LegalDialogService,
   ) {}
 
   ngOnInit(): void {
@@ -110,6 +114,8 @@ export class CompleteGoogleRegistrationComponent implements OnInit {
       serviceRadiusKm: value.role === 'PROVIDER' ? value.serviceRadiusKm : undefined,
       propertyTypes: value.role === 'PROVIDER' ? value.propertyTypes : undefined,
       acceptsPets: value.role === 'PROVIDER' ? value.acceptsPets : undefined,
+      acceptPrivacy: value.acceptPrivacy,
+      acceptTerms: value.acceptTerms,
     }).subscribe({
       next: response => {
         sessionStorage.removeItem('lar_google_onboarding');

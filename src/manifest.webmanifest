@@ -1,17 +1,24 @@
 {
-  "name": "Projeto Lar - Marketplace de Serviços Domésticos",
+  "id": "/",
+  "name": "Projeto Lar — Serviços com Confiança",
   "short_name": "Projeto Lar",
-  "theme_color": "#0f766e",
-  "background_color": "#f8fafc",
+  "description": "Encontre profissionais confiáveis e organize seus serviços residenciais.",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "theme_color": "#a7472a",
+  "background_color": "#f5f3ee",
   "display": "standalone",
-  "orientation": "portrait",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
   "scope": "/",
   "start_url": "/",
+  "categories": ["lifestyle", "business", "productivity"],
   "icons": [
     {
-      "src": "/favicon.ico",
-      "sizes": "16x16 32x32 48x48",
-      "type": "image/x-icon"
+      "src": "/assets/icons/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }

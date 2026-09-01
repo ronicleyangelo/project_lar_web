@@ -14,6 +14,8 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from './core/services/auth.service';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 function initializeAuth(authService: AuthService): () => Promise<unknown> {
   return () => firstValueFrom(authService.restoreSession());
@@ -32,6 +34,10 @@ function initializeAuth(authService: AuthService): () => Promise<unknown> {
     AppRoutingModule,
     ToastModule,
     NgbModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
   providers: [
     MessageService,

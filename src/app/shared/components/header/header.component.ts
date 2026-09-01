@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { User } from '../../../core/models/user.model';
 import { TranslateService } from '@ngx-translate/core';
+import { LegalDialogService } from '../../../core/services/legal-dialog.service';
 
 @Component({
   selector: 'app-header',
@@ -8,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  constructor(public translate: TranslateService) {}
+  constructor(public translate: TranslateService, private legalDialogs: LegalDialogService) {}
   
   @Input() currentUser: User | null = null;
   @Input() authPage: 'login' | 'register' | 'complete-google' | null = null;
@@ -72,6 +73,11 @@ export class HeaderComponent {
   logout(): void {
     this.closeMenus();
     this.logoutClicked.emit();
+  }
+
+  openAbout(): void {
+    this.closeMenus();
+    this.legalDialogs.open('about');
   }
 
   @HostListener('document:click')

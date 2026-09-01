@@ -67,6 +67,8 @@ export interface CompleteGoogleRegistrationPayload {
   categoryIds?: string[];
   propertyTypes?: string[];
   acceptsPets?: boolean;
+  acceptPrivacy: boolean;
+  acceptTerms: boolean;
 }
 
 export interface LoginPayload {
@@ -82,6 +84,8 @@ export interface RegisterClientPayload {
   neighborhood: string;
   city: string;
   fullAddress: string;
+  acceptPrivacy: boolean;
+  acceptTerms: boolean;
 }
 
 export interface RegisterProviderPayload {
@@ -96,4 +100,6 @@ export interface RegisterProviderPayload {
   categoryIds?: string[];
   propertyTypes: string[];
   acceptsPets: boolean;
+  acceptPrivacy: boolean;
+  acceptTerms: boolean;
 }

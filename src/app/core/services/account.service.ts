@@ -28,4 +28,8 @@ export class AccountService {
   cancelDeletion(): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/deletion`);
   }
+
+  exportData(): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/export`, { responseType: 'blob' });
+  }
 }

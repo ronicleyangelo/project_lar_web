@@ -136,6 +136,10 @@
             </div>
           </a>
           <div class="menu-divider"></div>
+          <button type="button" class="dropdown-item" (click)="openAbout()">
+            <span class="icon">info</span>
+            <div class="item-text"><strong>Sobre o Projeto Lar</strong><small>Versão e informações da plataforma</small></div>
+          </button>
           <button type="button" class="dropdown-item logout-btn" (click)="logout()">
             <span class="icon">logout</span>
             <strong>{{ 'HEADER.LOG_OUT' | translate }}</strong>

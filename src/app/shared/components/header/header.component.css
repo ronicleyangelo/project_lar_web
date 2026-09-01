@@ -1,3 +1,8 @@
+:host {
+  display: block;
+  line-height: normal;
+}
+
 .app-header {
   position: sticky;
   top: 0;

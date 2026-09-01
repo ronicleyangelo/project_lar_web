@@ -1,3 +1,4 @@
+<div class="app-shell" [class.auth-shell]="authPage">
 <app-header
   *ngIf="!authPage"
   [currentUser]="currentUser"
@@ -8,6 +9,53 @@
   <router-outlet></router-outlet>
 </main>
 
+<footer *ngIf="!authPage" class="app-footer">
+  <span>© 2026 Projeto Lar</span>
+  <button type="button" class="release-link" (click)="legalDialogs.open('about')">{{ release.channel }} v{{ release.version }}</button>
+</footer>
+
+<p-dialog *ngIf="legalDialogs.dialog$ | async as dialog"
+  [header]="dialog === 'about' ? 'Sobre o Projeto Lar' : (dialog === 'privacy' ? 'Política de Privacidade' : 'Termos de Uso')"
+  [visible]="true"
+  (visibleChange)="!$event && legalDialogs.close()"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{width: dialog === 'about' ? '470px' : '720px', maxWidth: 'calc(100vw - 32px)'}"
+  styleClass="about-dialog">
+  <div *ngIf="dialog === 'about'" class="about-dialog-content">
+    <div class="about-dialog-brand"><span class="icon">home</span></div>
+    <span class="about-dialog-eyebrow">Serviços com confiança</span>
+    <h2>Projeto Lar</h2>
+    <p>Conectamos clientes e profissionais de serviços residenciais de forma simples, segura e transparente.</p>
+    <div class="about-dialog-release"><span></span>{{ release.channel }} v{{ release.version }}</div>
+    <div class="about-dialog-links">
+      <button type="button" (click)="legalDialogs.open('privacy')">Política de Privacidade</button>
+      <button type="button" (click)="legalDialogs.open('terms')">Termos de Uso</button>
+    </div>
+  </div>
+  <article *ngIf="dialog === 'privacy'" class="legal-dialog-content">
+    <p class="legal-version">Versão de 1 de setembro de 2026</p>
+    <p>O Projeto Lar é responsável pelo tratamento de dados realizado na plataforma. Esta política explica como os dados são usados para conectar clientes e profissionais.</p>
+    <h3>Dados tratados</h3><p>Tratamos dados cadastrais e de contato, endereço e região de atendimento, informações profissionais, pedidos, propostas, agendamentos, avaliações, preferências de privacidade e registros técnicos de segurança. No acesso pelo Google recebemos identificador, e-mail, nome e foto autorizados pelo usuário.</p>
+    <h3>Finalidades</h3><p>Os dados são usados para criar e proteger a conta, executar os serviços solicitados, aproximar clientes e profissionais, prevenir fraude, atender direitos e cumprir obrigações legais. Recomendações e visibilidade pública são controles opcionais.</p>
+    <h3>Compartilhamento</h3><p>Usamos fornecedores de infraestrutura, banco de dados, autenticação Google e geocodificação Mapbox conforme necessário. O endereço completo do cliente é protegido até a aceitação da proposta. Não vendemos dados pessoais.</p>
+    <h3>Conservação e segurança</h3><p>Conservamos dados pelo tempo necessário às finalidades e obrigações aplicáveis. Contas com exclusão confirmada têm prazo de 30 dias para cancelamento e depois são eliminadas, ressalvadas retenções obrigatórias.</p>
+    <h3>Seus direitos</h3><p>Em Minha conta você pode alterar preferências, baixar seus dados, corrigir seu perfil e solicitar exclusão.</p>
+    <p class="legal-notice">Antes da publicação comercial, o operador deve completar razão social, CNPJ, endereço e contato do encarregado.</p>
+  </article>
+  <article *ngIf="dialog === 'terms'" class="legal-dialog-content">
+    <p class="legal-version">Versão de 1 de setembro de 2026</p>
+    <p>Ao criar uma conta, você concorda em fornecer informações verdadeiras, proteger suas credenciais e usar o Projeto Lar apenas para contratar ou oferecer serviços lícitos.</p>
+    <h3>Contas e segurança</h3><p>Cada pessoa deve manter uma única conta e é responsável pelas ações realizadas nela. Fraude, abuso, assédio, automação indevida ou violação de segurança podem resultar em suspensão.</p>
+    <h3>Pedidos, propostas e serviços</h3><p>Clientes descrevem os serviços e profissionais apresentam propostas. As partes são responsáveis pelas informações, combinações e execução do serviço. Avaliações devem refletir experiências reais.</p>
+    <h3>Privacidade e conteúdo</h3><p>O tratamento de dados segue a Política de Privacidade. Não publique documentos, endereços ou dados sensíveis de terceiros sem necessidade e autorização.</p>
+    <h3>Disponibilidade e alterações</h3><p>A plataforma pode receber atualizações e interrupções de manutenção. Mudanças materiais serão apresentadas em nova versão.</p>
+    <p class="legal-notice">Antes da publicação comercial, o operador deve completar dados societários, regras comerciais, foro e canais de suporte.</p>
+  </article>
+</p-dialog>
+
 <app-mobile-nav *ngIf="!authPage" [currentUser]="currentUser"></app-mobile-nav>
 
 <p-toast position="top-right"></p-toast>
+</div>

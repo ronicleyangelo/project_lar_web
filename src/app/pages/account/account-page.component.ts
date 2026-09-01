@@ -18,6 +18,7 @@ export class AccountPageComponent implements OnInit {
   isSavingPrivacy = false;
   isSavingPassword = false;
   isDeleting = false;
+  isExporting = false;
   deletionDialogVisible = false;
   get isDeletionPending(): boolean { return this.account?.status === 'DELETION_PENDING'; }
   get canRequestDeletion(): boolean { return Boolean(this.account) && !this.isDeletionPending; }
@@ -134,6 +135,21 @@ export class AccountPageComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: 'Exclusão cancelada', detail: response.message });
       },
       error: error => this.showError(error, 'Não foi possível cancelar a exclusão.'),
+    });
+  }
+
+  exportData(): void {
+    this.isExporting = true;
+    this.accountService.exportData().pipe(finalize(() => this.isExporting = false)).subscribe({
+      next: blob => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'projeto-lar-meus-dados.json';
+        link.click();
+        URL.revokeObjectURL(url);
+      },
+      error: error => this.showError(error, 'Não foi possível exportar seus dados.'),
     });
   }
 

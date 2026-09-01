@@ -5,6 +5,8 @@ import { filter } from 'rxjs/operators';
 import { AuthService } from './core/services/auth.service';
 import { User } from './core/models/user.model';
 import { TranslateService } from '@ngx-translate/core';
+import { APP_RELEASE } from './core/config/app-version';
+import { LegalDialogService } from './core/services/legal-dialog.service';
 
 @Component({
   selector: 'app-root',
@@ -12,12 +14,13 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
+  readonly release = APP_RELEASE;
   currentUser: User | null = null;
   authPage: 'login' | 'register' | 'complete-google' | null = null;
   private userSub!: Subscription;
   private routeSub!: Subscription;
 
-  constructor(private authService: AuthService, private router: Router, private translate: TranslateService) {}
+  constructor(private authService: AuthService, private router: Router, private translate: TranslateService, public legalDialogs: LegalDialogService) {}
 
   ngOnInit(): void {
     const savedLang = localStorage.getItem('appLang') || 'pt';

@@ -54,6 +54,15 @@
       </div>
     </section>
 
+    <section class="settings-card">
+      <div class="section-icon"><span class="icon">download</span></div>
+      <div class="section-content">
+        <h2>Portabilidade e acesso aos dados</h2>
+        <p>Baixe uma cópia em JSON dos dados relacionados à sua conta.</p>
+        <button type="button" class="btn btn-outline-primary" (click)="exportData()" [disabled]="isExporting">{{ isExporting ? 'Preparando...' : 'Baixar meus dados' }}</button>
+      </div>
+    </section>
+
     <section class="settings-card danger-card">
       <div class="section-icon"><span class="icon">delete_forever</span></div>
       <div class="section-content">
