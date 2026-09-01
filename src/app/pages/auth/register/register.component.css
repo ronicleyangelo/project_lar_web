@@ -158,3 +158,13 @@ textarea.form-control {
   .auth-card .card-body { padding: 22px 18px !important; }
   .auth-card .mb-3 { width: 100%; }
 }
+
+.btn-link {
+  border: none;
+  background: transparent;
+  color: var(--primary);
+  text-decoration: underline;
+}
+.btn-link:hover {
+  color: var(--primary-strong);
+}
