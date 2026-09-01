@@ -551,3 +551,10 @@ textarea:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Darker Modal Backdrop */
+.p-dialog-mask, .p-component-overlay {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(3px) !important;
+}
+
