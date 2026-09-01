@@ -206,3 +206,20 @@
   background: #16a34a !important;
   color: white;
 }
+
+:host ::ng-deep .about-dialog {
+  border: none !important;
+  border-radius: 16px !important;
+  overflow: hidden;
+}
+:host ::ng-deep .about-dialog .p-dialog-header {
+  background: var(--surface) !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+:host ::ng-deep .about-dialog .p-dialog-content {
+  background: var(--surface) !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
