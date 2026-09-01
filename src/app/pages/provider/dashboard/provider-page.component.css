@@ -88,29 +88,7 @@
   padding-bottom: 72px !important;
 }
 
-.page-heading {
-  padding: 26px 28px;
-  border: none;
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at 91% 15%, rgba(91, 92, 226, 0.11), transparent 15rem),
-    linear-gradient(135deg, #fff, #f9fffd);
-  box-shadow: var(--shadow-sm);
-}
 
-.page-heading p {
-  margin: 4px 0 0;
-  color: var(--text-muted);
-  font-size: 12px;
-}
-
-.page-eyebrow {
-  color: var(--secondary);
-  font-size: 9px;
-  font-weight: 850;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
-}
 
 .page-title {
   margin: 3px 0 0;
@@ -174,3 +152,4 @@
     padding: 21px;
   }
 }
+

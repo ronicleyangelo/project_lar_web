@@ -1,11 +1,13 @@
+<app-page-hero
+  [eyebrow]="'PROVIDER_PAGES.PROFILE.EYEBROW' | translate"
+  [title]="'PROVIDER_PAGES.PROFILE.TITLE' | translate"
+  [subtitle]="'PROVIDER_PAGES.PROFILE.DESC' | translate">
+  <a routerLink="/provider" class="btn btn-outline d-none d-md-inline-flex"><span class="icon me-2">arrow_back</span> {{ 'PROVIDER_PAGES.PROFILE.BACK_TO_DASHBOARD' | translate }}</a>
+</app-page-hero>
+
 <div class="profile-page container py-5">
-  <div class="profile-heading">
-    <div>
-      <span class="eyebrow">{{ 'PROVIDER_PAGES.PROFILE.EYEBROW' | translate }}</span>
-      <h1>{{ 'PROVIDER_PAGES.PROFILE.TITLE' | translate }}</h1>
-      <p>{{ 'PROVIDER_PAGES.PROFILE.DESC' | translate }}</p>
-    </div>
-    <a routerLink="/provider" class="btn btn-outline"><span class="icon">arrow_back</span> {{ 'PROVIDER_PAGES.PROFILE.BACK_TO_DASHBOARD' | translate }}</a>
+  <div class="d-md-none mb-4">
+    <a routerLink="/provider" class="btn btn-outline w-100"><span class="icon me-2">arrow_back</span> {{ 'PROVIDER_PAGES.PROFILE.BACK_TO_DASHBOARD' | translate }}</a>
   </div>
 
   <div *ngIf="isLoading" class="loading-state">

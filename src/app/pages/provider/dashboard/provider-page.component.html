@@ -1,9 +1,10 @@
+<app-page-hero
+  [eyebrow]="'PROVIDER.NEARBY_OPPORTUNITIES' | translate"
+  [title]="'PROVIDER.AVAILABLE_REQUESTS' | translate"
+  [subtitle]="'PROVIDER.FIND_NEW_SERVICES' | translate">
+</app-page-hero>
+
 <div class="container py-5">
-  <div class="page-heading mb-4">
-    <span class="page-eyebrow">{{ 'PROVIDER.NEARBY_OPPORTUNITIES' | translate }}</span>
-    <h2 class="page-title">{{ 'PROVIDER.AVAILABLE_REQUESTS' | translate }}</h2>
-    <p>{{ 'PROVIDER.FIND_NEW_SERVICES' | translate }}</p>
-  </div>
 
   <div class="row g-4" *ngIf="openProviderRequests.length > 0; else noReqs">
     <div class="col-12 col-md-6" *ngFor="let req of openProviderRequests">

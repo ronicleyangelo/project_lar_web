@@ -1,14 +1,13 @@
-<div class="container py-5">
-  <div class="page-header">
-    <div>
-      <span class="page-eyebrow">{{ 'CLIENT.EYEBROW' | translate }}</span>
-      <h2>{{ 'CLIENT.TITLE' | translate }}</h2>
-      <p class="page-subtitle">{{ 'CLIENT.SUBTITLE' | translate }}</p>
-    </div>
-    <button class="btn btn-primary" (click)="openNewRequestModal(newReqModal)">
-      <span class="icon">add_circle</span> {{ 'CLIENT.NEW_REQUEST' | translate }}
-    </button>
-  </div>
+<app-page-hero
+  [eyebrow]="'CLIENT.EYEBROW' | translate"
+  [title]="'CLIENT.TITLE' | translate"
+  [subtitle]="'CLIENT.SUBTITLE' | translate">
+  <button class="btn btn-primary" (click)="openNewRequestModal(newReqModal)">
+    <span class="icon">add_circle</span> {{ 'CLIENT.NEW_REQUEST' | translate }}
+  </button>
+</app-page-hero>
+
+<div class="container py-4">
 
   <div class="row g-4" *ngIf="clientRequests.length > 0; else noRequests">
     <div class="col-12" *ngFor="let req of clientRequests; let i = index" [style.animation-delay]="(i * 0.08) + 's'" style="animation: fadeInUp 0.4s ease both;">
