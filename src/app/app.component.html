@@ -15,7 +15,7 @@
 </footer>
 
 <p-dialog *ngIf="legalDialogs.dialog$ | async as dialog"
-  [header]="dialog === 'about' ? 'Sobre o Projeto Lar' : (dialog === 'privacy' ? 'Política de Privacidade' : 'Termos de Uso')"
+  [header]="dialog === 'about' ? '' : (dialog === 'privacy' ? 'Política de Privacidade' : 'Termos de Uso')"
   [visible]="true"
   (visibleChange)="!$event && legalDialogs.close()"
   [modal]="true"
@@ -28,11 +28,7 @@
     <span class="about-dialog-eyebrow">Serviços com confiança</span>
     <h2>Projeto Lar</h2>
     <p>Conectamos clientes e profissionais de serviços residenciais de forma simples, segura e transparente.</p>
-    <div class="about-dialog-release"><span></span>{{ release.channel }} v{{ release.version }}</div>
-    <div class="about-dialog-links">
-      <button type="button" (click)="legalDialogs.open('privacy')">Política de Privacidade</button>
-      <button type="button" (click)="legalDialogs.open('terms')">Termos de Uso</button>
-    </div>
+    <div class="about-dialog-release">{{ release.channel }} v{{ release.version }}</div>
   </div>
   <article *ngIf="dialog === 'privacy'" class="legal-dialog-content">
     <p class="legal-version">Versão de 1 de setembro de 2026</p>
