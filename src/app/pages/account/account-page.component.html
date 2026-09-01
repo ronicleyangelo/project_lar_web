@@ -1,7 +1,10 @@
-<div class="account-page container py-5">
-  <div class="page-heading">
-    <div><span class="eyebrow">{{ 'ACCOUNT.SETTINGS_EYEBROW' | translate }}</span><h1>{{ 'ACCOUNT.MY_ACCOUNT_TITLE' | translate }}</h1><p>{{ 'ACCOUNT.MY_ACCOUNT_DESC' | translate }}</p></div>
-  </div>
+<app-page-hero
+  [eyebrow]="'ACCOUNT.SETTINGS_EYEBROW' | translate"
+  [title]="'ACCOUNT.MY_ACCOUNT_TITLE' | translate"
+  [subtitle]="'ACCOUNT.MY_ACCOUNT_DESC' | translate">
+</app-page-hero>
+
+<div class="account-page container py-4">
 
   <div *ngIf="isLoading" class="loading-state"><span class="spinner-border"></span> {{ 'ACCOUNT.LOADING_ACCOUNT' | translate }}</div>
 

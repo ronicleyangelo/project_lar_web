@@ -1,10 +1,8 @@
-<section class="opportunity-hero">
-  <div class="container">
-    <span>{{ 'PROVIDER.HERO_EYEBROW' | translate }}</span>
-    <h1>{{ 'PROVIDER.HERO_TITLE' | translate }}</h1>
-    <p>{{ 'PROVIDER.HERO_SUBTITLE' | translate }}</p>
-  </div>
-</section>
+<app-page-hero
+  [eyebrow]="'PROVIDER.HERO_EYEBROW' | translate"
+  [title]="'PROVIDER.HERO_TITLE' | translate"
+  [subtitle]="'PROVIDER.HERO_SUBTITLE' | translate">
+</app-page-hero>
 
 <main class="opportunities-page container">
   <aside class="filters-card">

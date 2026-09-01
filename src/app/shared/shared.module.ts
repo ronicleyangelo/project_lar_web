@@ -23,6 +23,7 @@ import { EmptyStateComponent } from './components/empty-state/empty-state.compon
 import { AuthBackgroundComponent } from './components/auth-background/auth-background.component';
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { ActivityLabelPipe } from './pipes/activity-label.pipe';
+import { PageHeroComponent } from './components/page-hero/page-hero.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { ActivityLabelPipe } from './pipes/activity-label.pipe';
     EmptyStateComponent,
     AuthBackgroundComponent,
     TruncatePipe,
-    ActivityLabelPipe
+    ActivityLabelPipe,
+    PageHeroComponent
   ],
   imports: [
     CommonModule,
@@ -77,7 +79,8 @@ import { ActivityLabelPipe } from './pipes/activity-label.pipe';
     EmptyStateComponent,
     AuthBackgroundComponent,
     TruncatePipe,
-    ActivityLabelPipe
+    ActivityLabelPipe,
+    PageHeroComponent
   ]
 })
 export class SharedModule { }

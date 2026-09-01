@@ -1,0 +1,31 @@
+.page-hero {
+  padding: 37px 0;
+  border-bottom: 1px solid #ded8ce;
+  background: linear-gradient(115deg, #edf3ef, #f4e6df);
+}
+.page-hero span {
+  color: var(--secondary);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+.page-hero h1 {
+  margin: 6px 0;
+  color: var(--text-primary);
+  font-size: 36px;
+  font-weight: 850;
+}
+.page-hero p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+@media (max-width: 767px) {
+  .page-hero {
+    padding: 28px 16px;
+  }
+  .page-hero h1 {
+    font-size: 29px;
+  }
+}

@@ -1,0 +1,7 @@
+<section class="page-hero">
+  <div class="container">
+    <span *ngIf="eyebrow">{{ eyebrow }}</span>
+    <h1 *ngIf="title" [innerHTML]="title"></h1>
+    <p *ngIf="subtitle">{{ subtitle }}</p>
+  </div>
+</section>

@@ -1,9 +1,6 @@
 :host { display: block; min-height: 100%; background: #f7f8f6; }
 .account-page { max-width: 920px; }
-.page-heading { margin-bottom: 25px; }
-.page-heading h1 { margin: 3px 0; font-size: 30px; font-weight: 850; letter-spacing: -.8px; }
-.page-heading p { margin: 0; color: var(--text-muted); font-size: 13px; }
-.eyebrow { color: var(--primary); font-size: 10px; font-weight: 850; letter-spacing: 1.2px; text-transform: uppercase; }
+
 .settings-stack { display: grid; gap: 16px; }
 .settings-card { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 18px; padding: 25px; border: 1px solid var(--border-light); border-radius: 16px; background: #fff; box-shadow: var(--shadow-sm); }
 .section-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; color: var(--primary); background: var(--primary-soft); }
@@ -36,3 +33,4 @@
 .dialog-form { display: grid; gap: 15px; margin-top: 18px; }.dialog-actions { display: flex; justify-content: flex-end; gap: 10px; padding-top: 4px; }
 .loading-state { min-height: 400px; display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--text-muted); }
 @media (max-width: 760px) { .form-grid { grid-template-columns: 1fr; }.form-grid .btn { margin-top: 0; }.settings-card { grid-template-columns: 1fr; }.section-icon { width: 40px; height: 40px; }.deletion-notice { align-items: stretch; flex-direction: column; } }
+
