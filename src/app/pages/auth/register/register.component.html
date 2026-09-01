@@ -96,6 +96,18 @@
         </div>
       </ng-container>
 
+      <div class="legal-consents mt-3">
+        <label class="d-flex gap-2 align-items-center">
+          <input type="checkbox" formControlName="acceptPrivacy">
+          <span>Li e aceito a <button type="button" class="btn-link p-0 align-baseline" (click)="legalDialogs.open('privacy')">Política de Privacidade</button>.</span>
+        </label>
+        <label class="d-flex gap-2 align-items-center mt-2">
+          <input type="checkbox" formControlName="acceptTerms">
+          <span>Li e aceito os <button type="button" class="btn-link p-0 align-baseline" (click)="legalDialogs.open('terms')">Termos de Uso</button>.</span>
+        </label>
+        <small class="text-danger" *ngIf="(form.controls.acceptPrivacy.touched && form.controls.acceptPrivacy.invalid) || (form.controls.acceptTerms.touched && form.controls.acceptTerms.invalid)">Os dois aceites são necessários para criar a conta.</small>
+      </div>
+
       <button type="submit" class="btn btn-primary w-100 auth-btn mt-3" [disabled]="isLoading">
         <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
         {{ isLoading ? ('AUTH.REGISTER_LOADING' | translate) : ('AUTH.REGISTER_BTN' | translate) }}
@@ -108,3 +120,4 @@
     </div>
   </div>
 </div>
+
