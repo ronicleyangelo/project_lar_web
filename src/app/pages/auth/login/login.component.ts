@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { MessageService } from 'primeng/api';
@@ -29,6 +29,7 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     private router: Router,
     private messageService: MessageService,
     private formBuilder: FormBuilder,
+    private ngZone: NgZone,
   ) {}
 
   ngAfterViewInit(): void {
@@ -70,7 +71,9 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
       if (!target || !window.google?.accounts?.id) return;
       window.google.accounts.id.initialize({
         client_id: environment.googleClientId,
-        callback: (response: { credential?: string }) => this.handleGoogleCredential(response.credential),
+        callback: (response: { credential?: string }) => {
+          this.ngZone.run(() => this.handleGoogleCredential(response.credential));
+        },
       });
       window.google.accounts.id.renderButton(target, {
         type: 'standard', theme: 'outline', size: 'large', text: 'continue_with',
@@ -95,7 +98,7 @@ export class LoginComponent implements AfterViewInit, OnDestroy {
     this.googleScript.defer = true;
     this.googleScript.dataset['googleIdentity'] = 'true';
     this.googleScript.onload = render;
-    this.googleScript.onerror = () => { this.googleUnavailable = true; };
+    this.googleScript.onerror = () => this.ngZone.run(() => { this.googleUnavailable = true; });
     document.head.appendChild(this.googleScript);
   }
 
