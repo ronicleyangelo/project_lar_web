@@ -13,10 +13,7 @@
     </a>
 
     <!-- NAVIGATION -->
-    <nav *ngIf="!authPage" class="main-nav d-none d-md-flex">
-      <a *ngIf="isAnonymous" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="exactRouteMatch" class="nav-item">
-        {{ 'HEADER.HOME' | translate }}
-      </a>
+    <nav *ngIf="isAuthenticated" class="main-nav d-none d-md-flex">
       <a *ngIf="isClient" routerLink="/explore" routerLinkActive="active" [routerLinkActiveOptions]="exactRouteMatch" class="nav-item">
         {{ 'HEADER.EXPLORE' | translate }}
       </a>

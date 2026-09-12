@@ -51,7 +51,7 @@
   </article>
 </p-dialog>
 
-<app-mobile-nav *ngIf="!authPage" [currentUser]="currentUser"></app-mobile-nav>
+<app-mobile-nav *ngIf="!authPage && currentUser" [currentUser]="currentUser"></app-mobile-nav>
 
 <p-toast position="top-right" [life]="2000"></p-toast>
 </div>

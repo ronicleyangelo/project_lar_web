@@ -1,8 +1,4 @@
 <nav class="mobile-nav d-flex d-md-none">
-  <a *ngIf="isAnonymous" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="exactRouteMatch" class="nav-item">
-    <span class="icon">home</span>
-    <span>{{ 'HEADER.HOME' | translate }}</span>
-  </a>
   <a *ngIf="isClient" routerLink="/explore" routerLinkActive="active" [routerLinkActiveOptions]="exactRouteMatch" class="nav-item">
     <span class="icon">search</span>
     <span>{{ 'HEADER.EXPLORE' | translate }}</span>
