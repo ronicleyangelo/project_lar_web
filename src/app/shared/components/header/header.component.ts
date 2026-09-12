@@ -17,6 +17,7 @@ export class HeaderComponent {
   
   accountMenuOpen = false;
   langMenuOpen = false;
+  avatarLoadFailed = false;
 
   get isClient(): boolean { return this.currentUser?.role === 'CLIENT'; }
   get isProvider(): boolean { return this.currentUser?.role === 'PROVIDER'; }
@@ -35,10 +36,15 @@ export class HeaderComponent {
   }
 
   get avatarUrl(): string | null {
+    if (this.avatarLoadFailed) return null;
     const profile = this.currentUser?.profile;
     const professionalPhoto = profile && 'photoUrl' in profile ? profile.photoUrl : null;
     const url = this.currentUser?.avatarUrl || professionalPhoto || null;
     return (!url || url === 'null') ? null : url;
+  }
+
+  onAvatarError(): void {
+    this.avatarLoadFailed = true;
   }
 
   get profileLink(): string {

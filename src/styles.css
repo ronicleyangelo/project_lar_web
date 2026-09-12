@@ -66,7 +66,15 @@ body {
   overflow-x: clip;
 }
 
-/* Material Icons */
+/* Material Icons bundled locally so icons do not turn into ligature text offline/mobile. */
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/assets/fonts/material-symbols-outlined.woff2') format('woff2');
+}
+
 .icon {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
@@ -75,6 +83,13 @@ body {
   line-height: 1;
   display: inline-block;
   vertical-align: middle;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
 }
 
 /* Base PrimeNG Overrides (retained and enhanced) */

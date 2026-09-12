@@ -79,7 +79,7 @@
       <!-- PROFILE DROPDOWN -->
       <div *ngIf="isAuthenticated" class="dropdown-wrapper">
         <button class="btn-profile" (click)="toggleAccountMenu($event)" [attr.aria-expanded]="accountMenuOpen">
-          <img *ngIf="avatarUrl; else defaultAvatar" [src]="avatarUrl" referrerpolicy="no-referrer" class="avatar-img" alt="User Avatar">
+          <img *ngIf="avatarUrl; else defaultAvatar" [src]="avatarUrl" (error)="onAvatarError()" referrerpolicy="no-referrer" class="avatar-img" alt="Foto do perfil">
           <ng-template #defaultAvatar>
             <div class="avatar-placeholder"><span class="icon">person</span></div>
           </ng-template>

@@ -442,6 +442,10 @@
   .brand-logo .icon {
     font-size: 18px;
   }
+  .brand-text h1 {
+    font-size: 14px;
+    white-space: nowrap;
+  }
   .brand-subtitle {
     display: none;
   }
@@ -455,6 +459,12 @@
   .flag-icon { width: 16px; height: 16px; }
   .btn-lang .lang-code {
     font-size: 11px;
+  }
+  .header-actions > .btn-auth-primary {
+    display: none;
+  }
+  .btn-auth-secondary {
+    padding: 7px 10px;
   }
 }
 
