@@ -36,7 +36,9 @@ export class AuthService {
   }
 
   loginWithGoogle(credential: string): Observable<GoogleAuthResponse> {
-    return this.http.post<GoogleAuthResponse>(`${this.apiUrl}/google`, { credential }).pipe(
+    return this.http.post<GoogleAuthResponse>(`${this.apiUrl}/google`, { credential }, {
+      headers: { 'X-Silent-Request': 'true' },
+    }).pipe(
       tap(res => {
         if (res.token && res.user) {
           this.setSession(res.token, res.user);
@@ -46,7 +48,9 @@ export class AuthService {
   }
 
   completeGoogleRegistration(payload: CompleteGoogleRegistrationPayload): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/google/complete`, payload).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/google/complete`, payload, {
+      headers: { 'X-Silent-Request': 'true' },
+    }).pipe(
       tap(res => this.setSession(res.token, res.user))
     );
   }
