@@ -107,9 +107,11 @@ export class AuthService {
   logout(): Observable<void> {
     this.clearLocalSession();
 
-    // A exclusão local não basta: o cookie HttpOnly só pode ser removido pelo
-    // servidor. O caller aguarda esta requisição antes de navegar/recarregar.
-    return this.http.post<void>(`${this.apiUrl}/logout`, {}).pipe(
+    // A interface sai imediatamente; o servidor remove o cookie HttpOnly
+    // silenciosamente, sem bloquear a navegação nem abrir o spinner global.
+    return this.http.post<void>(`${this.apiUrl}/logout`, {}, {
+      headers: { 'X-Silent-Request': 'true' },
+    }).pipe(
       catchError(() => of(void 0))
     );
   }
