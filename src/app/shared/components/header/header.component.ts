@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, HostListener } from '@angular/c
 import { User } from '../../../core/models/user.model';
 import { TranslateService } from '@ngx-translate/core';
 import { LegalDialogService } from '../../../core/services/legal-dialog.service';
+import { IsActiveMatchOptions } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -9,6 +10,12 @@ import { LegalDialogService } from '../../../core/services/legal-dialog.service'
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
+  readonly exactRouteMatch: IsActiveMatchOptions = {
+    paths: 'exact',
+    queryParams: 'ignored',
+    matrixParams: 'ignored',
+    fragment: 'ignored',
+  };
   constructor(public translate: TranslateService, private legalDialogs: LegalDialogService) {}
   
   @Input() currentUser: User | null = null;

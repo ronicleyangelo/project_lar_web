@@ -1,25 +1,25 @@
 <nav class="mobile-nav d-flex d-md-none">
-  <a *ngIf="isAnonymous" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+  <a *ngIf="isAnonymous" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="exactRouteMatch" class="nav-item">
     <span class="icon">home</span>
     <span>{{ 'HEADER.HOME' | translate }}</span>
   </a>
-  <a *ngIf="isClient" routerLink="/explore" routerLinkActive="active" class="nav-item">
+  <a *ngIf="isClient" routerLink="/explore" routerLinkActive="active" [routerLinkActiveOptions]="exactRouteMatch" class="nav-item">
     <span class="icon">search</span>
     <span>{{ 'HEADER.EXPLORE' | translate }}</span>
   </a>
-  <a *ngIf="isClient" routerLink="/client" routerLinkActive="active" class="nav-item">
+  <a *ngIf="isClient" routerLink="/client" routerLinkActive="active" [routerLinkActiveOptions]="exactRouteMatch" class="nav-item">
     <span class="icon">list_alt</span>
     <span>{{ 'HEADER.MY_ORDERS' | translate }}</span>
   </a>
-  <a *ngIf="isProvider" routerLink="/provider" routerLinkActive="active" class="nav-item">
+  <a *ngIf="isProvider" routerLink="/provider" routerLinkActive="active" [routerLinkActiveOptions]="exactRouteMatch" class="nav-item">
     <span class="icon">dashboard</span>
     <span>{{ 'HEADER.DASHBOARD' | translate }}</span>
   </a>
-  <a *ngIf="isProvider" routerLink="/provider/opportunities" routerLinkActive="active" class="nav-item">
+  <a *ngIf="isProvider" routerLink="/provider/opportunities" routerLinkActive="active" [routerLinkActiveOptions]="exactRouteMatch" class="nav-item">
     <span class="icon">work</span>
     <span>{{ 'HEADER.OPPORTUNITIES' | translate }}</span>
   </a>
-  <a *ngIf="isAdmin" routerLink="/admin" routerLinkActive="active" class="nav-item">
+  <a *ngIf="isAdmin" routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="exactRouteMatch" class="nav-item">
     <span class="icon">admin_panel_settings</span>
     <span>{{ 'HEADER.ADMIN' | translate }}</span>
   </a>
