@@ -1,99 +1,63 @@
 <div class="auth-wrapper">
   <app-auth-background></app-auth-background>
-  <div class="auth-card card">
-    <div class="card-body p-4">
-      <div class="auth-intro">
-        <img *ngIf="profile?.picture" [src]="profile?.picture" alt="Foto do perfil Google" class="google-avatar">
-        <div>
-          <h3 class="auth-title">Complete seu cadastro</h3>
-          <p>{{ profile?.email }}</p>
+  <main class="onboarding-card" aria-labelledby="onboarding-title">
+    <header class="onboarding-header">
+      <div class="identity">
+        <img *ngIf="profile?.picture && !avatarLoadFailed" [src]="profile?.picture" (error)="avatarLoadFailed = true" [alt]="'AUTH.GOOGLE_AVATAR_ALT' | translate" class="google-avatar">
+        <span *ngIf="!profile?.picture || avatarLoadFailed" class="avatar-fallback icon" aria-hidden="true">person</span>
+        <div class="identity-copy">
+          <span class="google-badge"><span class="icon">verified</span>{{ 'AUTH.GOOGLE_CONNECTED' | translate }}</span>
+          <h1 id="onboarding-title">{{ 'AUTH.COMPLETE_TITLE' | translate }}</h1>
+          <p>{{ 'AUTH.COMPLETE_INTRO' | translate }}</p>
+          <span class="account-email">{{ profile?.email }}</span>
         </div>
       </div>
+      <span class="step-badge">{{ 'AUTH.COMPLETE_STEP' | translate }}</span>
+    </header>
 
-      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-
-      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-      <div class="role-selector mb-3">
-        <input type="radio" class="btn-check" id="googleClient" value="CLIENT" formControlName="role">
-        <label class="btn btn-outline-primary" for="googleClient">Sou cliente</label>
-        <input type="radio" class="btn-check" id="googleProvider" value="PROVIDER" formControlName="role">
-        <label class="btn btn-outline-primary" for="googleProvider">Sou profissional</label>
-      </div>
-
-      <div class="form-row">
-        <div class="form-field">
-          <label class="form-label">Nome completo</label>
-          <input class="form-control" formControlName="fullName" autocomplete="name" [class.is-invalid]="form.controls.fullName.touched && form.controls.fullName.invalid">
-          <div class="invalid-feedback">Informe um nome com pelo menos 3 caracteres.</div>
-        </div>
-        <div class="form-field">
-          <label class="form-label">Telefone / WhatsApp</label>
-          <input type="tel" class="form-control" formControlName="phone" (input)="onPhoneInput($event)"
-            placeholder="(27) 99999-9999" maxlength="15" autocomplete="tel-national">
-          <div class="invalid-feedback" [class.d-block]="form.controls.phone.touched && form.controls.phone.invalid">Informe um celular válido com DDD.</div>
-        </div>
-      </div>
-
-      <div class="form-row" [class.provider-location-row]="isProviderRegistration">
-        <div class="form-field">
-          <label class="form-label">Bairro</label>
-          <input class="form-control" formControlName="neighborhood" autocomplete="address-level3" [class.is-invalid]="form.controls.neighborhood.touched && form.controls.neighborhood.invalid">
-          <div class="invalid-feedback">Informe o bairro.</div>
-        </div>
-        <div class="form-field">
-          <label class="form-label">Cidade</label>
-          <input class="form-control" formControlName="city" autocomplete="address-level2" [class.is-invalid]="form.controls.city.touched && form.controls.city.invalid">
-          <div class="invalid-feedback">Informe a cidade.</div>
-        </div>
-        <div class="form-field" *ngIf="isProviderRegistration">
-          <label class="form-label">Raio (km)</label>
-          <input type="number" class="form-control" min="1" max="100" formControlName="serviceRadiusKm" [class.is-invalid]="form.controls.serviceRadiusKm.touched && form.controls.serviceRadiusKm.invalid">
-          <div class="invalid-feedback">Use um valor entre 1 e 100 km.</div>
-        </div>
-      </div>
-
-      <ng-container *ngIf="isClientRegistration">
-        <label class="form-label">Endereço completo (protegido)</label>
-        <input class="form-control mb-3" formControlName="fullAddress" autocomplete="street-address" [class.is-invalid]="form.controls.fullAddress.touched && form.controls.fullAddress.invalid">
-        <div class="invalid-feedback mb-3">Informe o endereço completo.</div>
-      </ng-container>
-
-      <ng-container *ngIf="isProviderRegistration">
-        <label class="form-label">Bio / qualificações</label>
-        <textarea class="form-control mb-3" rows="2" formControlName="bio"></textarea>
-
-        <label class="form-label">Onde você realiza faxinas?</label>
-        <div class="property-grid mb-3">
-          <label *ngFor="let option of propertyTypeOptions" class="category-option">
-            <input type="checkbox" [checked]="form.controls.propertyTypes.value.includes(option.value)"
-              (change)="togglePropertyType(option.value, $any($event.target).checked)">
-            <span>{{ option.label }}</span>
+    <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}</div>
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <section class="form-section" aria-labelledby="role-title">
+        <div class="section-heading"><span class="section-icon icon">switch_account</span><div><h2 id="role-title">{{ 'AUTH.CHOOSE_PROFILE' | translate }}</h2><p>{{ 'AUTH.CHOOSE_PROFILE_HINT' | translate }}</p></div></div>
+        <div class="role-selector">
+          <input type="radio" class="visually-hidden" id="googleClient" value="CLIENT" formControlName="role">
+          <label class="role-card" for="googleClient" [class.selected]="isClientRegistration">
+            <span class="role-icon icon">person_search</span><span class="role-copy"><strong>{{ 'AUTH.CLIENT_CHOICE_TITLE' | translate }}</strong><small>{{ 'AUTH.CLIENT_CHOICE_DESC' | translate }}</small></span><span class="selection-mark icon">{{ isClientRegistration ? 'check_circle' : 'radio_button_unchecked' }}</span>
+          </label>
+          <input type="radio" class="visually-hidden" id="googleProvider" value="PROVIDER" formControlName="role">
+          <label class="role-card" for="googleProvider" [class.selected]="isProviderRegistration">
+            <span class="role-icon icon">home_repair_service</span><span class="role-copy"><strong>{{ 'AUTH.PROVIDER_CHOICE_TITLE' | translate }}</strong><small>{{ 'AUTH.PROVIDER_CHOICE_DESC' | translate }}</small></span><span class="selection-mark icon">{{ isProviderRegistration ? 'check_circle' : 'radio_button_unchecked' }}</span>
           </label>
         </div>
-        <div class="validation-message" *ngIf="form.controls.propertyTypes.touched && form.controls.propertyTypes.invalid">Selecione ao menos um tipo de imóvel.</div>
+      </section>
 
-        <label class="pet-option mb-3">
-          <input type="checkbox" formControlName="acceptsPets">
-          <span>Aceito trabalhar em residências com pets</span>
-        </label>
-      </ng-container>
+      <section class="form-section details" aria-labelledby="details-title">
+        <div class="section-heading"><span class="section-icon icon">badge</span><div><h2 id="details-title">{{ 'AUTH.YOUR_DETAILS' | translate }}</h2><p>{{ 'AUTH.YOUR_DETAILS_HINT' | translate }}</p></div></div>
+        <div class="fields-grid">
+          <div class="form-field"><label for="googleFullName">{{ 'AUTH.FULL_NAME' | translate }}</label><input id="googleFullName" class="form-control" formControlName="fullName" autocomplete="name" [placeholder]="'AUTH.FULL_NAME_PLACEHOLDER' | translate" [class.is-invalid]="form.controls.fullName.touched && form.controls.fullName.invalid"><div class="invalid-feedback">{{ 'AUTH.FULL_NAME_ERROR' | translate }}</div></div>
+          <div class="form-field"><label for="googlePhone">{{ 'AUTH.PHONE' | translate }}</label><input id="googlePhone" type="tel" class="form-control" formControlName="phone" (input)="onPhoneInput($event)" [placeholder]="'AUTH.PHONE_PLACEHOLDER' | translate" maxlength="15" autocomplete="tel-national" [class.is-invalid]="form.controls.phone.touched && form.controls.phone.invalid"><div class="invalid-feedback">{{ 'AUTH.PHONE_ERROR' | translate }}</div></div>
+          <div class="form-field"><label for="googleNeighborhood">{{ 'AUTH.NEIGHBORHOOD' | translate }}</label><input id="googleNeighborhood" class="form-control" formControlName="neighborhood" autocomplete="address-level3" [placeholder]="'AUTH.NEIGHBORHOOD_PLACEHOLDER' | translate" [class.is-invalid]="form.controls.neighborhood.touched && form.controls.neighborhood.invalid"><div class="invalid-feedback">{{ 'AUTH.NEIGHBORHOOD_ERROR' | translate }}</div></div>
+          <div class="form-field"><label for="googleCity">{{ 'AUTH.CITY' | translate }}</label><input id="googleCity" class="form-control" formControlName="city" autocomplete="address-level2" [placeholder]="'AUTH.CITY_PLACEHOLDER' | translate" [class.is-invalid]="form.controls.city.touched && form.controls.city.invalid"><div class="invalid-feedback">{{ 'AUTH.CITY_ERROR' | translate }}</div></div>
 
-      <div class="legal-consents mb-3">
-        <label class="d-flex gap-2 align-items-start">
-          <input type="checkbox" formControlName="acceptPrivacy">
-          <span>Li e aceito a <button type="button" class="btn-link p-0 align-baseline" (click)="legalDialogs.open('privacy')">Política de Privacidade</button>.</span>
-        </label>
-        <label class="d-flex gap-2 align-items-start mt-2">
-          <input type="checkbox" formControlName="acceptTerms">
-          <span>Li e aceito os <button type="button" class="btn-link p-0 align-baseline" (click)="legalDialogs.open('terms')">Termos de Uso</button>.</span>
-        </label>
-      </div>
+          <div class="form-field full-width" *ngIf="isClientRegistration">
+            <label for="googleAddress">{{ 'AUTH.FULL_ADDRESS' | translate }}</label><div class="input-with-icon"><span class="icon">lock</span><input id="googleAddress" class="form-control" formControlName="fullAddress" autocomplete="street-address" [class.is-invalid]="form.controls.fullAddress.touched && form.controls.fullAddress.invalid"></div>
+            <small class="field-hint">{{ 'AUTH.ADDRESS_PRIVACY_HINT' | translate }}</small><div class="invalid-feedback" [class.d-block]="form.controls.fullAddress.touched && form.controls.fullAddress.invalid">{{ 'AUTH.FULL_ADDRESS_ERROR' | translate }}</div>
+          </div>
 
-      <button type="submit" class="btn btn-primary w-100 auth-btn" [disabled]="isLoading">
-        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-        {{ isLoading ? 'Finalizando...' : 'Concluir cadastro' }}
-      </button>
-      </form>
-    </div>
-  </div>
+          <ng-container *ngIf="isProviderRegistration">
+            <div class="form-field"><label for="googleRadius">{{ 'AUTH.RADIUS' | translate }}</label><div class="input-suffix"><input id="googleRadius" type="number" class="form-control" min="1" max="100" formControlName="serviceRadiusKm" [class.is-invalid]="form.controls.serviceRadiusKm.touched && form.controls.serviceRadiusKm.invalid"><span>km</span></div><div class="invalid-feedback" [class.d-block]="form.controls.serviceRadiusKm.touched && form.controls.serviceRadiusKm.invalid">{{ 'AUTH.RADIUS_ERROR' | translate }}</div></div>
+            <div class="form-field"><label for="googleBio">{{ 'AUTH.BIO' | translate }}</label><textarea id="googleBio" class="form-control" rows="2" formControlName="bio" [placeholder]="'AUTH.BIO_PLACEHOLDER' | translate"></textarea></div>
+            <div class="form-field full-width"><label>{{ 'AUTH.WHERE_CLEAN' | translate }}</label><div class="property-grid"><label *ngFor="let option of propertyTypeOptions" class="category-option" [class.selected]="form.controls.propertyTypes.value.includes(option.value)"><input type="checkbox" [checked]="form.controls.propertyTypes.value.includes(option.value)" (change)="togglePropertyType(option.value, $any($event.target).checked)"><span class="icon">{{ option.icon }}</span><span>{{ option.labelKey | translate }}</span></label></div><div class="validation-message" *ngIf="form.controls.propertyTypes.touched && form.controls.propertyTypes.invalid">{{ 'AUTH.PROPERTY_TYPE_ERROR' | translate }}</div></div>
+            <label class="pet-option full-width"><input type="checkbox" formControlName="acceptsPets"><span class="icon">pets</span><span>{{ 'AUTH.ACCEPTS_PETS' | translate }}</span></label>
+          </ng-container>
+        </div>
+      </section>
+
+      <section class="legal-consents">
+        <label><input type="checkbox" formControlName="acceptPrivacy"><span>{{ 'AUTH.ACCEPT_PRIVACY_PREFIX' | translate }} <button type="button" class="legal-link" (click)="legalDialogs.open('privacy')">{{ 'AUTH.PRIVACY_POLICY' | translate }}</button>.</span></label>
+        <label><input type="checkbox" formControlName="acceptTerms"><span>{{ 'AUTH.ACCEPT_TERMS_PREFIX' | translate }} <button type="button" class="legal-link" (click)="legalDialogs.open('terms')">{{ 'AUTH.TERMS_OF_USE' | translate }}</button>.</span></label>
+      </section>
+      <footer class="form-footer"><span class="secure-note"><span class="icon">shield_lock</span>{{ 'AUTH.SECURE_DATA' | translate }}</span><button type="submit" class="btn btn-primary auth-btn" [disabled]="isLoading"><span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span><span>{{ (isLoading ? 'AUTH.COMPLETE_LOADING' : 'AUTH.COMPLETE_BUTTON') | translate }}</span><span *ngIf="!isLoading" class="icon">arrow_forward</span></button></footer>
+    </form>
+  </main>
 </div>

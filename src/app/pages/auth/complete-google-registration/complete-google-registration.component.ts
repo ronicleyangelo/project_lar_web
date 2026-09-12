@@ -30,11 +30,12 @@ export class CompleteGoogleRegistrationComponent implements OnInit {
   });
 
   profile?: GoogleProfile;
+  avatarLoadFailed = false;
   onboardingToken = '';
   readonly propertyTypeOptions = [
-    { value: 'HOUSE', label: 'Casa' },
-    { value: 'APARTMENT', label: 'Apartamento' },
-    { value: 'CONDOMINIUM', label: 'Condomínio' },
+    { value: 'HOUSE', labelKey: 'AUTH.PROPERTY_HOUSE', icon: 'home' },
+    { value: 'APARTMENT', labelKey: 'AUTH.PROPERTY_APARTMENT', icon: 'apartment' },
+    { value: 'CONDOMINIUM', labelKey: 'AUTH.PROPERTY_CONDOMINIUM', icon: 'domain' },
   ];
   error = '';
   isLoading = false;
