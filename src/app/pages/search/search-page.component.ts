@@ -10,6 +10,7 @@ import { ActivityService } from '../../core/services/activity.service';
 import { ServiceActivity } from '../../core/models/service-activity.model';
 import { TranslateService } from '@ngx-translate/core';
 import { FavoriteService } from '../../core/services/favorite.service';
+import { SearchStateService } from '../../core/services/search-state.service';
 import { Observable } from 'rxjs';
 
 type SortOption = 'recommended' | 'distance' | 'price' | 'rating';
@@ -46,20 +47,43 @@ export class SearchPageComponent implements OnInit {
     private recommendationService: RecommendationService,
     private authService: AuthService,
     private favoriteService: FavoriteService,
+    private searchStateService: SearchStateService,
     private router: Router,
     public readonly translate: TranslateService
   ) {}
 
   ngOnInit(): void {
+    const cachedState = this.searchStateService.getSearchState();
+
     this.categoryService.getAll().subscribe(categories => {
       this.categoryId = categories[0]?.id || '';
+      
+      if (cachedState) {
+        this.form.patchValue(cachedState.filters, { emitEvent: false });
+        this.sortBy = cachedState.sortBy as SortOption;
+        this.recommendations = cachedState.results;
+        this.hasSearched = cachedState.hasSearched;
+      } else {
+        setTimeout(() => this.runSearch(), 50);
+      }
     });
+
     this.activityService.list().subscribe(activities => this.activities = activities);
+    
     if (this.authService.currentUserValue?.role === 'CLIENT') {
       this.favoriteService.list().subscribe({
         next: providerIds => this.favoriteProviderIds = new Set(providerIds),
       });
     }
+  }
+
+  get sortOptions() {
+    return [
+      { label: this.translate.instant('SEARCH.SORT_RECOMMENDED'), value: 'recommended' },
+      { label: this.translate.instant('SEARCH.SORT_DISTANCE'), value: 'distance' },
+      { label: this.translate.instant('SEARCH.SORT_PRICE'), value: 'price' },
+      { label: this.translate.instant('SEARCH.SORT_RATING'), value: 'rating' }
+    ];
   }
 
   get currencyCode(): 'BRL' | 'USD' { return this.translate.currentLang() === 'en' ? 'USD' : 'BRL'; }
@@ -93,23 +117,45 @@ export class SearchPageComponent implements OnInit {
       this.searchError = 'A categoria de limpeza ainda não está disponível.';
       return;
     }
-    this.searchError = '';
-    this.isSearching = true;
-    const value = this.form.getRawValue();
-    const params: SearchParams = {
-      categoryId: this.categoryId,
-      city: value.city.trim(),
-      neighborhood: value.neighborhood.trim(),
-      maxBudget: value.maxBudget > 0 ? value.maxBudget : undefined,
-      propertyType: value.propertyType || undefined,
-      hasPets: value.hasPets,
-      minRating: value.minRating > 0 ? value.minRating : undefined,
-      activityIds: value.activityIds.length ? value.activityIds : undefined,
-    };
-    this.recommendationService.search(params).pipe(finalize(() => { this.isSearching = false; this.hasSearched = true; })).subscribe({
-      next: results => { this.recommendations = results; this.filtersOpen = false; },
-      error: error => { this.recommendations = []; this.searchError = error?.error?.error || 'Não foi possível buscar profissionais agora.'; },
-    });
+    
+    try {
+      this.searchError = '';
+      this.isSearching = true;
+      const value = this.form.getRawValue();
+      const params: SearchParams = {
+        categoryId: this.categoryId,
+        city: (value.city || '').trim(),
+        neighborhood: (value.neighborhood || '').trim(),
+        maxBudget: value.maxBudget > 0 ? value.maxBudget : undefined,
+        propertyType: value.propertyType || undefined,
+        hasPets: value.hasPets,
+        minRating: value.minRating > 0 ? value.minRating : undefined,
+        activityIds: value.activityIds?.length ? value.activityIds : undefined,
+      };
+
+      this.recommendationService.search(params).pipe(
+        finalize(() => { 
+          this.isSearching = false; 
+          this.hasSearched = true; 
+        })
+      ).subscribe({
+        next: results => { 
+          this.recommendations = results || []; 
+          this.filtersOpen = false; 
+          this.searchStateService.setSearchState(this.recommendations, this.form.getRawValue(), this.sortBy);
+        },
+        error: error => { 
+          this.recommendations = []; 
+          this.searchError = error?.error?.error || 'Não foi possível buscar profissionais agora.'; 
+          this.isSearching = false;
+          this.hasSearched = true;
+        },
+      });
+    } catch (e) {
+      console.error('Erro local ao buscar:', e);
+      this.isSearching = false;
+      this.hasSearched = true;
+    }
   }
 
   clearFilters(): void {
@@ -136,17 +182,40 @@ export class SearchPageComponent implements OnInit {
       return;
     }
     if (this.pendingFavoriteIds.has(providerId)) return;
-    this.pendingFavoriteIds.add(providerId);
-    const request: Observable<unknown> = this.favoriteProviderIds.has(providerId)
+    
+    // Atualização otimista: Inverte o visual antes mesmo do servidor responder
+    const isFav = this.favoriteProviderIds.has(providerId);
+    
+    const nextFav = new Set(this.favoriteProviderIds);
+    isFav ? nextFav.delete(providerId) : nextFav.add(providerId);
+    this.favoriteProviderIds = nextFav;
+
+    const nextPending = new Set(this.pendingFavoriteIds);
+    nextPending.add(providerId);
+    this.pendingFavoriteIds = nextPending;
+
+    const request: Observable<unknown> = isFav
       ? this.favoriteService.remove(providerId)
       : this.favoriteService.add(providerId);
-    request.pipe(finalize(() => { this.pendingFavoriteIds.delete(providerId); })).subscribe({
+      
+    request.pipe(
+      finalize(() => { 
+        const finishPending = new Set(this.pendingFavoriteIds);
+        finishPending.delete(providerId);
+        this.pendingFavoriteIds = finishPending;
+      })
+    ).subscribe({
       next: () => {
-        const next = new Set(this.favoriteProviderIds);
-        next.has(providerId) ? next.delete(providerId) : next.add(providerId);
-        this.favoriteProviderIds = next;
+        // Nada a fazer, a UI já foi atualizada otimisticamente
       },
-      error: (error: any) => this.searchError = error?.error?.error || this.translate.instant('PROVIDER_CARD.FAVORITE_ERROR'),
+      error: (error: any) => { 
+        // Reverte em caso de falha do servidor
+        const revertFav = new Set(this.favoriteProviderIds);
+        isFav ? revertFav.add(providerId) : revertFav.delete(providerId);
+        this.favoriteProviderIds = revertFav;
+        
+        this.searchError = error?.error?.error || this.translate.instant('PROVIDER_CARD.FAVORITE_ERROR'); 
+      },
     });
   }
 

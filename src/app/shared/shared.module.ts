@@ -9,7 +9,10 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputMaskModule } from 'primeng/inputmask';
 import { DropdownModule } from 'primeng/dropdown';
+import { TooltipModule } from 'primeng/tooltip';
+import { ProgressSpinner } from 'primeng/progressspinner';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { TranslatePipe, TranslateDirective } from '@ngx-translate/core';
 
@@ -24,6 +27,7 @@ import { AuthBackgroundComponent } from './components/auth-background/auth-backg
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { ActivityLabelPipe } from './pipes/activity-label.pipe';
 import { PageHeroComponent } from './components/page-hero/page-hero.component';
+import { LoadingStateComponent } from './components/loading-state/loading-state.component';
 
 @NgModule({
   declarations: [
@@ -49,9 +53,13 @@ import { PageHeroComponent } from './components/page-hero/page-hero.component';
     TagModule,
     CardModule,
     InputTextModule,
+    InputMaskModule,
     DropdownModule,
+    TooltipModule,
+    ProgressSpinner,
     TranslatePipe,
     TranslateDirective,
+    LoadingStateComponent,
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
     })
@@ -67,7 +75,10 @@ import { PageHeroComponent } from './components/page-hero/page-hero.component';
     TagModule,
     CardModule,
     InputTextModule,
+    InputMaskModule,
     DropdownModule,
+    TooltipModule,
+    ProgressSpinner,
     NgxEchartsModule,
     TranslatePipe,
     TranslateDirective,
@@ -80,7 +91,9 @@ import { PageHeroComponent } from './components/page-hero/page-hero.component';
     AuthBackgroundComponent,
     TruncatePipe,
     ActivityLabelPipe,
-    PageHeroComponent
+    PageHeroComponent,
+    LoadingStateComponent
   ]
 })
 export class SharedModule { }
+

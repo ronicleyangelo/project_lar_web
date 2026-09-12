@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostBinding, HostListener } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -15,6 +15,7 @@ import { ServiceRequest, CreateRequestPayload } from '../../core/models/service-
 import { Appointment, CreateReviewPayload } from '../../core/models/appointment.model';
 import { APPOINTMENT_STATUS_VIEWS, REQUEST_STATUS_VIEWS } from '../../core/presentation/lifecycle-view';
 import { TranslateService } from '@ngx-translate/core';
+import { PaymentService } from '../../core/services/payment.service';
 
 @Component({
   selector: 'app-client-page',
@@ -22,9 +23,37 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./client-page.component.css']
 })
 export class ClientPageComponent implements OnInit {
+  @HostBinding('class.maximized') get isMaximized() { return !!this.maximizedTable; }
   readonly appointmentStatusViews = APPOINTMENT_STATUS_VIEWS;
   readonly requestStatusViews = REQUEST_STATUS_VIEWS;
   clientRequests: ServiceRequest[] = [];
+  expandedRowId: string | null = null;
+  searchTermReq: string = '';
+  searchTermApp: string = '';
+
+  get filteredRequests() {
+    if (!this.searchTermReq) return this.clientRequests;
+    const term = this.searchTermReq.toLowerCase();
+    return this.clientRequests.filter(req => 
+      req.description?.toLowerCase().includes(term) || 
+      req.category?.name?.toLowerCase().includes(term) ||
+      this.translate.instant('STATUS_REQUEST.' + req.status).toLowerCase().includes(term)
+    );
+  }
+
+  get filteredAppointments() {
+    if (!this.searchTermApp) return this.appointments;
+    const term = this.searchTermApp.toLowerCase();
+    return this.appointments.filter(app => 
+      app.provider?.fullName?.toLowerCase().includes(term) ||
+      app.id?.toLowerCase().includes(term) ||
+      this.translate.instant('STATUS_APPOINTMENT.' + app.status).toLowerCase().includes(term)
+    );
+  }
+
+  toggleRow(id: string) {
+    this.expandedRowId = this.expandedRowId === id ? null : id;
+  }
   appointments: Appointment[] = [];
   categories: Category[] = [];
   activities: ServiceActivity[] = [];
@@ -40,16 +69,29 @@ export class ClientPageComponent implements OnInit {
   private currentModalRef: NgbModalRef | null = null;
 
   showRatingModal = false;
+  maximizedTable: string | null = null;
+  toggleMaximize(tableId: string) {
+    this.maximizedTable = this.maximizedTable === tableId ? null : tableId;
+  }
+
+  @HostListener('document:keydown.escape')
+  restoreTable(): void {
+    this.maximizedTable = null;
+  }
   selectedAppointmentId = '';
   isCreatingRequest = false;
   isSubmittingReview = false;
+  isLoadingRequests = true;
+  isLoadingAppointments = true;
   private readonly acceptingQuoteIds = new Set<string>();
   private readonly confirmingAppointmentIds = new Set<string>();
+  private readonly payingAppointmentIds = new Set<string>();
 
   constructor(
     private requestService: RequestService,
     private quoteService: QuoteService,
     private appointmentService: AppointmentService,
+    private paymentService: PaymentService,
     private reviewService: ReviewService,
     private categoryService: CategoryService,
     private activityService: ActivityService,
@@ -70,14 +112,20 @@ export class ClientPageComponent implements OnInit {
   }
 
   loadClientRequests(): void {
-    this.requestService.getClientRequests().subscribe({
+    this.isLoadingRequests = true;
+    this.requestService.getClientRequests().pipe(
+      finalize(() => this.isLoadingRequests = false)
+    ).subscribe({
       next: requests => this.clientRequests = requests,
       error: error => this.showError(error, 'Não foi possível carregar seus pedidos.')
     });
   }
 
   loadAppointments(): void {
-    this.appointmentService.getAll().subscribe({
+    this.isLoadingAppointments = true;
+    this.appointmentService.getAll().pipe(
+      finalize(() => this.isLoadingAppointments = false)
+    ).subscribe({
       next: appointments => this.appointments = appointments,
       error: error => this.showError(error, 'Não foi possível carregar seus agendamentos.')
     });
@@ -183,6 +231,21 @@ export class ClientPageComponent implements OnInit {
     return this.confirmingAppointmentIds.has(id);
   }
 
+  payAppointment(id: string): void {
+    if (this.payingAppointmentIds.has(id)) return;
+    this.payingAppointmentIds.add(id);
+    this.paymentService.createCheckout(id).pipe(
+      finalize(() => this.payingAppointmentIds.delete(id))
+    ).subscribe({
+      next: result => window.location.assign(result.checkoutUrl),
+      error: error => this.showError(error, 'Não foi possível iniciar o pagamento.'),
+    });
+  }
+
+  isPayingAppointment(id: string): boolean {
+    return this.payingAppointmentIds.has(id);
+  }
+
   openRating(appointmentId: string): void {
     this.selectedAppointmentId = appointmentId;
     this.showRatingModal = true;
@@ -207,3 +270,9 @@ export class ClientPageComponent implements OnInit {
     this.messageService.add({ severity: 'error', summary: 'Erro', detail: error?.error?.error || fallback });
   }
 }
+
+
+
+
+
+

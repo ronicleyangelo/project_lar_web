@@ -134,7 +134,15 @@ export class ProviderOpportunitiesComponent implements OnInit {
             detail: 'O cliente já pode analisar sua proposta.',
           });
         },
-        error: error => this.showError(error, 'Não foi possível enviar a proposta.'),
+        error: error => {
+          if (error?.status === 403 && String(error?.error?.error || '').includes('area de atendimento')) {
+            this.requests = this.requests.filter(request => request.id !== requestId);
+            this.quoteDialogVisible = false;
+            this.selectedRequest = null;
+            this.loadOpportunities();
+          }
+          this.showError(error, 'Não foi possível enviar a proposta.');
+        },
       });
   }
 

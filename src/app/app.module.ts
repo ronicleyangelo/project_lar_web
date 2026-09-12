@@ -16,6 +16,10 @@ import { firstValueFrom } from 'rxjs';
 import { AuthService } from './core/services/auth.service';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { providePrimeNG } from 'primeng/config';
+// @ts-ignore
+// @ts-ignore
+import Aura from '@primeuix/themes/aura';
 
 function initializeAuth(authService: AuthService): () => Promise<unknown> {
   return () => firstValueFrom(authService.restoreSession());
@@ -51,8 +55,15 @@ function initializeAuth(authService: AuthService): () => Promise<unknown> {
       lang: 'pt',
       fallbackLang: 'pt'
     }),
-    provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
+    provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' }),
+    providePrimeNG({
+      theme: { preset: Aura, options: { darkModeSelector: '.fake-dark-class' } }
+    })
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
+
+
+
+

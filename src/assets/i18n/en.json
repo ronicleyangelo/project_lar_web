@@ -4,7 +4,7 @@
     "HOME_ARIA": "Go to home",
     "HOME": "Home",
     "EXPLORE": "Explore",
-    "MY_ORDERS": "My Orders",
+    "MY_ORDERS": "My Services",
     "DASHBOARD": "Dashboard",
     "OPPORTUNITIES": "Opportunities",
     "PROFILE": "Profile",
@@ -21,7 +21,9 @@
     "FIND_PROFESSIONALS_DESC": "Find services in your area",
     "CLIENT_ORDERS_DESC": "Track orders and appointments",
     "CLIENT_PROFILE_DESC": "Personal data and protected address",
-    "LOG_OUT": "Log out"
+    "LOG_OUT": "Log out",
+    "ABOUT_PROJECT": "About Project Lar",
+    "ABOUT_PROJECT_DESC": "Platform version and information"
   },
   "HOME": {
     "EYEBROW": "Trusted house cleaning",
@@ -56,8 +58,27 @@
     "CTA_TITLE": "Ready to get started?",
     "CTA_DESC": "Create your free account and find the right option for you."
   },
-  "CLIENT_PROFILE": { "EYEBROW": "Client profile", "TITLE": "My details", "SUBTITLE": "Keep your information updated to request services.", "BACK": "Back to orders", "LOADING": "Loading profile...", "PROTECTED": "Protected address", "PROTECTED_DESC": "The full address is only released after you accept a proposal.", "PERSONAL_DATA": "Personal data and location", "FULL_NAME": "Full Name",
-      "FULL_NAME_PLACEHOLDER": "Ex.: Mary Smith", "PHONE": "Phone / WhatsApp", "CITY": "City", "NEIGHBORHOOD": "Neighborhood", "ADDRESS": "Full address", "ADDRESS_HELP": "This information is not displayed publicly.", "UNSAVED": "You have unsaved changes.", "UPDATED": "Information is up to date.", "SAVING": "Saving...", "SAVE": "Save changes" },
+  "CLIENT_PROFILE": {
+    "EYEBROW": "Client profile",
+    "TITLE": "My details",
+    "SUBTITLE": "Keep your information updated to request services.",
+    "BACK": "Back to services",
+    "LOADING": "Loading profile...",
+    "PROTECTED": "Protected address",
+    "PROTECTED_DESC": "The full address is only released after you accept a proposal.",
+    "PERSONAL_DATA": "Personal data and location",
+    "FULL_NAME": "Full Name",
+    "FULL_NAME_PLACEHOLDER": "Ex.: Mary Smith",
+    "PHONE": "Phone / WhatsApp",
+    "CITY": "City",
+    "NEIGHBORHOOD": "Neighborhood",
+    "ADDRESS": "Full address",
+    "ADDRESS_HELP": "This information is not displayed publicly.",
+    "UNSAVED": "You have unsaved changes.",
+    "UPDATED": "Information is up to date.",
+    "SAVING": "Saving...",
+    "SAVE": "Save changes"
+  },
   "SEARCH": {
     "HERO_EYEBROW": "House Cleaning",
     "HERO_TITLE": "Find professionals <span>near you</span>",
@@ -115,7 +136,12 @@
     "SERVES": "Serves",
     "PRICE": "Rate",
     "REQUEST_CLEANING": "Request cleaning",
-    "PROPERTY_TYPES": { "HOUSE": "House", "APARTMENT": "Apartment", "CONDOMINIUM": "Condominium", "PETS": "Accepts pets" }
+    "PROPERTY_TYPES": {
+      "HOUSE": "House",
+      "APARTMENT": "Apartment",
+      "CONDOMINIUM": "Condominium",
+      "PETS": "Accepts pets"
+    }
   },
   "CLIENT": {
     "EYEBROW": "Client Area",
@@ -157,6 +183,7 @@
       "SEND_QUOTE": "Send Quote",
       "NO_REQS": "There are no orders available in your region at the moment.",
       "MY_JOBS": "My Jobs (Appointments)",
+      "LOADING_APPOINTMENTS": "Loading appointments...",
       "APPOINTMENT": "Appointment",
       "ID": "ID",
       "ADDRESS_RELEASED": "Address Released",
@@ -223,6 +250,28 @@
       "LOADING_PROFILE": "Loading profile...",
       "PROFESSIONAL": "Professional",
       "TEAM_MESSAGE": "Team message",
+    "STATUS": {
+      "DRAFT": {
+        "LABEL": "Profile in draft",
+        "HELP": "Complete and save your profile; then submit it for team review."
+      },
+      "PENDING": {
+        "LABEL": "Pending review",
+        "HELP": "Your review is in queue. Meanwhile, you can edit your data."
+      },
+      "CHANGES": {
+        "LABEL": "Changes requested",
+        "HELP": "Review the team's message, adjust your profile and submit again."
+      },
+      "VERIFIED": {
+        "LABEL": "Profile verified",
+        "HELP": "Your profile is approved and available to receive orders."
+      },
+      "REJECTED": {
+        "LABEL": "Profile not approved",
+        "HELP": "Check the team's message before making a new submission."
+      }
+    },
       "SUBMIT_FOR_REVIEW": "Submit for review",
       "SUBMITTING": "Submitting...",
       "SCORE": "Score",
@@ -290,7 +339,7 @@
     "ROLE_CLIENT": "I am a Client",
     "ROLE_PROVIDER": "I am a Professional",
     "FULL_NAME": "Full Name",
-      "FULL_NAME_PLACEHOLDER": "Ex.: Mary Smith",
+    "FULL_NAME_PLACEHOLDER": "Ex.: Mary Smith",
     "FULL_NAME_ERROR": "Enter a name with at least 3 characters.",
     "PASSWORD_ERROR": "Password must be at least 8 characters long.",
     "PHONE": "Phone / WhatsApp",
@@ -306,7 +355,7 @@
     "FULL_ADDRESS_ERROR": "Enter the full address.",
     "BIO": "Bio / Qualifications",
     "RADIUS": "Radius (km)",
-      "RADIUS_PLACEHOLDER": "Ex.: 10",
+    "RADIUS_PLACEHOLDER": "Ex.: 10",
     "WHERE_CLEAN": "Where do you clean?",
     "ACCEPTS_PETS": "I accept working in homes with pets",
     "REGISTER_LOADING": "Registering...",
@@ -358,7 +407,7 @@
     "PROFESSIONAL_REVIEW": "Professional review",
     "IDENTITY_CONTACT": "Identity and contact",
     "FULL_NAME": "Full Name",
-      "FULL_NAME_PLACEHOLDER": "Ex.: Mary Smith",
+    "FULL_NAME_PLACEHOLDER": "Ex.: Mary Smith",
     "PHONE_WHATSAPP": "Phone / WhatsApp",
     "EMAIL": "Email",
     "ACCOUNT_CREATED": "Account created",
@@ -471,6 +520,7 @@
     "SEND_QUOTE": "Send Quote",
     "NO_REQUESTS": "No requests available in your region at the moment.",
     "MY_JOBS": "My Jobs (Appointments)",
+      "LOADING_APPOINTMENTS": "Loading appointments...",
     "APPOINTMENT": "Appointment",
     "ADDRESS_RELEASED": "Address Released:",
     "ADDRESS_UNAVAILABLE": "Address not available",
@@ -488,7 +538,7 @@
     "PROFILE_SUBTITLE": "Update your information, service radius, and preferences.",
     "PERSONAL_DATA": "Personal Data",
     "FULL_NAME": "Full Name",
-      "FULL_NAME_PLACEHOLDER": "Ex.: Mary Smith",
+    "FULL_NAME_PLACEHOLDER": "Ex.: Mary Smith",
     "PHONE": "Phone / WhatsApp",
     "LOCATION": "Location and Attendance",
     "CITY": "Base city",
@@ -530,16 +580,46 @@
     "SENDING": "Sending..."
   },
   "ACTIVITIES": {
-    "BASIC_CLEANING": { "NAME": "Residential cleaning", "DESCRIPTION": "General cleaning of floors, surfaces, kitchen, and bathrooms." },
-    "DISHES": { "NAME": "Wash dishes", "DESCRIPTION": "Wash the dishes available at the time of service." },
-    "LAUNDRY": { "NAME": "Do laundry", "DESCRIPTION": "Sort clothes and place them in the washing machine." },
-    "IRONING": { "NAME": "Iron clothes", "DESCRIPTION": "Iron the garments agreed upon in the request." },
-    "FOLD_AND_STORE": { "NAME": "Fold and store clothes", "DESCRIPTION": "Fold and organize clean clothes." },
-    "COOKING": { "NAME": "Cook", "DESCRIPTION": "Prepare meals agreed upon in advance." },
-    "CABINETS": { "NAME": "Organize cabinets", "DESCRIPTION": "Organize the inside of cabinets." },
-    "FRIDGE": { "NAME": "Clean refrigerator", "DESCRIPTION": "Clean the inside of the refrigerator." },
-    "OVEN": { "NAME": "Clean oven", "DESCRIPTION": "Clean the inside of the oven." },
-    "WINDOWS": { "NAME": "Clean windows", "DESCRIPTION": "Clean accessible and safe windows." }
+    "BASIC_CLEANING": {
+      "NAME": "Residential cleaning",
+      "DESCRIPTION": "General cleaning of floors, surfaces, kitchen, and bathrooms."
+    },
+    "DISHES": {
+      "NAME": "Wash dishes",
+      "DESCRIPTION": "Wash the dishes available at the time of service."
+    },
+    "LAUNDRY": {
+      "NAME": "Do laundry",
+      "DESCRIPTION": "Sort clothes and place them in the washing machine."
+    },
+    "IRONING": {
+      "NAME": "Iron clothes",
+      "DESCRIPTION": "Iron the garments agreed upon in the request."
+    },
+    "FOLD_AND_STORE": {
+      "NAME": "Fold and store clothes",
+      "DESCRIPTION": "Fold and organize clean clothes."
+    },
+    "COOKING": {
+      "NAME": "Cook",
+      "DESCRIPTION": "Prepare meals agreed upon in advance."
+    },
+    "CABINETS": {
+      "NAME": "Organize cabinets",
+      "DESCRIPTION": "Organize the inside of cabinets."
+    },
+    "FRIDGE": {
+      "NAME": "Clean refrigerator",
+      "DESCRIPTION": "Clean the inside of the refrigerator."
+    },
+    "OVEN": {
+      "NAME": "Clean oven",
+      "DESCRIPTION": "Clean the inside of the oven."
+    },
+    "WINDOWS": {
+      "NAME": "Clean windows",
+      "DESCRIPTION": "Clean accessible and safe windows."
+    }
   },
   "STATUS_REQUEST": {
     "OPEN": "Open",
@@ -555,7 +635,12 @@
     "COMPLETED": "Completed",
     "CANCELLED": "Cancelled",
     "DISPUTED": "Disputed"
+  },
+  "APP": {
+    "ABOUT_TITLE": "Trusted services",
+    "ABOUT_DESC": "We connect clients and residential service professionals simply, safely, and transparently."
   }
 }
+
 
 

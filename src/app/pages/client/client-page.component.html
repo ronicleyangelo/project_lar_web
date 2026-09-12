@@ -8,137 +8,147 @@
 </app-page-hero>
 
 <div class="container py-4">
-  <div class="d-flex align-items-center justify-content-between mb-4">
-    <h3 class="fw-bold m-0 text-dark" style="font-size: 20px;">Pedidos em Aberto</h3>
-  </div>
-
-  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
-    <div class="table-responsive" *ngIf="clientRequests.length > 0; else noRequests">
-      <table class="table table-hover align-middle mb-0" style="background: white;">
-        <thead class="table-light">
-          <tr>
-            <th style="width: 40px;"></th>
-            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Serviço</th>
-            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Data / Horário</th>
-            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Status</th>
-            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Privacidade</th>
-            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Propostas</th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngFor="let req of clientRequests">
-            <tr [class.bg-light]="expandedRowId === req.id">
-              <td>
-                <button type="button" class="btn btn-sm btn-link text-dark p-0 text-decoration-none" (click)="toggleRow(req.id)" *ngIf="(req.quotes?.length || 0) > 0">
-                  <span class="icon">{{ expandedRowId === req.id ? 'expand_less' : 'expand_more' }}</span>
-                </button>
-              </td>
-              <td>
-                <div class="fw-bold text-dark">{{ req.category.name || req.categoryId }}</div>
-                <div class="text-muted small text-truncate" style="max-width: 250px;">{{ req.description }}</div>
-              </td>
-              <td>
-                <div class="fw-bold text-dark">{{ req.scheduledDate | date: 'dd/MM/yyyy' }}</div>
-                <div class="text-muted small">{{ req.timeSlot }}</div>
-              </td>
-              <td>
-                <span class="badge" [ngClass]="requestStatusViews[req.status].badgeClass">{{ 'STATUS_REQUEST.' + req.status | translate }}</span>
-              </td>
-              <td>
-                <span class="badge bg-light text-dark border"><span class="icon" style="font-size: 11px;">lock</span> Endereço Protegido</span>
-              </td>
-              <td>
-                <span class="badge bg-primary text-white" *ngIf="(req.quotes?.length || 0) > 0">{{ req.quotes.length }} Proposta(s)</span>
-                <span class="text-muted small" *ngIf="!req.quotes || req.quotes.length === 0">Nenhuma</span>
-              </td>
-            </tr>
-            <!-- Row Expansion -->
-            <tr *ngIf="expandedRowId === req.id" class="bg-light">
-              <td colspan="6" class="p-0 border-0">
-                <div class="p-4 border-bottom">
-                  <h6 class="fw-bold mb-3"><span class="icon align-middle" style="font-size: 18px;">receipt_long</span> Propostas Recebidas</h6>
-                  <div class="row g-3">
-                    <div class="col-12 col-md-6" *ngFor="let q of req.quotes">
-                      <div class="card border-0 shadow-sm rounded-3">
-                        <div class="card-body">
-                          <div class="d-flex justify-content-between mb-2">
-                            <strong class="text-dark">{{ q.provider.fullName || 'Profissional' }}</strong>
-                            <div class="fw-bold text-primary">R$ {{ q.price }}</div>
+  <div id="requests-card" class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'requests'">
+    <app-loading-state [loading]="isLoadingRequests" label="Carregando pedidos..."></app-loading-state>
+    <p-table #dtRequests [value]="filteredRequests" dataKey="id" [globalFilterFields]="['category.name', 'description', 'status']" [rows]="5" [paginator]="true" responsiveLayout="scroll" styleClass="p-datatable-lg p-datatable-striped" *ngIf="!isLoadingRequests">
+      <ng-template pTemplate="caption">
+        <div class="d-flex align-items-center justify-content-between p-3">
+          <h3 class="fw-bold m-0 text-dark d-flex align-items-center gap-2" style="font-size: 20px;">Pedidos em Aberto <button pButton pRipple type="button" [icon]="maximizedTable === 'requests' ? 'pi pi-window-minimize' : 'pi pi-window-maximize'" class="p-button-rounded p-button-text p-button-secondary p-button-sm" [attr.aria-label]="maximizedTable === 'requests' ? 'Restaurar tabela' : 'Expandir tabela'" [attr.aria-pressed]="maximizedTable === 'requests'" (click)="toggleMaximize('requests')"></button></h3>
+          <input pInputText type="text" (input)="dtRequests.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar pedido..." />
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem"></th>
+            <th>Serviço</th>
+          <th>Data / Horário</th>
+          <th>Status</th>
+          <th>Privacidade</th>
+          <th>Propostas</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-req let-expanded="expanded">
+        <tr>
+          <td>
+              <button type="button" pButton pRipple [pRowToggler]="req" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" *ngIf="req.quotes?.length > 0"></button>
+            </td>
+            <td>
+              <div class="fw-bold text-dark">{{ req.category.name || req.categoryId }}</div>
+            <div class="text-muted small text-truncate" style="max-width: 250px;">{{ req.description }}</div>
+          </td>
+          <td>
+            <div class="fw-bold text-dark">{{ req.scheduledDate | date: 'dd/MM/yyyy' }}</div>
+            <div class="text-muted small">{{ req.timeSlot }}</div>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="requestStatusViews[req.status].badgeClass">{{ 'STATUS_REQUEST.' + req.status | translate }}</span>
+          </td>
+          <td>
+            <span class="badge bg-light text-dark border"><span class="icon" style="font-size: 11px;">lock</span> Endereço Protegido</span>
+          </td>
+          <td>
+            <span class="badge bg-primary text-white" *ngIf="(req.quotes?.length || 0) > 0">{{ req.quotes?.length }} Proposta(s)</span>
+            <span class="text-muted small" *ngIf="!req.quotes || req.quotes.length === 0">Nenhuma</span>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="rowexpansion" let-req>
+        <tr>
+          <td colspan="6" class="p-0">
+            <div class="p-4 bg-light border-top">
+              <h6 class="fw-bold mb-3"><span class="icon align-middle" style="font-size: 18px;">receipt_long</span> Propostas Recebidas</h6>
+              <div class="row g-3">
+                <div class="col-12 col-md-6" *ngFor="let q of req.quotes">
+                  <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between mb-2">
+                        <div class="d-flex align-items-center gap-2">
+                          <img *ngIf="q.provider?.photoUrl" [src]="q.provider?.photoUrl" class="rounded-circle object-fit-cover shadow-sm" style="width: 28px; height: 28px;" alt="Foto">
+                          <div *ngIf="!q.provider?.photoUrl" class="bg-primary-soft text-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 28px; height: 28px; font-size: 13px; font-weight: bold;">
+                            {{ q.provider?.fullName?.charAt(0) || 'P' }}
                           </div>
-                          <p class="text-muted small mb-2">{{ q.message }}</p>
-                          <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted"><span class="icon align-middle" style="font-size: 14px;">schedule</span> {{ q.estimatedDuration }}</small>
-                            <button class="btn btn-sm btn-primary" *ngIf="requestStatusViews[req.status]?.canAcceptQuote" [disabled]="isAcceptingQuote(q.id)" (click)="acceptQuote(q.id)">
-                              <span class="icon" style="font-size: 14px;">check_circle</span> Aceitar
-                            </button>
-                          </div>
+                          <strong class="text-dark">{{ q.provider?.fullName || 'Profissional' }}</strong>
                         </div>
+                        <div class="fw-bold text-primary">R$ {{ q.price }}</div>
+                      </div>
+                      <p class="text-muted small mb-2">{{ q.message }}</p>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted"><span class="icon align-middle" style="font-size: 14px;">schedule</span> {{ q.estimatedDuration }}</small>
+                        <button class="btn btn-sm btn-primary" *ngIf="requestStatusViews[req.status]?.canAcceptQuote" [disabled]="isAcceptingQuote(q.id)" (click)="acceptQuote(q.id)">
+                          <span class="icon" style="font-size: 14px;">check_circle</span> Aceitar
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
-              </td>
-            </tr>
-          </ng-container>
-        </tbody>
-      </table>
-    </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
 
   <ng-template #noRequests>
     <app-empty-state icon="assignment" [message]="'CLIENT.NO_REQUESTS' | translate"></app-empty-state>
   </ng-template>
 
-  <div class="d-flex align-items-center justify-content-between mb-4">
-    <h3 class="fw-bold m-0 text-dark" style="font-size: 20px;">Serviços Agendados</h3>
-  </div>
-
-  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
-    <div class="table-responsive" *ngIf="appointments.length > 0; else noAppointments">
-      <table class="table table-hover align-middle mb-0" style="background: white;">
-        <thead class="table-light">
-          <tr>
-            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600; padding-left: 1.5rem;">Serviço</th>
-            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Profissional</th>
-            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Data / Horário</th>
-            <th class="text-uppercase text-muted" style="font-size: 13px; font-weight: 600;">Status</th>
-            <th class="text-uppercase text-muted text-end" style="font-size: 13px; font-weight: 600; padding-right: 1.5rem;">Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let app of appointments">
-            <td style="padding-left: 1.5rem;">
-              <div class="fw-bold text-dark">Faxina Residencial</div>
-              <div class="text-muted small">ID: {{ app.id | slice:0:8 }}</div>
-            </td>
-            <td>
-              <div class="d-flex align-items-center gap-2">
-                <div class="bg-primary-soft text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-weight: bold;">
-                  {{ app.provider?.fullName?.charAt(0) || 'P' }}
-                </div>
-                <span class="fw-bold text-dark">{{ app.provider?.fullName || 'Profissional' }}</span>
+  <div id="appointments-card" class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'appointments'">
+    <app-loading-state [loading]="isLoadingAppointments" label="Carregando agendamentos..."></app-loading-state>
+    <p-table #dtApps [value]="filteredAppointments" [globalFilterFields]="['provider.fullName', 'status', 'id']" [rows]="5" [paginator]="true" responsiveLayout="scroll" styleClass="p-datatable-lg p-datatable-striped" *ngIf="!isLoadingAppointments">
+      <ng-template pTemplate="caption">
+        <div class="d-flex align-items-center justify-content-between p-3">
+          <h3 class="fw-bold m-0 text-dark d-flex align-items-center gap-2" style="font-size: 20px;">Serviços Agendados <button pButton pRipple type="button" [icon]="maximizedTable === 'appointments' ? 'pi pi-window-minimize' : 'pi pi-window-maximize'" class="p-button-rounded p-button-text p-button-secondary p-button-sm" [attr.aria-label]="maximizedTable === 'appointments' ? 'Restaurar tabela' : 'Expandir tabela'" [attr.aria-pressed]="maximizedTable === 'appointments'" (click)="toggleMaximize('appointments')"></button></h3>
+          <input pInputText type="text" (input)="dtApps.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar agendamento..." />
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem"></th>
+            <th>Serviço</th>
+          <th>Profissional</th>
+          <th>Data / Horário</th>
+          <th>Status</th>
+          <th class="text-end">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-app>
+        <tr>
+          <td>
+            <div class="fw-bold text-dark">Faxina Residencial</div>
+            <div class="text-muted small">ID: {{ app.id | slice:0:8 }}</div>
+          </td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <img *ngIf="app.provider?.photoUrl" [src]="app.provider?.photoUrl" class="rounded-circle object-fit-cover shadow-sm" style="width: 32px; height: 32px;" alt="Foto">
+              <div *ngIf="!app.provider?.photoUrl" class="bg-primary-soft text-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 32px; height: 32px; font-weight: bold;">
+                {{ app.provider?.fullName?.charAt(0) || 'P' }}
               </div>
-            </td>
-            <td>
-              <div class="fw-bold text-dark">{{ app.scheduledAt | date: 'dd/MM/yyyy HH:mm' }}</div>
-              
-            </td>
-            <td>
-              <span class="badge" [ngClass]="appointmentStatusViews[app.status].badgeClass">{{ 'STATUS_APPOINTMENT.' + app.status | translate }}</span>
-            </td>
-            <td class="text-end" style="padding-right: 1.5rem;">
-              <button class="btn btn-primary btn-sm me-2" *ngIf="appointmentStatusViews[app.status]?.canConfirm" [disabled]="isConfirmingAppointment(app.id)" (click)="confirmCompletion(app.id)">
-                <span class="icon" style="font-size: 14px;">task_alt</span> Confirmar
-              </button>
-              <button class="btn btn-gold btn-sm" *ngIf="appointmentStatusViews[app.status]?.canReview && !app.review" (click)="openRating(app.id)">
-                <span class="icon" style="font-size: 14px;">star</span> Avaliar
-              </button>
-              <span class="text-muted small" *ngIf="!appointmentStatusViews[app.status]?.canConfirm && (!appointmentStatusViews[app.status]?.canReview || app.review)">-</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+              <span class="fw-bold text-dark">{{ app.provider?.fullName || 'Profissional' }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="fw-bold text-dark">{{ app.scheduledAt | date: 'dd/MM/yyyy HH:mm' }}</div>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="appointmentStatusViews[app.status]?.badgeClass || 'bg-secondary'">{{ 'STATUS_APPOINTMENT.' + app.status | translate }}</span>
+          </td>
+          <td class="text-end">
+            <button class="btn btn-success btn-sm me-2" *ngIf="app.status === 'SCHEDULED' && app.payment?.status !== 'APPROVED'" [disabled]="isPayingAppointment(app.id)" (click)="payAppointment(app.id)">
+              <span class="icon" style="font-size: 14px;">payments</span> {{ isPayingAppointment(app.id) ? 'Abrindo...' : 'Pagar' }}
+            </button>
+            <span class="badge bg-success me-2" *ngIf="app.payment?.status === 'APPROVED'">Pago</span>
+            <button class="btn btn-primary btn-sm me-2" *ngIf="appointmentStatusViews[app.status]?.canConfirm" [disabled]="isConfirmingAppointment(app.id)" (click)="confirmCompletion(app.id)">
+              <span class="icon" style="font-size: 14px;">task_alt</span> Confirmar
+            </button>
+            <button class="btn btn-gold btn-sm" *ngIf="appointmentStatusViews[app.status]?.canReview && !app.review" (click)="openRating(app.id)">
+              <span class="icon" style="font-size: 14px;">star</span> Avaliar
+            </button>
+            
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
 
   <ng-template #noAppointments>
@@ -212,5 +222,15 @@
   [submitting]="isSubmittingReview"
   (submitReview)="onSubmitReview($event)">
 </app-rating-dialog>
+
+
+
+
+
+
+
+
+
+
 
 

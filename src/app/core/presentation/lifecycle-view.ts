@@ -7,7 +7,9 @@ export interface AppointmentStatusView {
   canReview: boolean;
 }
 
-export const APPOINTMENT_STATUS_VIEWS: Record<string, AppointmentStatusView> = {
+// O status chega da API como string; valores novos ou desconhecidos podem não
+// existir ainda neste mapa, por isso a indexação pode legitimamente ser undefined.
+export const APPOINTMENT_STATUS_VIEWS: Partial<Record<string, AppointmentStatusView>> = {
   SCHEDULED: { label: 'Agendado', badgeClass: 'bg-info text-white', canStart: true, canComplete: true, canConfirm: false, canReview: false },
   IN_PROGRESS: { label: 'Em andamento', badgeClass: 'bg-warning text-dark', canStart: false, canComplete: true, canConfirm: false, canReview: false },
   AWAITING_CONFIRMATION: { label: 'Aguardando confirmação', badgeClass: 'bg-warning text-dark', canStart: false, canComplete: false, canConfirm: true, canReview: false },

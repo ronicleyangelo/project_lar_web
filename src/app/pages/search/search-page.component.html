@@ -1,6 +1,8 @@
-<section class="search-hero" aria-labelledby="search-page-title">
-  <div class="container"><span class="hero-eyebrow">{{ 'SEARCH.HERO_EYEBROW' | translate }}</span><h2 id="search-page-title" [innerHTML]="'SEARCH.HERO_TITLE' | translate"></h2><p>{{ 'SEARCH.HERO_SUBTITLE' | translate }}</p></div>
-</section>
+<app-page-hero
+  [eyebrow]="'SEARCH.HERO_EYEBROW' | translate"
+  [title]="'SEARCH.HERO_TITLE' | translate"
+  [subtitle]="'SEARCH.HERO_SUBTITLE' | translate">
+</app-page-hero>
 
 <section class="search-workspace">
   <div class="container">
@@ -31,9 +33,17 @@
       <main class="results-panel">
         <div class="results-header">
           <div><span class="results-eyebrow">{{ 'SEARCH.PROS_AVAILABLE' | translate }}</span><h3 class="results-title">{{ hasSearched ? ('SEARCH.RESULTS_TITLE_FOUND' | translate) : ('SEARCH.RESULTS_TITLE_INITIAL' | translate) }}</h3></div>
-          <div class="results-tools" *ngIf="showResultsTools"><span class="results-count">{{ recommendations.length }} {{ 'SEARCH.FOUND' | translate }}</span><select class="sort-select" [(ngModel)]="sortBy" [ngModelOptions]="{standalone: true}" [attr.aria-label]="'SEARCH.SORT_ARIA' | translate"><option value="recommended">{{ 'SEARCH.SORT_RECOMMENDED' | translate }}</option><option value="distance">{{ 'SEARCH.SORT_DISTANCE' | translate }}</option><option value="price">{{ 'SEARCH.SORT_PRICE' | translate }}</option><option value="rating">{{ 'SEARCH.SORT_RATING' | translate }}</option></select></div>
+          <div class="results-tools" *ngIf="showResultsTools"><span class="results-count">{{ recommendations.length }} {{ 'SEARCH.FOUND' | translate }}</span><p-dropdown [options]="sortOptions" [(ngModel)]="sortBy" [ngModelOptions]="{standalone: true}" styleClass="sort-dropdown" [attr.aria-label]="'SEARCH.SORT_ARIA' | translate"></p-dropdown></div>
         </div>
-        <div class="loading-results" *ngIf="isSearching"><span class="spinner-border"></span><strong>{{ 'SEARCH.SEARCHING_PROS' | translate }}</strong></div>
+          <div class="loading-results" *ngIf="isSearching">
+            <p-progressSpinner 
+              styleClass="w-4rem h-4rem" 
+              strokeWidth="8" 
+              animationDuration=".5s"
+              [style]="{'width': '64px', 'height': '64px'}">
+            </p-progressSpinner>
+            <strong>{{ 'SEARCH.SEARCHING_PROS' | translate }}</strong>
+          </div>
         <div class="row g-4" *ngIf="showResults">
           <div class="col-12 col-xl-6 animate-in" *ngFor="let item of displayedRecommendations; let i = index" [style.animation-delay]="(i * 0.08) + 's'"><app-provider-card [recommendation]="item" [searchNeighborhood]="searchLocationLabel" [isFavorite]="isFavorite(item.provider.id)" [favoritePending]="isFavoritePending(item.provider.id)" (favoriteChange)="toggleFavorite($event)" (requestQuote)="onRequestQuote()"></app-provider-card></div>
         </div>

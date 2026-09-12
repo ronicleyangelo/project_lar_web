@@ -1,6 +1,7 @@
 /* Imports for Bootstrap & PrimeIcons */
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'primeicons/primeicons.css';
+@import '@fortawesome/fontawesome-free/css/all.min.css';
 
 /* Projeto Lar - practical, local-service design system */
 :root {
@@ -149,6 +150,8 @@ body {
 .card:hover { box-shadow: var(--shadow-md); }
 
 /* Global Forms */
+p-inputmask .p-inputtext { padding: 12px 16px !important; border-radius: var(--radius-sm) !important; border: 1.5px solid var(--border-light) !important; font-size: 14px !important; background-color: var(--surface) !important; color: var(--text-primary) !important; transition: all 0.2s ease !important; width: 100% !important; box-shadow: none !important; }
+p-inputmask .p-inputtext:focus { outline: none !important; border-color: var(--ocean-blue) !important; box-shadow: 0 0 0 3px var(--ocean-blue-glow) !important; }
 .form-control, .form-select {
   padding: 12px 16px;
   border-radius: var(--radius-sm);
@@ -557,4 +560,22 @@ textarea:focus-visible {
   background-color: rgba(0, 0, 0, 0.6) !important;
   backdrop-filter: blur(3px) !important;
 }
+
+/* Customização do Toast do PrimeNG */
+.p-toast .p-toast-message {
+  border-width: 1px !important;       /* Remove a borda grossa da esquerda que o tema padrão coloca */
+  border-style: solid !important;
+  border-color: #e2e8f0 !important;   /* Cor de borda sutil e limpa */
+  border-radius: 12px !important;     /* Cantos mais arredondados */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Garante que o conteúdo interno não gere a faixa lateral (depende do tema ativo) */
+.p-toast .p-toast-message .p-toast-message-content {
+  border-width: 0 !important;
+}
+
+/* PrimeNG 18 - ProgressSpinner color */
+.p-progressspinner-circle { stroke: var(--primary) !important; }
+
 

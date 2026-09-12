@@ -79,7 +79,7 @@
       <!-- PROFILE DROPDOWN -->
       <div *ngIf="isAuthenticated" class="dropdown-wrapper">
         <button class="btn-profile" (click)="toggleAccountMenu($event)" [attr.aria-expanded]="accountMenuOpen">
-          <img *ngIf="avatarUrl; else defaultAvatar" [src]="avatarUrl" class="avatar-img" alt="User Avatar">
+          <img *ngIf="avatarUrl; else defaultAvatar" [src]="avatarUrl" referrerpolicy="no-referrer" class="avatar-img" alt="User Avatar">
           <ng-template #defaultAvatar>
             <div class="avatar-placeholder"><span class="icon">person</span></div>
           </ng-template>
@@ -138,7 +138,7 @@
           <div class="menu-divider"></div>
           <button type="button" class="dropdown-item" (click)="openAbout()">
             <span class="icon">info</span>
-            <div class="item-text"><strong>Sobre o Projeto Lar</strong><small>Versão e informações da plataforma</small></div>
+            <div class="item-text"><strong>{{ 'HEADER.ABOUT_PROJECT' | translate }}</strong><small>{{ 'HEADER.ABOUT_PROJECT_DESC' | translate }}</small></div>
           </button>
           <button type="button" class="dropdown-item logout-btn" (click)="logout()">
             <span class="icon">logout</span>

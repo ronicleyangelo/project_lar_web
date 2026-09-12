@@ -153,3 +153,294 @@
   }
 }
 
+
+
+
+
+
+
+.fullscreen-table {
+  position: fixed !important;
+  inset: 24px !important;
+  width: auto !important;
+  height: auto !important;
+  z-index: 1040 !important;
+  border-radius: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  max-width: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: var(--surface) !important;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.3) !important;
+  overflow: hidden !important;
+}
+.fullscreen-table p-table {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.fullscreen-table ::ng-deep .p-datatable {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.fullscreen-table ::ng-deep .p-datatable-wrapper {
+  flex: 1;
+  overflow: auto;
+}
+
+:host.maximized { transform: none !important; animation: none !important; }
+
+:host.maximized::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1039;
+  background: rgba(15, 23, 42, 0.38);
+}
+
+/* Table workspace: keep the two data views easy to scan and operate. */
+:host ::ng-deep .dashboard-table .p-datatable-header {
+  padding: 0;
+  border: 0;
+  background: var(--surface);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+:host ::ng-deep .dashboard-table .p-datatable-table {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.table-toolbar {
+  min-height: 56px;
+  padding: 8px 24px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
+}
+
+.table-heading h3 {
+  display: inline;
+  margin: 0;
+  color: var(--text-primary, #1f2937);
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.25;
+  letter-spacing: -0.25px;
+}
+
+.table-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 22px;
+  margin-left: 8px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--primary-soft, #eef0ff);
+  color: var(--primary, #5b5ce2);
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1;
+  vertical-align: 2px;
+}
+
+.table-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.table-tools > button {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+}
+
+:host ::ng-deep .table-tools > button .p-button-icon {
+  font-size: 17px;
+}
+
+.table-tools > button > i {
+  display: inline-block;
+  font-family: "Font Awesome 6 Free";
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* PrimeNG adds the `pi` class to pButton icons; keep Font Awesome as the source font. */
+:host ::ng-deep .dashboard-table .p-button-icon.fa-solid,
+:host ::ng-deep .dashboard-table .p-button-icon.fas {
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900;
+}
+
+.table-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.table-search input {
+  width: 190px;
+  height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 450;
+}
+
+.table-search input:focus {
+  border-color: var(--primary, #5b5ce2);
+  box-shadow: 0 0 0 3px rgba(91, 92, 226, 0.12);
+}
+
+.table-expand {
+  flex: 0 0 auto;
+}
+
+:host ::ng-deep .dashboard-table .p-datatable-thead > tr > th {
+  padding: 11px 16px;
+  border-color: var(--border-color, #e5e7eb);
+  background: #fbfcfe;
+  color: #243b5a;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+}
+
+:host ::ng-deep .dashboard-table .p-datatable-tbody > tr > td {
+  padding: 13px 16px;
+  border-color: #edf0f4;
+  color: var(--text-primary, #1f2937);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  vertical-align: middle;
+}
+
+:host ::ng-deep .dashboard-table .p-datatable-tbody > tr > td .fw-bold {
+  font-weight: 650 !important;
+}
+
+:host ::ng-deep .dashboard-table .p-datatable-tbody > tr > td .small {
+  font-size: 12px;
+  font-weight: 450;
+  line-height: 1.35;
+}
+
+:host ::ng-deep .dashboard-table .p-datatable-tbody > tr:not(.p-highlight):hover {
+  background: #f8fafc;
+}
+
+:host ::ng-deep .dashboard-table .p-paginator {
+  min-height: 50px;
+  padding: 8px 16px;
+  border: 0;
+  border-top: 1px solid #edf0f4;
+  background: #fff;
+}
+
+:host ::ng-deep .dashboard-table .p-paginator-current {
+  margin-right: auto;
+  color: var(--text-muted, #6b7280);
+  font-size: 12px;
+}
+
+.row-toggle-col {
+  width: 48px;
+}
+
+.table-row-toggle > i {
+  display: inline-block;
+  font-family: "Font Awesome 6 Free";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.table-action {
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.table-icon-action {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 10px;
+}
+
+.table-icon-action > i {
+  display: inline-block;
+  font-family: "Font Awesome 6 Free";
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.table-avatar {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.table-icon-action:hover,
+.table-icon-action:focus-visible {
+  box-shadow: 0 4px 12px rgba(177, 70, 37, 0.24);
+}
+
+@media (max-width: 640px) {
+  .fullscreen-table {
+    inset: 10px !important;
+  }
+
+  .table-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .table-tools,
+  .table-search,
+  .table-search input {
+    width: 100%;
+  }
+
+  .table-search input {
+    height: 42px;
+  }
+
+  .table-expand {
+    display: none;
+  }
+
+  :host ::ng-deep .dashboard-table .p-datatable-thead > tr > th,
+  :host ::ng-deep .dashboard-table .p-datatable-tbody > tr > td {
+    padding: 12px;
+  }
+}
+
+
+

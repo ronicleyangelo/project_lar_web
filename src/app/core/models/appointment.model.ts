@@ -10,6 +10,14 @@ export interface Appointment {
   provider?: ProviderProfile;
   client?: ClientProfile;
   review?: Review;
+  quote?: { price: number };
+  payment?: {
+    id: string;
+    amount: number;
+    platformFee: number;
+    providerAmount: number;
+    status: string;
+  };
 }
 
 export interface Review {

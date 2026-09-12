@@ -14,11 +14,11 @@ type VerificationStatus = EditableProviderProfile['verificationStatus'];
 interface VerificationView { label: string; help: string; icon: string; verified: boolean; canSubmit: boolean; }
 
 const VERIFICATION_VIEWS: Record<VerificationStatus, VerificationView> = {
-  DRAFT: { label: 'Perfil em preparação', help: 'Complete e salve o perfil; depois envie para a análise da equipe.', icon: 'edit_note', verified: false, canSubmit: true },
-  PENDING_REVIEW: { label: 'Aguardando análise', help: 'Sua análise está na fila. Enquanto isso, você pode editar seus dados.', icon: 'schedule', verified: false, canSubmit: false },
-  CHANGES_REQUESTED: { label: 'Correções solicitadas', help: 'Revise a mensagem da equipe, ajuste o perfil e envie novamente.', icon: 'rate_review', verified: false, canSubmit: true },
-  VERIFIED: { label: 'Perfil verificado', help: 'Seu perfil está aprovado e disponível para receber pedidos.', icon: 'verified', verified: true, canSubmit: false },
-  REJECTED: { label: 'Perfil não aprovado', help: 'Consulte a mensagem da equipe antes de realizar um novo envio.', icon: 'block', verified: false, canSubmit: true },
+  DRAFT: { label: 'PROVIDER_PAGES.PROFILE.STATUS.DRAFT.LABEL', help: 'PROVIDER_PAGES.PROFILE.STATUS.DRAFT.HELP', icon: 'edit_note', verified: false, canSubmit: true },
+  PENDING_REVIEW: { label: 'PROVIDER_PAGES.PROFILE.STATUS.PENDING.LABEL', help: 'PROVIDER_PAGES.PROFILE.STATUS.PENDING.HELP', icon: 'schedule', verified: false, canSubmit: false },
+  CHANGES_REQUESTED: { label: 'PROVIDER_PAGES.PROFILE.STATUS.CHANGES.LABEL', help: 'PROVIDER_PAGES.PROFILE.STATUS.CHANGES.HELP', icon: 'rate_review', verified: false, canSubmit: true },
+  VERIFIED: { label: 'PROVIDER_PAGES.PROFILE.STATUS.VERIFIED.LABEL', help: 'PROVIDER_PAGES.PROFILE.STATUS.VERIFIED.HELP', icon: 'verified', verified: true, canSubmit: false },
+  REJECTED: { label: 'PROVIDER_PAGES.PROFILE.STATUS.REJECTED.LABEL', help: 'PROVIDER_PAGES.PROFILE.STATUS.REJECTED.HELP', icon: 'block', verified: false, canSubmit: true },
 };
 
 @Component({
@@ -90,15 +90,7 @@ export class ProviderProfileComponent implements OnInit {
     });
   }
 
-  onPhoneInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const digits = input.value.replace(/\D/g, '').slice(0, 11);
-    const formatted = digits.length > 7
-      ? `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
-      : digits.length > 2 ? `(${digits.slice(0, 2)}) ${digits.slice(2)}` : digits;
-    this.form.controls.phone.setValue(digits);
-    input.value = formatted;
-  }
+  
 
   togglePropertyType(value: string, checked: boolean): void {
     const control = this.form.controls.propertyTypes;
@@ -167,3 +159,5 @@ export class ProviderProfileComponent implements OnInit {
     this.verificationView = VERIFICATION_VIEWS[status];
   }
 }
+
+

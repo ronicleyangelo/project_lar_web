@@ -15,6 +15,7 @@ export interface ClientProfile {
   neighborhood: string;
   city: string;
   fullAddress: string;
+  user?: { avatarUrl?: string | null };
 }
 
 export interface ProviderProfile {

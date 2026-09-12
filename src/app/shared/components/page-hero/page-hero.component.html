@@ -1,7 +1,12 @@
 <section class="page-hero">
-  <div class="container">
-    <span *ngIf="eyebrow">{{ eyebrow }}</span>
-    <h1 *ngIf="title" [innerHTML]="title"></h1>
-    <p *ngIf="subtitle">{{ subtitle }}</p>
+  <div class="container d-flex justify-content-between align-items-end">
+    <div>
+      <span *ngIf="eyebrow">{{ eyebrow }}</span>
+      <h1 *ngIf="title" [innerHTML]="title"></h1>
+      <p *ngIf="subtitle">{{ subtitle }}</p>
+    </div>
+    <div class="page-hero-actions">
+      <ng-content></ng-content>
+    </div>
   </div>
 </section>

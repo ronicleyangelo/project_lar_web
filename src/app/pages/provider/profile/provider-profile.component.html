@@ -10,11 +10,9 @@
     <a routerLink="/provider" class="btn btn-outline w-100"><span class="icon me-2">arrow_back</span> {{ 'PROVIDER_PAGES.PROFILE.BACK_TO_DASHBOARD' | translate }}</a>
   </div>
 
-  <div *ngIf="isLoading" class="loading-state">
-    <span class="spinner-border"></span> {{ 'PROVIDER_PAGES.PROFILE.LOADING_PROFILE' | translate }}
-  </div>
+  <app-loading-state [loading]="isLoading" [label]="'PROVIDER_PAGES.PROFILE.LOADING_PROFILE' | translate">
 
-  <form *ngIf="!isLoading" [formGroup]="form" (ngSubmit)="save()" class="profile-layout" novalidate>
+  <form [formGroup]="form" (ngSubmit)="save()" class="profile-layout" novalidate>
     <aside class="profile-summary card">
       <div class="avatar-wrap">
         <img *ngIf="form.controls.photoUrl.value; else avatarFallback" [src]="form.controls.photoUrl.value" alt="Foto do profissional">
@@ -24,9 +22,9 @@
       <p>{{ profile?.email }}</p>
       <span class="verification" [class.verified]="verificationView.verified">
         <span class="icon">{{ verificationView.icon }}</span>
-        {{ verificationView.label }}
+        {{ verificationView.label | translate }}
       </span>
-      <p class="verification-help">{{ verificationView.help }}</p>
+      <p class="verification-help">{{ verificationView.help | translate }}</p>
       <p class="verification-help review-note" *ngIf="profile?.verificationNote"><strong>{{ 'PROVIDER_PAGES.PROFILE.TEAM_MESSAGE' | translate }}:</strong> {{ profile?.verificationNote }}</p>
       <button *ngIf="verificationView.canSubmit" type="button" class="btn btn-outline submit-review" [disabled]="isSubmittingReview" (click)="submitForReview()">{{ isSubmittingReview ? ('PROVIDER_PAGES.PROFILE.SUBMITTING' | translate) : ('PROVIDER_PAGES.PROFILE.SUBMIT_FOR_REVIEW' | translate) }}</button>
       <div class="stats">
@@ -45,14 +43,11 @@
         </div>
         <div class="field">
           <label for="profilePhone">{{ 'PROVIDER_PAGES.PROFILE.PHONE_WHATSAPP' | translate }}</label>
-          <input id="profilePhone" class="form-control" formControlName="phone" (input)="onPhoneInput($event)" maxlength="15" autocomplete="tel-national">
+          <p-inputMask id="profilePhone" styleClass="form-control" formControlName="phone" mask="(99) 99999-9999" [unmask]="true" placeholder="(99) 99999-9999"></p-inputMask>
           <div class="validation" *ngIf="form.controls.phone.touched && form.controls.phone.invalid">{{ 'PROVIDER_PAGES.PROFILE.PHONE_VALIDATION' | translate }}</div>
         </div>
       </div>
-      <div class="field">
-        <label for="profilePhoto">{{ 'PROVIDER_PAGES.PROFILE.PHOTO_URL' | translate }}</label>
-        <input id="profilePhoto" class="form-control" formControlName="photoUrl" placeholder="https://...">
-      </div>
+      
       <div class="field">
         <label for="profileBio">{{ 'PROVIDER_PAGES.PROFILE.BIO_QUALIFICATIONS' | translate }}</label>
         <textarea id="profileBio" class="form-control" rows="4" formControlName="bio" [placeholder]="'PROVIDER_PAGES.PROFILE.BIO_PLACEHOLDER' | translate"></textarea>
@@ -97,4 +92,9 @@
       </div>
     </section>
   </form>
+  </app-loading-state>
 </div>
+
+
+
+

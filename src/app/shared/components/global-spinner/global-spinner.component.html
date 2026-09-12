@@ -1,0 +1,8 @@
+<div class="spinner-overlay" *ngIf="spinnerService.isLoading$ | async">
+  <p-progressSpinner 
+    styleClass="w-4rem h-4rem" 
+    strokeWidth="8" 
+    fill="transparent" 
+    animationDuration=".5s">
+  </p-progressSpinner>
+</div>

@@ -3,69 +3,196 @@
   [title]="'PROVIDER.AVAILABLE_REQUESTS' | translate"
   [subtitle]="'PROVIDER.FIND_NEW_SERVICES' | translate">
 </app-page-hero>
-
+<div class="alert d-flex align-items-center justify-content-between gap-3 mb-4" [ngClass]="mercadoPagoConnected ? 'alert-success' : 'alert-warning'">
+  <div>
+    <strong>{{ mercadoPagoConnected ? 'Mercado Pago conectado' : 'Conecte o Mercado Pago para receber' }}</strong>
+    <div class="small">{{ mercadoPagoConnected ? 'Seus pagamentos podem ser processados pela plataforma.' : 'A conexão é gratuita e necessária antes do primeiro pagamento.' }}</div>
+  </div>
+  <button *ngIf="!mercadoPagoConnected" class="btn btn-primary btn-sm" [disabled]="isConnectingMercadoPago" (click)="connectMercadoPago()">
+    {{ isConnectingMercadoPago ? 'Conectando...' : 'Conectar' }}
+  </button>
+</div>
 <div class="container py-5">
 
-  <div class="row g-4" *ngIf="openProviderRequests.length > 0; else noReqs">
-    <div class="col-12 col-md-6" *ngFor="let req of openProviderRequests">
-      <div class="card h-100 request-card">
-        <div class="card-body">
-          <span class="badge bg-info text-white mb-2 d-inline-block">{{ req.category.name || req.categoryId }}</span>
-          <h5 class="card-title">{{ req.description }}</h5>
-          <p class="text-muted small mb-2">{{ 'PROVIDER.NEIGHBORHOOD' | translate }} {{ req.neighborhood }} - {{ req.city }}</p>
-          
-          <div class="alert alert-secondary py-2 px-3 small d-flex align-items-center mb-3">
-            <span class="icon me-2 fs-6">lock</span>
-            {{ 'PROVIDER.ADDRESS_HIDDEN' | translate }}
+  <div id="requests-card" class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'requests'">
+    <app-loading-state [loading]="isLoadingRequests" [label]="'PROVIDER.SEARCHING' | translate"></app-loading-state>
+    
+    <p-table #dtReqs [value]="openProviderRequests" [globalFilterFields]="['category.name', 'city', 'neighborhood', 'description']" [rows]="5" [paginator]="true" [showCurrentPageReport]="true" currentPageReportTemplate="{first}–{last} de {totalRecords}" responsiveLayout="scroll" styleClass="p-datatable-lg dashboard-table" dataKey="id" *ngIf="!isLoadingRequests && openProviderRequests.length > 0">
+      <ng-template pTemplate="caption">
+        <div class="table-toolbar">
+          <div class="table-heading">
+            <h3>{{ 'PROVIDER.AVAILABLE_REQUESTS' | translate }}</h3>
+            <span class="table-count-badge">{{ openProviderRequests.length }}</span>
           </div>
-
-          <button class="btn btn-primary w-100" (click)="openSendQuoteModal(req.id, quoteModal)">{{ 'PROVIDER.SEND_QUOTE' | translate }}</button>
+          <div class="table-tools">
+            <label class="table-search" *ngIf="searchOpenRequests">
+              <input pInputText type="search" (input)="dtReqs.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar pedidos..." aria-label="Buscar pedidos" />
+            </label>
+            <button pButton pRipple type="button" class="p-button-rounded p-button-text p-button-secondary p-button-sm" [attr.aria-label]="searchOpenRequests ? 'Fechar busca' : 'Abrir busca'" [attr.aria-expanded]="searchOpenRequests" (click)="toggleTableSearch('requests')"><i class="fa-solid" [ngClass]="searchOpenRequests ? 'fa-xmark' : 'fa-magnifying-glass'" aria-hidden="true"></i></button>
+            <button pButton pRipple type="button" class="p-button-rounded p-button-text p-button-secondary p-button-sm table-expand" [title]="maximizedTable === 'requests' ? 'Restaurar tabela' : 'Expandir tabela'" [attr.aria-label]="maximizedTable === 'requests' ? 'Restaurar tabela' : 'Expandir tabela'" [attr.aria-pressed]="maximizedTable === 'requests'" (click)="toggleMaximize('requests')"><i class="fa-solid" [ngClass]="maximizedTable === 'requests' ? 'fa-down-left-and-up-right-to-center' : 'fa-up-right-and-down-left-from-center'" aria-hidden="true"></i></button>
+          </div>
         </div>
-      </div>
-    </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="row-toggle-col" scope="col"></th>
+          <th scope="col">Serviço</th>
+          <th scope="col">Localização</th>
+          <th scope="col">Data / Horário</th>
+          <th class="text-end" scope="col">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-req let-expanded="expanded">
+        <tr>
+          <td>
+              <button type="button" pButton pRipple [pRowToggler]="req" class="p-button-text p-button-rounded p-button-plain p-button-sm table-row-toggle"><i class="fa-solid" [ngClass]="expanded ? 'fa-chevron-down' : 'fa-chevron-right'" aria-hidden="true"></i></button>
+            </td>
+            <td>
+              <div class="fw-bold text-dark">{{ req.category.name || req.categoryId }}</div>
+            <div class="text-muted small">ID: {{ req.id | slice:0:8 }}</div>
+          </td>
+          <td>
+            <div class="fw-bold text-dark">{{ req.neighborhood }}</div>
+            <div class="text-muted small"><i class="fa-solid fa-location-arrow align-middle" aria-hidden="true"></i> {{ req.approxDistanceKm || 0 | number:'1.0-1' }} km de você</div>
+          </td>
+          <td>
+            <div class="fw-bold text-dark">{{ req.scheduledDate | date: 'dd/MM/yyyy' }}</div>
+            <div class="text-muted small">{{ req.timeSlot }}</div>
+          </td>
+          <td class="text-end">
+              <button class="btn btn-primary btn-sm table-icon-action quote-action" type="button" pTooltip="Enviar orçamento" tooltipPosition="top" appendTo="body" aria-label="Enviar orçamento" (click)="openSendQuoteModal(req.id, quoteModal)">
+                <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i>
+                <span class="visually-hidden">Enviar orçamento</span>
+              </button>
+            </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="rowexpansion" let-req>
+        <tr>
+          <td colspan="5" class="p-4 bg-light">
+            <div class="p-3 bg-white rounded shadow-sm border">
+              <h5 class="fw-bold mb-3">Detalhes do Pedido</h5>
+              <p class="mb-3">{{ req.description }}</p>
+              
+              <div class="row g-3">
+                <div class="col-md-6" *ngIf="req.budgetLimit">
+                  <div class="d-flex align-items-center gap-2 text-muted">
+                    <i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i>
+                    <strong>Orçamento limite:</strong> R$ {{ req.budgetLimit }}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="alert alert-secondary py-2 px-3 small d-flex align-items-center m-0">
+                    <i class="fa-solid fa-lock me-2" aria-hidden="true"></i>
+                    {{ 'PROVIDER.ADDRESS_HIDDEN' | translate }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-empty-state *ngIf="!isLoadingRequests && openProviderRequests.length === 0" icon="work_off" [message]="'PROVIDER.NO_REQUESTS' | translate"></app-empty-state>
   </div>
 
-  <ng-template #noReqs>
-    <app-empty-state icon="work_off" [message]="'PROVIDER.NO_REQUESTS' | translate"></app-empty-state>
-  </ng-template>
 
   <h2 class="section-divider mt-5 mb-4">{{ 'PROVIDER.MY_JOBS' | translate }}</h2>
-  <div class="row g-4" *ngIf="appointments.length > 0; else noAppointments">
-    <div class="col-12 col-md-6" *ngFor="let app of appointments">
-      <div class="card appointment-card h-100">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0">{{ 'PROVIDER.APPOINTMENT' | translate }}</h5>
-            <span class="badge" [ngClass]="appointmentStatusViews[app.status].badgeClass">{{ 'STATUS_APPOINTMENT.' + app.status | translate }}</span>
+  <div id="appointments-card" class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'appointments'">
+    <app-loading-state [loading]="isLoadingAppointments" [label]="'PROVIDER.LOADING_APPOINTMENTS' | translate"></app-loading-state>
+    
+    <p-table #dtApps [value]="appointments" [globalFilterFields]="['client.fullName', 'status', 'id']" [rows]="5" [paginator]="true" [showCurrentPageReport]="true" currentPageReportTemplate="{first}–{last} de {totalRecords}" responsiveLayout="scroll" styleClass="p-datatable-lg dashboard-table" dataKey="id" *ngIf="!isLoadingAppointments && appointments.length > 0">
+      <ng-template pTemplate="caption">
+        <div class="table-toolbar">
+          <div class="table-heading">
+            <h3>{{ 'PROVIDER.MY_JOBS' | translate }}</h3>
+            <span class="table-count-badge">{{ appointments.length }}</span>
           </div>
-          <p class="text-muted small mb-2">ID: {{ app.id | slice:0:8 }}...</p>
-          
-          <div class="alert alert-success py-2 px-3 small mb-3">
-            <span class="icon me-2 fs-6">location_on</span>
-            <strong>{{ 'PROVIDER.ADDRESS_RELEASED' | translate }}</strong> {{ app.client?.fullAddress || ('PROVIDER.ADDRESS_UNAVAILABLE' | translate) }}
-          </div>
-
-          <div class="d-flex gap-2">
-            <button class="btn btn-outline-primary btn-sm w-100 mb-2" *ngIf="appointmentStatusViews[app.status]?.canStart" [disabled]="isAppointmentActionRunning(app.id)" (click)="startAppointment(app.id)">
-              <span class="icon" style="font-size: 16px;">play_arrow</span> {{ 'PROVIDER.START_SERVICE' | translate }}
-            </button>
-            <button class="btn btn-primary btn-sm w-100" *ngIf="appointmentStatusViews[app.status]?.canComplete" [disabled]="isAppointmentActionRunning(app.id)" (click)="completeAppointment(app.id)">
-              <span class="icon" style="font-size: 16px;">task_alt</span> {{ 'PROVIDER.REPORT_EXECUTION' | translate }}
-            </button>
+          <div class="table-tools">
+            <label class="table-search" *ngIf="searchOpenAppointments">
+              <input pInputText type="search" (input)="dtApps.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar agendamento..." aria-label="Buscar agendamento" />
+            </label>
+            <button pButton pRipple type="button" class="p-button-rounded p-button-text p-button-secondary p-button-sm" [attr.aria-label]="searchOpenAppointments ? 'Fechar busca' : 'Abrir busca'" [attr.aria-expanded]="searchOpenAppointments" (click)="toggleTableSearch('appointments')"><i class="fa-solid" [ngClass]="searchOpenAppointments ? 'fa-xmark' : 'fa-magnifying-glass'" aria-hidden="true"></i></button>
+            <button pButton pRipple type="button" class="p-button-rounded p-button-text p-button-secondary p-button-sm table-expand" [title]="maximizedTable === 'appointments' ? 'Restaurar tabela' : 'Expandir tabela'" [attr.aria-label]="maximizedTable === 'appointments' ? 'Restaurar tabela' : 'Expandir tabela'" [attr.aria-pressed]="maximizedTable === 'appointments'" (click)="toggleMaximize('appointments')"><i class="fa-solid" [ngClass]="maximizedTable === 'appointments' ? 'fa-down-left-and-up-right-to-center' : 'fa-up-right-and-down-left-from-center'" aria-hidden="true"></i></button>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="row-toggle-col" scope="col"></th>
+          <th scope="col">Serviço</th>
+          <th scope="col">Cliente</th>
+          <th scope="col">Data / Horário</th>
+          <th scope="col">Status</th>
+          <th class="text-end" scope="col">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-app let-expanded="expanded">
+        <tr>
+          <td>
+              <button type="button" pButton pRipple [pRowToggler]="app" class="p-button-text p-button-rounded p-button-plain p-button-sm table-row-toggle"><i class="fa-solid" [ngClass]="expanded ? 'fa-chevron-down' : 'fa-chevron-right'" aria-hidden="true"></i></button>
+            </td>
+            <td>
+              <div class="fw-bold text-dark">{{ app.request?.category?.name || 'Serviço' }}</div>
+            <div class="text-muted small">ID: {{ app.id | slice:0:8 }}</div>
+          </td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <img *ngIf="app.client?.user?.avatarUrl" [src]="app.client?.user?.avatarUrl" (error)="onClientAvatarError(app)" referrerpolicy="no-referrer" class="table-avatar rounded-circle object-fit-cover shadow-sm" alt="Foto do cliente">
+              <div *ngIf="!app.client?.user?.avatarUrl" class="table-avatar bg-primary-soft text-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm">
+                {{ app.client?.fullName?.charAt(0) || 'C' }}
+              </div>
+              <span class="fw-bold text-dark">{{ app.client?.fullName || 'Cliente' }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="fw-bold text-dark">{{ app.scheduledAt | date: 'dd/MM/yyyy HH:mm' }}</div>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="appointmentStatusViews[app.status]?.badgeClass || 'bg-secondary'">{{ 'STATUS_APPOINTMENT.' + app.status | translate }}</span>
+          </td>
+          <td class="text-end">
+              <button class="btn btn-outline-primary btn-sm me-2" *ngIf="appointmentStatusViews[app.status]?.canStart" [disabled]="isAppointmentActionRunning(app.id)" (click)="startAppointment(app.id)">
+                <i class="fa-solid fa-play" aria-hidden="true"></i> Iniciar
+              </button>
+              <button class="btn btn-primary btn-sm" *ngIf="appointmentStatusViews[app.status]?.canComplete" [disabled]="isAppointmentActionRunning(app.id)" (click)="completeAppointment(app.id)">
+                <i class="fa-solid fa-circle-check" aria-hidden="true"></i> Concluir
+              </button>
+            </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="rowexpansion" let-app>
+        <tr>
+          <td colspan="6" class="p-4 bg-light">
+            <div class="p-3 bg-white rounded shadow-sm border">
+              
+              <div class="alert alert-success py-2 px-3 small d-flex align-items-center mb-3" *ngIf="app.status !== 'COMPLETED' && app.status !== 'CANCELED'">
+                <i class="fa-solid fa-location-dot me-2" aria-hidden="true"></i>
+                <div>
+                  <strong>{{ 'PROVIDER.ADDRESS_RELEASED' | translate }}</strong><br>
+                  {{ app.client?.fullAddress && !app.client.fullAddress.startsWith('enc:') ? app.client.fullAddress : 'Endereço fornecido de forma segura (Criptografado pelo servidor)' }}
+                </div>
+              </div>
+              
+              <div class="alert alert-secondary py-2 px-3 small d-flex align-items-center mb-3" *ngIf="app.status === 'COMPLETED' || app.status === 'CANCELED'">
+                <i class="fa-solid fa-lock me-2" aria-hidden="true"></i>
+                <div>Endereço oculto pois o serviço já foi concluído ou cancelado.</div>
+              </div>
 
-  <ng-template #noAppointments>
-    <app-empty-state icon="event_available" [message]="'PROVIDER.NO_APPOINTMENTS' | translate"></app-empty-state>
-  </ng-template>
+              <h6 class="fw-bold">Descrição Original:</h6>
+              <p class="small text-muted">{{ app.request?.description || 'Não informada' }}</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <app-empty-state *ngIf="!isLoadingAppointments && appointments.length === 0" icon="event_available" [message]="'PROVIDER.NO_APPOINTMENTS' | translate"></app-empty-state>
+  </div>
 </div>
 
 <ng-template #quoteModal let-modal>
   <div class="modal-header d-flex align-items-center gap-2" style="background: linear-gradient(90deg, var(--dark-blue-deep) 0%, #0c2340 100%); border-bottom: 2px solid var(--gold-primary);">
-    <span class="icon text-gold">local_offer</span>
+    <i class="fa-solid fa-tag text-gold" aria-hidden="true"></i>
     <h5 class="modal-title mb-0 fw-bold text-white">{{ 'PROVIDER.SEND_QUOTE' | translate }}</h5>
     <button type="button" class="btn-close btn-close-white ms-auto" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
@@ -82,7 +209,7 @@
     <div class="form-floating-custom mb-3">
       <label class="form-label text-muted small">{{ 'PROVIDER.ESTIMATED_DURATION' | translate }}</label>
       <div class="input-group">
-        <span class="input-group-text bg-transparent border-end-0 text-muted"><span class="icon fs-6">schedule</span></span>
+        <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="fa-solid fa-clock fs-6" aria-hidden="true"></i></span>
         <input type="text" class="form-control border-start-0 ps-0" [placeholder]="'PROVIDER.DURATION_PLACEHOLDER' | translate" [(ngModel)]="quoteDuration">
       </div>
     </div>
@@ -97,8 +224,16 @@
     <div class="d-flex justify-content-end gap-2 w-100">
       <button class="btn btn-outline" (click)="modal.dismiss('Cancel')">{{ 'PROVIDER.CANCEL' | translate }}</button>
       <button class="btn btn-primary" [disabled]="isSendingQuote" (click)="submitQuote()">
-        <span class="icon">send</span> {{ 'PROVIDER.SEND_PROPOSAL' | translate }}
+        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> {{ 'PROVIDER.SEND_PROPOSAL' | translate }}
       </button>
     </div>
   </div>
 </ng-template>
+
+
+
+
+
+
+
+

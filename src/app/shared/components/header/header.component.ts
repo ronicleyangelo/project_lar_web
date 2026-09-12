@@ -37,7 +37,8 @@ export class HeaderComponent {
   get avatarUrl(): string | null {
     const profile = this.currentUser?.profile;
     const professionalPhoto = profile && 'photoUrl' in profile ? profile.photoUrl : null;
-    return this.currentUser?.avatarUrl || professionalPhoto || null;
+    const url = this.currentUser?.avatarUrl || professionalPhoto || null;
+    return (!url || url === 'null') ? null : url;
   }
 
   get profileLink(): string {

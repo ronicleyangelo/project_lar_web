@@ -25,9 +25,9 @@
   styleClass="about-dialog">
   <div *ngIf="dialog === 'about'" class="about-dialog-content">
     <div class="about-dialog-brand"><span class="icon">home</span></div>
-    <span class="about-dialog-eyebrow">Serviços com confiança</span>
+    <span class="about-dialog-eyebrow">{{ 'APP.ABOUT_TITLE' | translate | uppercase }}</span>
     <h2>Projeto Lar</h2>
-    <p>Conectamos clientes e profissionais de serviços residenciais de forma simples, segura e transparente.</p>
+    <p>{{ 'APP.ABOUT_DESC' | translate }}</p>
     <div class="about-dialog-release">{{ release.channel }} v{{ release.version }}</div>
   </div>
   <article *ngIf="dialog === 'privacy'" class="legal-dialog-content">
@@ -53,5 +53,5 @@
 
 <app-mobile-nav *ngIf="!authPage" [currentUser]="currentUser"></app-mobile-nav>
 
-<p-toast position="top-right"></p-toast>
+<p-toast position="top-right" [life]="2000"></p-toast>
 </div>

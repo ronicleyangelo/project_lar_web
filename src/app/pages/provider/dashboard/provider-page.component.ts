@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostBinding, HostListener } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -8,6 +8,7 @@ import { AppointmentService } from '../../../core/services/appointment.service';
 import { ServiceRequest, SendQuotePayload } from '../../../core/models/service-request.model';
 import { Appointment } from '../../../core/models/appointment.model';
 import { APPOINTMENT_STATUS_VIEWS } from '../../../core/presentation/lifecycle-view';
+import { PaymentService } from '../../../core/services/payment.service';
 
 @Component({
   selector: 'app-provider-page',
@@ -15,14 +16,39 @@ import { APPOINTMENT_STATUS_VIEWS } from '../../../core/presentation/lifecycle-v
   styleUrls: ['./provider-page.component.css']
 })
 export class ProviderPageComponent implements OnInit {
+  @HostBinding('class.maximized') get isMaximized() { return !!this.maximizedTable; }
   readonly appointmentStatusViews = APPOINTMENT_STATUS_VIEWS;
   openProviderRequests: ServiceRequest[] = [];
+  isLoadingRequests = true;
   appointments: Appointment[] = [];
+  isLoadingAppointments = true;
+  mercadoPagoConnected = false;
+  isConnectingMercadoPago = false;
   quoteRequestId = '';
   quotePrice = 150;
   quoteDuration = '4 horas';
   quoteMessage = 'Olá! Posso realizar o serviço na data solicitada.';
   isSendingQuote = false;
+  searchOpenRequests = false;
+  searchOpenAppointments = false;
+  maximizedTable: string | null = null;
+
+  toggleTableSearch(tableId: 'requests' | 'appointments'): void {
+    if (tableId === 'requests') {
+      this.searchOpenRequests = !this.searchOpenRequests;
+      return;
+    }
+    this.searchOpenAppointments = !this.searchOpenAppointments;
+  }
+
+  toggleMaximize(tableId: string) {
+    this.maximizedTable = this.maximizedTable === tableId ? null : tableId;
+  }
+
+  @HostListener('document:keydown.escape')
+  restoreTable(): void {
+    this.maximizedTable = null;
+  }
   private currentModalRef: NgbModalRef | null = null;
   private readonly appointmentActionIds = new Set<string>();
 
@@ -30,6 +56,7 @@ export class ProviderPageComponent implements OnInit {
     private requestService: RequestService,
     private quoteService: QuoteService,
     private appointmentService: AppointmentService,
+    private paymentService: PaymentService,
     private modalService: NgbModal,
     private messageService: MessageService
   ) {}
@@ -37,17 +64,36 @@ export class ProviderPageComponent implements OnInit {
   ngOnInit(): void {
     this.loadProviderOpenRequests();
     this.loadAppointments();
+    this.loadPaymentConnection();
+  }
+
+  loadPaymentConnection(): void {
+    this.paymentService.connectionStatus().subscribe({
+      next: result => this.mercadoPagoConnected = result.connected,
+      error: () => this.mercadoPagoConnected = false,
+    });
+  }
+
+  connectMercadoPago(): void {
+    if (this.isConnectingMercadoPago) return;
+    this.isConnectingMercadoPago = true;
+    this.paymentService.connect().pipe(finalize(() => this.isConnectingMercadoPago = false)).subscribe({
+      next: result => window.location.assign(result.authorizationUrl),
+      error: error => this.showError(error, 'Não foi possível conectar ao Mercado Pago.'),
+    });
   }
 
   loadAppointments(): void {
-    this.appointmentService.getAll().subscribe({
+    this.isLoadingAppointments = true;
+    this.appointmentService.getAll().pipe(finalize(() => this.isLoadingAppointments = false)).subscribe({
       next: appointments => this.appointments = appointments,
       error: error => this.showError(error, 'Não foi possível carregar os agendamentos.')
     });
   }
 
   loadProviderOpenRequests(): void {
-    this.requestService.getProviderOpenRequests().subscribe({
+    this.isLoadingRequests = true;
+    this.requestService.getProviderOpenRequests().pipe(finalize(() => this.isLoadingRequests = false)).subscribe({
       next: requests => this.openProviderRequests = requests,
       error: error => this.showError(error, 'Não foi possível carregar os pedidos disponíveis.')
     });
@@ -88,7 +134,15 @@ export class ProviderPageComponent implements OnInit {
         this.openProviderRequests = this.openProviderRequests.filter(request => request.id !== payload.requestId);
         this.messageService.add({ severity: 'success', summary: 'Proposta enviada', detail: 'O cliente já pode analisar seu orçamento.' });
       },
-      error: error => this.showError(error, 'Não foi possível enviar a proposta.')
+      error: error => {
+        if (error?.status === 403 && String(error?.error?.error || '').includes('area de atendimento')) {
+          this.openProviderRequests = this.openProviderRequests.filter(request => request.id !== payload.requestId);
+          this.currentModalRef?.close();
+          this.currentModalRef = null;
+          this.loadProviderOpenRequests();
+        }
+        this.showError(error, 'Não foi possível enviar a proposta.');
+      }
     });
   }
 
@@ -102,6 +156,12 @@ export class ProviderPageComponent implements OnInit {
 
   isAppointmentActionRunning(id: string): boolean {
     return this.appointmentActionIds.has(id);
+  }
+
+  onClientAvatarError(appointment: Appointment): void {
+    // URLs externas podem expirar ou recusar hotlink. Ao limpar a URL, o
+    // template troca a imagem quebrada pelo avatar com a inicial do cliente.
+    if (appointment.client?.user) appointment.client.user.avatarUrl = null;
   }
 
   private runAppointmentAction(id: string, action: () => ReturnType<AppointmentService['start']>, successMessage: string): void {
@@ -122,3 +182,8 @@ export class ProviderPageComponent implements OnInit {
     this.messageService.add({ severity: 'error', summary: 'Erro', detail: error?.error?.error || fallback });
   }
 }
+
+
+
+
+

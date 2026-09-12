@@ -4,7 +4,7 @@
     "HOME_ARIA": "Ir para o início",
     "HOME": "Início",
     "EXPLORE": "Explorar",
-    "MY_ORDERS": "Meus Pedidos",
+    "MY_ORDERS": "Meus Serviços",
     "DASHBOARD": "Painel",
     "OPPORTUNITIES": "Oportunidades",
     "PROFILE": "Perfil",
@@ -16,12 +16,14 @@
     "MY_PROFILE": "Meu perfil",
     "PROFESSIONAL_DATA": "Dados profissionais",
     "PROFESSIONAL_DASHBOARD": "Painel profissional",
-    "ORDERS_SCHEDULES": "Pedidos e agendamentos",
+    "ORDERS_SCHEDULES": "Serviços e agendamentos",
     "FIND_PROFESSIONALS": "Buscar profissionais",
     "FIND_PROFESSIONALS_DESC": "Encontre serviços na sua região",
-    "CLIENT_ORDERS_DESC": "Acompanhe pedidos e agendamentos",
+    "CLIENT_ORDERS_DESC": "Acompanhe solicitações e serviços",
     "CLIENT_PROFILE_DESC": "Dados pessoais e endereço protegido",
-    "LOG_OUT": "Sair da conta"
+    "LOG_OUT": "Sair da conta",
+    "ABOUT_PROJECT": "Sobre o Projeto Lar",
+    "ABOUT_PROJECT_DESC": "Versão e informações da plataforma"
   },
   "HOME": {
     "EYEBROW": "Faxina residencial com confiança",
@@ -56,8 +58,27 @@
     "CTA_TITLE": "Pronto para começar?",
     "CTA_DESC": "Crie sua conta gratuitamente e encontre a opção certa para você."
   },
-  "CLIENT_PROFILE": { "EYEBROW": "Perfil do cliente", "TITLE": "Meus dados", "SUBTITLE": "Mantenha seus dados atualizados para solicitar serviços.", "BACK": "Voltar aos pedidos", "LOADING": "Carregando perfil...", "PROTECTED": "Endereço protegido", "PROTECTED_DESC": "O endereço completo só é liberado após você aceitar uma proposta.", "PERSONAL_DATA": "Dados pessoais e localização", "FULL_NAME": "Nome Completo",
-      "FULL_NAME_PLACEHOLDER": "Ex.: Maria da Silva", "PHONE": "Telefone / WhatsApp", "CITY": "Cidade", "NEIGHBORHOOD": "Bairro", "ADDRESS": "Endereço completo", "ADDRESS_HELP": "Essa informação não aparece publicamente.", "UNSAVED": "Você possui alterações não salvas.", "UPDATED": "Informações atualizadas.", "SAVING": "Salvando...", "SAVE": "Salvar alterações" },
+  "CLIENT_PROFILE": {
+    "EYEBROW": "Perfil do cliente",
+    "TITLE": "Meus dados",
+    "SUBTITLE": "Mantenha seus dados atualizados para solicitar serviços.",
+    "BACK": "Voltar aos serviços",
+    "LOADING": "Carregando perfil...",
+    "PROTECTED": "Endereço protegido",
+    "PROTECTED_DESC": "O endereço completo só é liberado após você aceitar uma proposta.",
+    "PERSONAL_DATA": "Dados pessoais e localização",
+    "FULL_NAME": "Nome Completo",
+    "FULL_NAME_PLACEHOLDER": "Ex.: Maria da Silva",
+    "PHONE": "Telefone / WhatsApp",
+    "CITY": "Cidade",
+    "NEIGHBORHOOD": "Bairro",
+    "ADDRESS": "Endereço completo",
+    "ADDRESS_HELP": "Essa informação não aparece publicamente.",
+    "UNSAVED": "Você possui alterações não salvas.",
+    "UPDATED": "Informações atualizadas.",
+    "SAVING": "Salvando...",
+    "SAVE": "Salvar alterações"
+  },
   "SEARCH": {
     "HERO_EYEBROW": "Faxina residencial",
     "HERO_TITLE": "Encontre profissionais <span>perto de você</span>",
@@ -115,7 +136,12 @@
     "SERVES": "Atende",
     "PRICE": "Valor",
     "REQUEST_CLEANING": "Solicitar faxina",
-    "PROPERTY_TYPES": { "HOUSE": "Casa", "APARTMENT": "Apartamento", "CONDOMINIUM": "Condomínio", "PETS": "Aceita pets" }
+    "PROPERTY_TYPES": {
+      "HOUSE": "Casa",
+      "APARTMENT": "Apartamento",
+      "CONDOMINIUM": "Condomínio",
+      "PETS": "Aceita pets"
+    }
   },
   "CLIENT": {
     "EYEBROW": "Gestão de Serviços",
@@ -157,6 +183,7 @@
       "SEND_QUOTE": "Enviar Orçamento",
       "NO_REQS": "Não há pedidos disponíveis na sua região no momento.",
       "MY_JOBS": "Meus Trabalhos (Agendamentos)",
+      "LOADING_APPOINTMENTS": "Carregando agendamentos...",
       "APPOINTMENT": "Agendamento",
       "ID": "ID",
       "ADDRESS_RELEASED": "Endereço Liberado",
@@ -223,6 +250,28 @@
       "LOADING_PROFILE": "Carregando perfil...",
       "PROFESSIONAL": "Profissional",
       "TEAM_MESSAGE": "Mensagem da equipe",
+    "STATUS": {
+      "DRAFT": {
+        "LABEL": "Perfil em preparação",
+        "HELP": "Complete e salve o perfil; depois envie para a análise da equipe."
+      },
+      "PENDING": {
+        "LABEL": "Aguardando análise",
+        "HELP": "Sua análise está na fila. Enquanto isso, você pode editar seus dados."
+      },
+      "CHANGES": {
+        "LABEL": "Correções solicitadas",
+        "HELP": "Revise a mensagem da equipe, ajuste o perfil e envie novamente."
+      },
+      "VERIFIED": {
+        "LABEL": "Perfil verificado",
+        "HELP": "Seu perfil está aprovado e disponível para receber pedidos."
+      },
+      "REJECTED": {
+        "LABEL": "Perfil não aprovado",
+        "HELP": "Consulte a mensagem da equipe antes de realizar um novo envio."
+      }
+    },
       "SUBMIT_FOR_REVIEW": "Enviar para análise",
       "SUBMITTING": "Enviando...",
       "SCORE": "Nota",
@@ -290,7 +339,7 @@
     "ROLE_CLIENT": "Sou Cliente",
     "ROLE_PROVIDER": "Sou Profissional",
     "FULL_NAME": "Nome Completo",
-      "FULL_NAME_PLACEHOLDER": "Ex.: Maria da Silva",
+    "FULL_NAME_PLACEHOLDER": "Ex.: Maria da Silva",
     "FULL_NAME_ERROR": "Informe um nome com pelo menos 3 caracteres.",
     "PASSWORD_ERROR": "A senha deve ter pelo menos 8 caracteres.",
     "PHONE": "Telefone / WhatsApp",
@@ -357,7 +406,7 @@
     "PROFESSIONAL_REVIEW": "Análise profissional",
     "IDENTITY_CONTACT": "Identidade e contato",
     "FULL_NAME": "Nome Completo",
-      "FULL_NAME_PLACEHOLDER": "Ex.: Maria da Silva",
+    "FULL_NAME_PLACEHOLDER": "Ex.: Maria da Silva",
     "PHONE_WHATSAPP": "Telefone / WhatsApp",
     "EMAIL": "E-mail",
     "ACCOUNT_CREATED": "Conta criada em",
@@ -470,6 +519,7 @@
     "SEND_QUOTE": "Enviar Orçamento",
     "NO_REQUESTS": "Não há pedidos disponíveis na sua região no momento.",
     "MY_JOBS": "Meus Trabalhos (Agendamentos)",
+      "LOADING_APPOINTMENTS": "Carregando agendamentos...",
     "APPOINTMENT": "Agendamento",
     "ADDRESS_RELEASED": "Endereço Liberado:",
     "ADDRESS_UNAVAILABLE": "Endereço não disponível",
@@ -487,7 +537,7 @@
     "PROFILE_SUBTITLE": "Atualize suas informações, raio de atendimento e preferências de serviço.",
     "PERSONAL_DATA": "Dados Pessoais",
     "FULL_NAME": "Nome Completo",
-      "FULL_NAME_PLACEHOLDER": "Ex.: Maria da Silva",
+    "FULL_NAME_PLACEHOLDER": "Ex.: Maria da Silva",
     "PHONE": "Telefone / WhatsApp",
     "LOCATION": "Localização e Atendimento",
     "CITY": "Cidade base",
@@ -529,16 +579,46 @@
     "SENDING": "Enviando..."
   },
   "ACTIVITIES": {
-    "BASIC_CLEANING": { "NAME": "Faxina residencial", "DESCRIPTION": "Limpeza geral de pisos, superfícies, cozinha e banheiros." },
-    "DISHES": { "NAME": "Lavar louça", "DESCRIPTION": "Lavagem da louça disponível no momento do serviço." },
-    "LAUNDRY": { "NAME": "Lavar roupas", "DESCRIPTION": "Separar e colocar roupas para lavar." },
-    "IRONING": { "NAME": "Passar roupas", "DESCRIPTION": "Passar as peças combinadas no pedido." },
-    "FOLD_AND_STORE": { "NAME": "Dobrar e guardar roupas", "DESCRIPTION": "Dobrar e organizar roupas limpas." },
-    "COOKING": { "NAME": "Cozinhar", "DESCRIPTION": "Preparar refeições previamente combinadas." },
-    "CABINETS": { "NAME": "Organizar armários", "DESCRIPTION": "Organização interna de armários." },
-    "FRIDGE": { "NAME": "Limpar geladeira", "DESCRIPTION": "Limpeza interna da geladeira." },
-    "OVEN": { "NAME": "Limpar forno", "DESCRIPTION": "Limpeza interna do forno." },
-    "WINDOWS": { "NAME": "Limpar janelas", "DESCRIPTION": "Limpeza de janelas acessíveis e seguras." }
+    "BASIC_CLEANING": {
+      "NAME": "Faxina residencial",
+      "DESCRIPTION": "Limpeza geral de pisos, superfícies, cozinha e banheiros."
+    },
+    "DISHES": {
+      "NAME": "Lavar louça",
+      "DESCRIPTION": "Lavagem da louça disponível no momento do serviço."
+    },
+    "LAUNDRY": {
+      "NAME": "Lavar roupas",
+      "DESCRIPTION": "Separar e colocar roupas para lavar."
+    },
+    "IRONING": {
+      "NAME": "Passar roupas",
+      "DESCRIPTION": "Passar as peças combinadas no pedido."
+    },
+    "FOLD_AND_STORE": {
+      "NAME": "Dobrar e guardar roupas",
+      "DESCRIPTION": "Dobrar e organizar roupas limpas."
+    },
+    "COOKING": {
+      "NAME": "Cozinhar",
+      "DESCRIPTION": "Preparar refeições previamente combinadas."
+    },
+    "CABINETS": {
+      "NAME": "Organizar armários",
+      "DESCRIPTION": "Organização interna de armários."
+    },
+    "FRIDGE": {
+      "NAME": "Limpar geladeira",
+      "DESCRIPTION": "Limpeza interna da geladeira."
+    },
+    "OVEN": {
+      "NAME": "Limpar forno",
+      "DESCRIPTION": "Limpeza interna do forno."
+    },
+    "WINDOWS": {
+      "NAME": "Limpar janelas",
+      "DESCRIPTION": "Limpeza de janelas acessíveis e seguras."
+    }
   },
   "STATUS_REQUEST": {
     "OPEN": "Aberto",
@@ -554,6 +634,10 @@
     "COMPLETED": "Concluído",
     "CANCELLED": "Cancelado",
     "DISPUTED": "Em disputa"
+  },
+  "APP": {
+    "ABOUT_TITLE": "Serviços com confiança",
+    "ABOUT_DESC": "Conectamos clientes e profissionais de serviços residenciais de forma simples, segura e transparente."
   }
 }
 

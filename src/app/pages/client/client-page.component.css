@@ -77,28 +77,61 @@
 
 
 
-::ng-deep .p-datatable-lg .p-datatable-header {
-  background: transparent;
-  border: none;
-}
-::ng-deep .p-datatable-lg .p-datatable-thead > tr > th {
-  background: var(--surface);
-  border-bottom: 2px solid var(--border-light);
-  color: var(--text-muted);
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 1rem 1rem;
-}
-::ng-deep .p-datatable-lg .p-datatable-tbody > tr > td {
-  border-bottom: 1px solid var(--border-light);
-  padding: 1.25rem 1rem;
-  vertical-align: middle;
-}
-::ng-deep .p-datatable-lg .p-datatable-tbody > tr.p-highlight {
-  background-color: rgba(91, 92, 226, 0.04);
-}
-::ng-deep .p-datatable-lg .p-datatable-row-expansion > td {
+
+
+
+
+
+
+
+
+
+
+
+
+
+.fullscreen-table {
+  position: fixed !important;
+  inset: 24px !important;
+  width: auto !important;
+  height: auto !important;
+  z-index: 1040 !important;
+  border-radius: 16px !important;
+  margin: 0 !important;
   padding: 0 !important;
+  box-sizing: border-box !important;
+  max-width: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: var(--surface) !important;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.3) !important;
+  overflow: hidden !important;
 }
+.fullscreen-table p-table {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.fullscreen-table ::ng-deep .p-datatable {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.fullscreen-table ::ng-deep .p-datatable-wrapper {
+  flex: 1;
+  overflow: auto;
+}
+
+:host.maximized { transform: none !important; animation: none !important; }
+
+:host.maximized::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1039;
+  background: rgba(15, 23, 42, 0.38);
+}
+
+
 

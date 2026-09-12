@@ -54,12 +54,9 @@
       </button>
     </div>
 
-    <div class="loading" *ngIf="isLoading">
-      <span class="spinner-border"></span>
-      {{ 'PROVIDER.SEARCHING' | translate }}
-    </div>
+    <app-loading-state [loading]="isLoading" [label]="'PROVIDER.SEARCHING' | translate">
 
-    <div class="opportunity-list" *ngIf="!isLoading && filteredRequests.length">
+    <div class="opportunity-list" *ngIf="filteredRequests.length">
       <article *ngFor="let request of filteredRequests" class="opportunity-card">
         <div class="card-top">
           <span class="category">{{ request.category.name }}</span>
@@ -107,10 +104,11 @@
     </div>
 
     <app-empty-state
-      *ngIf="!isLoading && !filteredRequests.length"
+      *ngIf="!filteredRequests.length"
       icon="work_off"
       [message]="'PROVIDER.EMPTY_OPPORTUNITIES' | translate"
     ></app-empty-state>
+    </app-loading-state>
   </section>
 </main>
 
@@ -132,7 +130,7 @@
     </div>
   </ng-template>
 
-  <form [formGroup]="quoteForm" (ngSubmit)="submitQuote()">
+  <form class="quote-form" [formGroup]="quoteForm" (ngSubmit)="submitQuote()">
     <div class="quote-grid">
       <label>
         {{ 'PROVIDER.TOTAL_VALUE' | translate }}
@@ -166,3 +164,5 @@
     </div>
   </form>
 </p-dialog>
+
+
