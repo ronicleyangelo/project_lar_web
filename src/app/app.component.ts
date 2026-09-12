@@ -62,8 +62,10 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onLogout(): void {
-    this.authService.logout().subscribe();
-    void this.router.navigate(['/auth/login'], { replaceUrl: true });
+    const serverLogout = this.authService.logout();
+    void this.router.navigate(['/auth/login'], { replaceUrl: true }).then(() => {
+      serverLogout.subscribe();
+    });
   }
 
   private updateAuthPage(url: string): void {

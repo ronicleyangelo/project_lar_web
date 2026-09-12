@@ -115,8 +115,10 @@ export class AccountPageComponent implements OnInit {
       .pipe(finalize(() => this.isDeleting = false)).subscribe({
         next: response => {
           this.deletionDialogVisible = false;
-          this.authService.logout().subscribe();
-          void this.router.navigate(['/auth/login'], { replaceUrl: true });
+          const serverLogout = this.authService.logout();
+          void this.router.navigate(['/auth/login'], { replaceUrl: true }).then(() => {
+            serverLogout.subscribe();
+          });
           this.messageService.add({ severity: 'success', summary: 'Exclusão agendada', detail: response.message });
         },
         error: error => this.showError(error, 'Não foi possível agendar a exclusão da conta.'),
