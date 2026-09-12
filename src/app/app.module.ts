@@ -40,7 +40,7 @@ function initializeAuth(authService: AuthService): () => Promise<unknown> {
     NgbModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
-      registrationStrategy: 'registerWhenStable:30000',
+      registrationStrategy: 'registerImmediately',
     }),
   ],
   providers: [

@@ -7,6 +7,7 @@ import { User } from './core/models/user.model';
 import { TranslateService } from '@ngx-translate/core';
 import { APP_RELEASE } from './core/config/app-version';
 import { LegalDialogService } from './core/services/legal-dialog.service';
+import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 
 @Component({
   selector: 'app-root',
@@ -19,8 +20,15 @@ export class AppComponent implements OnInit, OnDestroy {
   authPage: 'login' | 'register' | 'complete-google' | null = null;
   private userSub!: Subscription;
   private routeSub!: Subscription;
+  private updateSub?: Subscription;
 
-  constructor(private authService: AuthService, private router: Router, private translate: TranslateService, public legalDialogs: LegalDialogService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private translate: TranslateService,
+    private swUpdate: SwUpdate,
+    public legalDialogs: LegalDialogService
+  ) {}
 
   ngOnInit(): void {
     const savedLang = localStorage.getItem('appLang') || 'pt';
@@ -32,12 +40,25 @@ export class AppComponent implements OnInit, OnDestroy {
     this.updateAuthPage(this.router.url);
     this.routeSub = this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd)
-    ).subscribe(event => this.updateAuthPage(event.urlAfterRedirects));
+    ).subscribe(event => {
+      this.updateAuthPage(event.urlAfterRedirects);
+      void this.checkForAppUpdate();
+    });
+
+    if (this.swUpdate.isEnabled) {
+      this.updateSub = this.swUpdate.versionUpdates.pipe(
+        filter((event): event is VersionReadyEvent => event.type === 'VERSION_READY')
+      ).subscribe(() => {
+        void this.swUpdate.activateUpdate().then(() => document.location.reload());
+      });
+      void this.checkForAppUpdate();
+    }
   }
 
   ngOnDestroy(): void {
     this.userSub?.unsubscribe();
     this.routeSub?.unsubscribe();
+    this.updateSub?.unsubscribe();
   }
 
   onLogout(): void {
@@ -55,6 +76,15 @@ export class AppComponent implements OnInit, OnDestroy {
       this.authPage = 'complete-google';
     } else {
       this.authPage = null;
+    }
+  }
+
+  private async checkForAppUpdate(): Promise<void> {
+    if (!this.swUpdate.isEnabled) return;
+    try {
+      await this.swUpdate.checkForUpdate();
+    } catch {
+      // A falta temporária de rede não deve impedir o uso da aplicação.
     }
   }
 }
