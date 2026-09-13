@@ -8,7 +8,79 @@
 </app-page-hero>
 
 <div class="container py-4">
-  <div id="requests-card" class="table-card requests-table card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'requests'">
+  <section class="service-section mb-5" aria-labelledby="open-requests-title">
+    <header class="service-section-header">
+      <div><span class="section-kicker">Solicitações</span><h2 id="open-requests-title">Pedidos em Aberto</h2><p>Acompanhe seus pedidos e as propostas recebidas.</p></div>
+      <label class="card-search"><span class="icon">search</span><input type="search" [(ngModel)]="searchTermReq" (ngModelChange)="requestPage = 1" placeholder="Buscar pedido..." aria-label="Buscar pedido"></label>
+    </header>
+
+    <div class="service-card-grid" *ngIf="pagedRequests.length; else noRequestCards">
+      <article class="service-item request-item" *ngFor="let req of pagedRequests">
+        <div class="card-accent"></div>
+        <div class="service-item-head">
+          <div class="service-symbol"><span class="icon">cleaning_services</span></div>
+          <div class="service-name"><span class="item-label">Serviço solicitado</span><h3>{{ req.category.name || req.categoryId }}</h3><span class="item-id">#{{ req.id | slice:0:8 }}</span></div>
+          <span class="badge status-badge" [ngClass]="requestStatusViews[req.status].badgeClass">{{ 'STATUS_REQUEST.' + req.status | translate }}</span>
+        </div>
+        <p class="service-description">{{ req.description }}</p>
+        <div class="service-meta">
+          <div><span class="icon">calendar_today</span><span><small>Data</small><strong>{{ req.scheduledDate | date:'dd/MM/yyyy' }}</strong></span></div>
+          <div><span class="icon">schedule</span><span><small>Horário</small><strong>{{ req.timeSlot }}</strong></span></div>
+          <div><span class="icon">lock</span><span><small>Privacidade</small><strong>Endereço protegido</strong></span></div>
+        </div>
+        <footer class="service-item-footer">
+          <span class="proposal-count"><span class="icon">request_quote</span>{{ req.quotes?.length || 0 }} {{ (req.quotes?.length || 0) === 1 ? 'proposta' : 'propostas' }}</span>
+          <button type="button" class="btn btn-sm btn-outline-primary" *ngIf="req.quotes?.length" (click)="toggleRow(req.id)"><span>{{ expandedRowId === req.id ? 'Ocultar propostas' : 'Ver propostas' }}</span><span class="icon">{{ expandedRowId === req.id ? 'expand_less' : 'expand_more' }}</span></button>
+        </footer>
+        <div class="quote-list" *ngIf="expandedRowId === req.id">
+          <article class="quote-card" *ngFor="let q of req.quotes">
+            <div class="quote-provider">
+              <img *ngIf="q.provider.photoUrl" [src]="q.provider.photoUrl" alt="Foto do profissional">
+              <span *ngIf="!q.provider.photoUrl" class="quote-avatar">{{ q.provider.fullName?.charAt(0) || 'P' }}</span>
+              <span><strong>{{ q.provider.fullName || 'Profissional' }}</strong><small>{{ q.estimatedDuration }}</small></span>
+              <b>R$ {{ q.price }}</b>
+            </div>
+            <p>{{ q.message }}</p>
+            <button class="btn btn-sm btn-primary" *ngIf="requestStatusViews[req.status]?.canAcceptQuote" [disabled]="isAcceptingQuote(q.id)" (click)="acceptQuote(q.id)"><span class="icon">check_circle</span>Aceitar proposta</button>
+          </article>
+        </div>
+      </article>
+    </div>
+    <ng-template #noRequestCards><app-empty-state icon="assignment" [message]="'CLIENT.NO_REQUESTS' | translate"></app-empty-state></ng-template>
+    <nav class="card-pagination" *ngIf="requestTotalPages > 1" aria-label="Paginação dos pedidos"><button (click)="setRequestPage(requestPage - 1)" [disabled]="requestPage === 1"><span class="icon">chevron_left</span></button><span>Página {{ requestPage }} de {{ requestTotalPages }}</span><button (click)="setRequestPage(requestPage + 1)" [disabled]="requestPage === requestTotalPages"><span class="icon">chevron_right</span></button></nav>
+  </section>
+
+  <section class="service-section mb-5" aria-labelledby="appointments-title">
+    <header class="service-section-header">
+      <div><span class="section-kicker">Agenda</span><h2 id="appointments-title">Serviços Agendados</h2><p>Consulte seus próximos serviços e ações disponíveis.</p></div>
+      <label class="card-search"><span class="icon">search</span><input type="search" [(ngModel)]="searchTermApp" (ngModelChange)="appointmentPage = 1" placeholder="Buscar agendamento..." aria-label="Buscar agendamento"></label>
+    </header>
+    <div class="service-card-grid" *ngIf="pagedAppointments.length; else noAppointmentCards">
+      <article class="service-item appointment-item" *ngFor="let app of pagedAppointments">
+        <div class="card-accent secondary"></div>
+        <div class="service-item-head">
+          <div class="service-symbol secondary"><span class="icon">event_available</span></div>
+          <div class="service-name"><span class="item-label">Serviço agendado</span><h3>Faxina Residencial</h3><span class="item-id">#{{ app.id | slice:0:8 }}</span></div>
+          <span class="badge status-badge" [ngClass]="appointmentStatusViews[app.status]?.badgeClass || 'bg-secondary'">{{ 'STATUS_APPOINTMENT.' + app.status | translate }}</span>
+        </div>
+        <div class="provider-line">
+          <img *ngIf="app.provider?.photoUrl" [src]="app.provider?.photoUrl" alt="Foto do profissional">
+          <span *ngIf="!app.provider?.photoUrl" class="quote-avatar">{{ app.provider?.fullName?.charAt(0) || 'P' }}</span>
+          <span><small>Profissional</small><strong>{{ app.provider?.fullName || 'Profissional' }}</strong></span>
+        </div>
+        <div class="service-meta two-columns"><div><span class="icon">calendar_today</span><span><small>Data e horário</small><strong>{{ app.scheduledAt | date:'dd/MM/yyyy HH:mm' }}</strong></span></div><div><span class="icon">payments</span><span><small>Pagamento</small><strong>{{ app.payment?.status === 'APPROVED' ? 'Pago' : 'Pendente' }}</strong></span></div></div>
+        <footer class="service-actions" *ngIf="(app.status === 'SCHEDULED' && app.payment?.status !== 'APPROVED') || appointmentStatusViews[app.status]?.canConfirm || (appointmentStatusViews[app.status]?.canReview && !app.review)">
+          <button class="btn btn-success btn-sm" *ngIf="app.status === 'SCHEDULED' && app.payment?.status !== 'APPROVED'" [disabled]="isPayingAppointment(app.id)" (click)="payAppointment(app.id)"><span class="icon">payments</span>{{ isPayingAppointment(app.id) ? 'Abrindo...' : 'Pagar' }}</button>
+          <button class="btn btn-primary btn-sm" *ngIf="appointmentStatusViews[app.status]?.canConfirm" [disabled]="isConfirmingAppointment(app.id)" (click)="confirmCompletion(app.id)"><span class="icon">task_alt</span>Confirmar conclusão</button>
+          <button class="btn btn-gold btn-sm" *ngIf="appointmentStatusViews[app.status]?.canReview && !app.review" (click)="openRating(app.id)"><span class="icon">star</span>Avaliar</button>
+        </footer>
+      </article>
+    </div>
+    <ng-template #noAppointmentCards><app-empty-state icon="event" [message]="'CLIENT.NO_APPOINTMENTS' | translate"></app-empty-state></ng-template>
+    <nav class="card-pagination" *ngIf="appointmentTotalPages > 1" aria-label="Paginação dos agendamentos"><button (click)="setAppointmentPage(appointmentPage - 1)" [disabled]="appointmentPage === 1"><span class="icon">chevron_left</span></button><span>Página {{ appointmentPage }} de {{ appointmentTotalPages }}</span><button (click)="setAppointmentPage(appointmentPage + 1)" [disabled]="appointmentPage === appointmentTotalPages"><span class="icon">chevron_right</span></button></nav>
+  </section>
+
+  <div id="requests-card" class="legacy-table d-none table-card requests-table card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'requests'">
     <app-loading-state [loading]="isLoadingRequests" label="Carregando pedidos..."></app-loading-state>
     <p-table #dtRequests [value]="filteredRequests" dataKey="id" [globalFilterFields]="['category.name', 'description', 'status']" [rows]="5" [paginator]="true" responsiveLayout="scroll" styleClass="p-datatable-lg p-datatable-striped" *ngIf="!isLoadingRequests">
       <ng-template pTemplate="caption">
@@ -93,7 +165,7 @@
     <app-empty-state icon="assignment" [message]="'CLIENT.NO_REQUESTS' | translate"></app-empty-state>
   </ng-template>
 
-  <div id="appointments-card" class="table-card appointments-table card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'appointments'">
+  <div id="appointments-card" class="legacy-table d-none table-card appointments-table card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'appointments'">
     <app-loading-state [loading]="isLoadingAppointments" label="Carregando agendamentos..."></app-loading-state>
     <p-table #dtApps [value]="filteredAppointments" [globalFilterFields]="['provider.fullName', 'status', 'id']" [rows]="5" [paginator]="true" responsiveLayout="scroll" styleClass="p-datatable-lg p-datatable-striped" *ngIf="!isLoadingAppointments">
       <ng-template pTemplate="caption">

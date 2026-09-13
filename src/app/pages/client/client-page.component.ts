@@ -30,6 +30,9 @@ export class ClientPageComponent implements OnInit {
   expandedRowId: string | null = null;
   searchTermReq: string = '';
   searchTermApp: string = '';
+  requestPage = 1;
+  appointmentPage = 1;
+  readonly pageSize = 6;
 
   get filteredRequests() {
     if (!this.searchTermReq) return this.clientRequests;
@@ -50,6 +53,14 @@ export class ClientPageComponent implements OnInit {
       this.translate.instant('STATUS_APPOINTMENT.' + app.status).toLowerCase().includes(term)
     );
   }
+
+  get requestTotalPages(): number { return Math.max(1, Math.ceil(this.filteredRequests.length / this.pageSize)); }
+  get appointmentTotalPages(): number { return Math.max(1, Math.ceil(this.filteredAppointments.length / this.pageSize)); }
+  get pagedRequests(): ServiceRequest[] { return this.filteredRequests.slice((this.requestPage - 1) * this.pageSize, this.requestPage * this.pageSize); }
+  get pagedAppointments(): Appointment[] { return this.filteredAppointments.slice((this.appointmentPage - 1) * this.pageSize, this.appointmentPage * this.pageSize); }
+
+  setRequestPage(page: number): void { this.requestPage = Math.min(Math.max(1, page), this.requestTotalPages); }
+  setAppointmentPage(page: number): void { this.appointmentPage = Math.min(Math.max(1, page), this.appointmentTotalPages); }
 
   toggleRow(id: string) {
     this.expandedRowId = this.expandedRowId === id ? null : id;
