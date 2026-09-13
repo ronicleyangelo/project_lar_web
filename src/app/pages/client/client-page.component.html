@@ -16,7 +16,6 @@
 
     <div class="service-card-grid" *ngIf="pagedRequests.length; else noRequestCards">
       <article class="service-item request-item" *ngFor="let req of pagedRequests">
-        <div class="card-accent"></div>
         <div class="service-item-head">
           <div class="service-symbol"><span class="icon">cleaning_services</span></div>
           <div class="service-name"><span class="item-label">Serviço solicitado</span><h3>{{ req.category.name || req.categoryId }}</h3><span class="item-id">#{{ req.id | slice:0:8 }}</span></div>
@@ -36,7 +35,7 @@
           <article class="quote-card" *ngFor="let q of req.quotes">
             <div class="quote-provider">
               <img *ngIf="q.provider.photoUrl" [src]="q.provider.photoUrl" alt="Foto do profissional">
-              <span *ngIf="!q.provider.photoUrl" class="quote-avatar">{{ q.provider.fullName?.charAt(0) || 'P' }}</span>
+              <span *ngIf="!q.provider.photoUrl" class="quote-avatar">{{ q.provider.fullName.charAt(0) || 'P' }}</span>
               <span><strong>{{ q.provider.fullName || 'Profissional' }}</strong><small>{{ q.estimatedDuration }}</small></span>
               <b>R$ {{ q.price }}</b>
             </div>
@@ -57,7 +56,6 @@
     </header>
     <div class="service-card-grid" *ngIf="pagedAppointments.length; else noAppointmentCards">
       <article class="service-item appointment-item" *ngFor="let app of pagedAppointments">
-        <div class="card-accent secondary"></div>
         <div class="service-item-head">
           <div class="service-symbol secondary"><span class="icon">event_available</span></div>
           <div class="service-name"><span class="item-label">Serviço agendado</span><h3>Faxina Residencial</h3><span class="item-id">#{{ app.id | slice:0:8 }}</span></div>
