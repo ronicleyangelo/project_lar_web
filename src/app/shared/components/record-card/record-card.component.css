@@ -1,0 +1,5 @@
+:host { display:block; min-width:0; }
+.record-card { height:100%; padding:var(--record-card-padding,20px); border:1px solid var(--border-light); border-radius:16px; background:#fff; box-shadow:0 3px 12px rgba(35,28,24,.045); transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease; }
+.record-card:hover { border-color:rgba(167,78,43,.24); box-shadow:0 8px 22px rgba(35,28,24,.08); transform:translateY(-2px); }
+.record-card[data-tone='secondary']:hover { border-color:rgba(53,82,67,.25); }
+@media(max-width:576px){.record-card{padding:var(--record-card-padding-mobile,16px);border-radius:14px}.record-card:hover{transform:none}}

@@ -14,7 +14,37 @@
 </div>
 <div class="container py-5">
 
-  <div id="requests-card" class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'requests'">
+  <section class="record-section mb-5">
+    <header class="record-section-heading"><span class="record-kicker">Oportunidades</span><h2>{{ 'PROVIDER.AVAILABLE_REQUESTS' | translate }}</h2><p>{{ openProviderRequests.length }} pedido(s) compatível(is) com seu perfil</p></header>
+    <app-loading-state [loading]="isLoadingRequests" [label]="'PROVIDER.SEARCHING' | translate"></app-loading-state>
+    <div class="provider-record-grid" *ngIf="!isLoadingRequests && openProviderRequests.length">
+      <app-record-card tone="primary" *ngFor="let req of openProviderRequests">
+        <header class="provider-record-head"><span class="record-icon icon">cleaning_services</span><div><small>Serviço solicitado</small><h3>{{ req.category.name || req.categoryId }}</h3><span>#{{ req.id | slice:0:8 }}</span></div><strong *ngIf="req.budgetLimit">R$ {{ req.budgetLimit }}</strong></header>
+        <p class="record-description">{{ req.description }}</p>
+        <div class="record-meta"><div><span class="icon">location_on</span><span><small>Região</small><strong>{{ req.neighborhood }}, {{ req.city }}</strong></span></div><div><span class="icon">near_me</span><span><small>Distância</small><strong>{{ req.approxDistanceKm || 0 | number:'1.0-1' }} km</strong></span></div><div><span class="icon">calendar_today</span><span><small>Data</small><strong>{{ req.scheduledDate | date:'dd/MM/yyyy' }}</strong></span></div><div><span class="icon">schedule</span><span><small>Horário</small><strong>{{ req.timeSlot }}</strong></span></div></div>
+        <div class="record-activities"><span *ngFor="let item of req.activities">{{ item.activity | activityLabel:'name' }}</span></div>
+        <footer class="record-actions"><span class="protected-address"><span class="icon">lock</span>{{ 'PROVIDER.ADDRESS_HIDDEN' | translate }}</span><button class="btn btn-primary btn-sm" (click)="openSendQuoteModal(req.id, quoteModal)"><span class="icon">request_quote</span>Enviar orçamento</button></footer>
+      </app-record-card>
+    </div>
+    <app-empty-state *ngIf="!isLoadingRequests && openProviderRequests.length === 0" icon="work_off" [message]="'PROVIDER.NO_REQUESTS' | translate"></app-empty-state>
+  </section>
+
+  <section class="record-section mb-5">
+    <header class="record-section-heading"><span class="record-kicker">Agenda</span><h2>{{ 'PROVIDER.MY_JOBS' | translate }}</h2><p>{{ appointments.length }} agendamento(s)</p></header>
+    <app-loading-state [loading]="isLoadingAppointments" [label]="'PROVIDER.LOADING_APPOINTMENTS' | translate"></app-loading-state>
+    <div class="provider-record-grid" *ngIf="!isLoadingAppointments && appointments.length">
+      <app-record-card tone="secondary" *ngFor="let app of appointments">
+        <header class="provider-record-head"><span class="record-icon secondary icon">event_available</span><div><small>Serviço agendado</small><h3>{{ app.request?.category?.name || 'Serviço' }}</h3><span>#{{ app.id | slice:0:8 }}</span></div><span class="badge" [ngClass]="appointmentStatusViews[app.status]?.badgeClass || 'bg-secondary'">{{ 'STATUS_APPOINTMENT.' + app.status | translate }}</span></header>
+        <div class="client-record"><img *ngIf="app.client?.user?.avatarUrl" [src]="app.client?.user?.avatarUrl" (error)="onClientAvatarError(app)" alt="Foto do cliente"><span *ngIf="!app.client?.user?.avatarUrl" class="client-initial">{{ app.client?.fullName?.charAt(0) || 'C' }}</span><span><small>Cliente</small><strong>{{ app.client?.fullName || 'Cliente' }}</strong></span></div>
+        <div class="record-meta"><div><span class="icon">calendar_today</span><span><small>Data e horário</small><strong>{{ app.scheduledAt | date:'dd/MM/yyyy HH:mm' }}</strong></span></div><div><span class="icon">location_on</span><span><small>Endereço</small><strong>{{ app.status !== 'COMPLETED' && app.status !== 'CANCELED' ? (app.client?.fullAddress || 'Protegido') : 'Oculto' }}</strong></span></div></div>
+        <p class="record-description">{{ app.request?.description || 'Descrição não informada' }}</p>
+        <footer class="record-actions" *ngIf="appointmentStatusViews[app.status]?.canStart || appointmentStatusViews[app.status]?.canComplete"><button class="btn btn-outline-primary btn-sm" *ngIf="appointmentStatusViews[app.status]?.canStart" [disabled]="isAppointmentActionRunning(app.id)" (click)="startAppointment(app.id)"><span class="icon">play_arrow</span>Iniciar</button><button class="btn btn-primary btn-sm" *ngIf="appointmentStatusViews[app.status]?.canComplete" [disabled]="isAppointmentActionRunning(app.id)" (click)="completeAppointment(app.id)"><span class="icon">task_alt</span>Concluir</button></footer>
+      </app-record-card>
+    </div>
+    <app-empty-state *ngIf="!isLoadingAppointments && appointments.length === 0" icon="event_available" [message]="'PROVIDER.NO_APPOINTMENTS' | translate"></app-empty-state>
+  </section>
+
+  <div id="requests-card" class="d-none card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'requests'">
     <app-loading-state [loading]="isLoadingRequests" [label]="'PROVIDER.SEARCHING' | translate"></app-loading-state>
     
     <p-table #dtReqs [value]="openProviderRequests" [globalFilterFields]="['category.name', 'city', 'neighborhood', 'description']" [rows]="5" [paginator]="true" [showCurrentPageReport]="true" currentPageReportTemplate="{first}–{last} de {totalRecords}" responsiveLayout="scroll" styleClass="p-datatable-lg dashboard-table" dataKey="id" *ngIf="!isLoadingRequests && openProviderRequests.length > 0">
@@ -97,8 +127,8 @@
   </div>
 
 
-  <h2 class="section-divider mt-5 mb-4">{{ 'PROVIDER.MY_JOBS' | translate }}</h2>
-  <div id="appointments-card" class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'appointments'">
+  <h2 class="d-none section-divider mt-5 mb-4">{{ 'PROVIDER.MY_JOBS' | translate }}</h2>
+  <div id="appointments-card" class="d-none card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'appointments'">
     <app-loading-state [loading]="isLoadingAppointments" [label]="'PROVIDER.LOADING_APPOINTMENTS' | translate"></app-loading-state>
     
     <p-table #dtApps [value]="appointments" [globalFilterFields]="['client.fullName', 'status', 'id']" [rows]="5" [paginator]="true" [showCurrentPageReport]="true" currentPageReportTemplate="{first}–{last} de {totalRecords}" responsiveLayout="scroll" styleClass="p-datatable-lg dashboard-table" dataKey="id" *ngIf="!isLoadingAppointments && appointments.length > 0">

@@ -18,6 +18,10 @@ export interface Appointment {
     providerAmount: number;
     status: string;
   };
+  request?: {
+    description?: string;
+    category?: { name: string };
+  };
 }
 
 export interface Review {

@@ -28,6 +28,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
 import { ActivityLabelPipe } from './pipes/activity-label.pipe';
 import { PageHeroComponent } from './components/page-hero/page-hero.component';
 import { LoadingStateComponent } from './components/loading-state/loading-state.component';
+import { RecordCardComponent } from './components/record-card/record-card.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { LoadingStateComponent } from './components/loading-state/loading-state.
     AuthBackgroundComponent,
     TruncatePipe,
     ActivityLabelPipe,
-    PageHeroComponent
+    PageHeroComponent,
+    RecordCardComponent
   ],
   imports: [
     CommonModule,
@@ -92,7 +94,8 @@ import { LoadingStateComponent } from './components/loading-state/loading-state.
     TruncatePipe,
     ActivityLabelPipe,
     PageHeroComponent,
-    LoadingStateComponent
+    LoadingStateComponent,
+    RecordCardComponent
   ]
 })
 export class SharedModule { }

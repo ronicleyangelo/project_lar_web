@@ -20,27 +20,26 @@
     </div>
 
     <div class="loading-admin" *ngIf="isLoading"><span class="spinner-border"></span> {{ 'ADMIN.LOADING_PROS' | translate }}</div>
-    <p-table *ngIf="!isLoading" [value]="adminProviders" [paginator]="adminProviders.length > 8" [rows]="8" responsiveLayout="scroll" styleClass="providers-table">
-      <ng-template pTemplate="header"><tr><th>{{ 'ADMIN.TH_PROFESSIONAL' | translate }}</th><th>{{ 'ADMIN.TH_CONTACT' | translate }}</th><th>{{ 'ADMIN.TH_SERVICE' | translate }}</th><th>{{ 'ADMIN.TH_ACTIVITIES' | translate }}</th><th>{{ 'ADMIN.TH_STATUS' | translate }}</th><th>{{ 'ADMIN.TH_ACTIONS' | translate }}</th></tr></ng-template>
-      <ng-template pTemplate="body" let-provider>
-        <tr>
-          <td><a class="provider-cell provider-link" [routerLink]="['/admin/providers', provider.id]"><span class="provider-avatar"><img *ngIf="provider.photoUrl; else initials" [src]="provider.photoUrl" alt=""><ng-template #initials>{{ providerInitials(provider) }}</ng-template></span><div><strong>{{ provider.fullName }}</strong><small>{{ 'ADMIN.VIEW_FULL_PROFILE' | translate }}</small></div></a></td>
-          <td><div class="stacked-cell"><span>{{ provider.user.email }}</span><small>{{ provider.user.phone }}</small></div></td>
-          <td><div class="stacked-cell"><span>{{ providerLocation(provider) }}</span><small>{{ provider.services.length }} {{ 'ADMIN.REGISTERED_SERVICE' | translate }}</small></div></td>
-          <td><span class="activity-count">{{ provider.activities.length }}</span></td>
-          <td><span class="status-chip" [ngClass]="verificationStatusViews[provider.verificationStatus].badgeClass">{{ statusKey(provider.verificationStatus) | translate }}</span></td>
-          <td>
-            <div class="review-actions" *ngIf="verificationStatusViews[provider.verificationStatus].canReview; else noAction">
-              <button class="action approve" [title]="'ADMIN.APPROVE_TITLE' | translate" [disabled]="isSubmittingReview" (click)="reviewProvider(provider, 'VERIFIED')"><span class="icon">check</span>{{ 'ADMIN.APPROVE' | translate }}</button>
-              <button class="action correction" [title]="'ADMIN.CORRECTION_TITLE' | translate" [disabled]="isSubmittingReview" (click)="openReviewDialog(provider, 'CHANGES_REQUESTED')"><span class="icon">edit_note</span>{{ 'ADMIN.CORRECTION' | translate }}</button>
-              <button class="action reject" [title]="'ADMIN.REJECT_TITLE' | translate" [disabled]="isSubmittingReview" (click)="openReviewDialog(provider, 'REJECTED')"><span class="icon">close</span>{{ 'ADMIN.REJECT' | translate }}</button>
-            </div>
-            <ng-template #noAction><span class="no-action">{{ 'ADMIN.NO_ACTION_PENDING' | translate }}</span></ng-template>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage"><tr><td colspan="6"><div class="empty-admin"><span class="icon">person_search</span>{{ 'ADMIN.NO_PROS_REGISTERED' | translate }}</div></td></tr></ng-template>
-    </p-table>
+    <div class="admin-provider-grid" *ngIf="!isLoading && adminProviders.length">
+      <app-record-card tone="secondary" *ngFor="let provider of adminProviders">
+        <header class="admin-provider-head">
+          <a class="provider-cell provider-link" [routerLink]="['/admin/providers', provider.id]"><span class="provider-avatar"><img *ngIf="provider.photoUrl; else initials" [src]="provider.photoUrl" alt=""><ng-template #initials>{{ providerInitials(provider) }}</ng-template></span><div><strong>{{ provider.fullName }}</strong><small>{{ 'ADMIN.VIEW_FULL_PROFILE' | translate }}</small></div></a>
+          <span class="status-chip" [ngClass]="verificationStatusViews[provider.verificationStatus].badgeClass">{{ statusKey(provider.verificationStatus) | translate }}</span>
+        </header>
+        <div class="admin-provider-meta">
+          <div><span class="icon">mail</span><span><small>{{ 'ADMIN.TH_CONTACT' | translate }}</small><strong>{{ provider.user.email }}</strong><em>{{ provider.user.phone }}</em></span></div>
+          <div><span class="icon">location_on</span><span><small>{{ 'ADMIN.TH_SERVICE' | translate }}</small><strong>{{ providerLocation(provider) }}</strong><em>{{ provider.services.length }} {{ 'ADMIN.REGISTERED_SERVICE' | translate }}</em></span></div>
+          <div><span class="icon">checklist</span><span><small>{{ 'ADMIN.TH_ACTIVITIES' | translate }}</small><strong>{{ provider.activities.length }}</strong></span></div>
+        </div>
+        <footer class="review-actions" *ngIf="verificationStatusViews[provider.verificationStatus].canReview; else noAction">
+          <button class="action approve" [title]="'ADMIN.APPROVE_TITLE' | translate" [disabled]="isSubmittingReview" (click)="reviewProvider(provider, 'VERIFIED')"><span class="icon">check</span>{{ 'ADMIN.APPROVE' | translate }}</button>
+          <button class="action correction" [title]="'ADMIN.CORRECTION_TITLE' | translate" [disabled]="isSubmittingReview" (click)="openReviewDialog(provider, 'CHANGES_REQUESTED')"><span class="icon">edit_note</span>{{ 'ADMIN.CORRECTION' | translate }}</button>
+          <button class="action reject" [title]="'ADMIN.REJECT_TITLE' | translate" [disabled]="isSubmittingReview" (click)="openReviewDialog(provider, 'REJECTED')"><span class="icon">close</span>{{ 'ADMIN.REJECT' | translate }}</button>
+        </footer>
+        <ng-template #noAction><div class="no-action card-no-action">{{ 'ADMIN.NO_ACTION_PENDING' | translate }}</div></ng-template>
+      </app-record-card>
+    </div>
+    <div class="empty-admin" *ngIf="!isLoading && !adminProviders.length"><span class="icon">person_search</span>{{ 'ADMIN.NO_PROS_REGISTERED' | translate }}</div>
   </section>
 
   <p-dialog [(visible)]="reviewDialogVisible" [modal]="true" [draggable]="false" [resizable]="false" [closable]="!isSubmittingReview" [style]="{width: '520px', maxWidth: 'calc(100vw - 32px)'}" styleClass="review-dialog" (onHide)="closeReviewDialog()">

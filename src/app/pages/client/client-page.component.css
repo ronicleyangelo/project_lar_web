@@ -34,7 +34,7 @@
 .card-search:focus-within { border-color:var(--primary); box-shadow:0 0 0 3px rgba(167,78,43,.08); }
 .card-search .icon { color:var(--text-secondary); font-size:18px; }.card-search input{width:100%;height:43px;border:0;outline:0;background:transparent;font-size:12px}
 .service-card-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
-.service-item { position:relative; overflow:hidden; padding:20px; border:1px solid var(--border-light); border-radius:16px; background:#fff; box-shadow:0 3px 12px rgba(35,28,24,.045); }
+.service-item { min-width:0; }
 .service-item-head { display:flex; align-items:flex-start; gap:11px; }.service-symbol{display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;border-radius:11px;color:var(--primary);background:rgba(167,78,43,.1)}.service-symbol.secondary{color:var(--secondary);background:rgba(53,82,67,.1)}
 .service-symbol .icon{font-size:21px}.service-name{flex:1;min-width:0}.item-label{display:block;color:var(--text-secondary);font-size:9px;font-weight:750;text-transform:uppercase}.service-name h3{margin:2px 0;color:var(--text-primary);font-size:15px;font-weight:800}.item-id{color:var(--text-secondary);font-size:10px}.status-badge{flex:0 0 auto;font-size:9px}
 .service-description{margin:15px 0;color:var(--text-secondary);font-size:12px;line-height:1.5;display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2}
@@ -126,7 +126,7 @@
   .service-section-header h2 { font-size:21px; }
   .card-search { flex-basis:auto; min-width:0; width:100%; }
   .service-card-grid { grid-template-columns:1fr; gap:12px; }
-  .service-item { padding:16px; }
+  .service-item { --record-card-padding-mobile:16px; }
   .service-item-head { flex-wrap:wrap; }
   .status-badge { margin-left:auto; }
   .service-meta,.service-meta.two-columns { grid-template-columns:1fr 1fr; }

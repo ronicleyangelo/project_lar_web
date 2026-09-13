@@ -15,7 +15,7 @@
     </header>
 
     <div class="service-card-grid" *ngIf="pagedRequests.length; else noRequestCards">
-      <article class="service-item request-item" *ngFor="let req of pagedRequests">
+      <app-record-card class="service-item request-item" tone="primary" *ngFor="let req of pagedRequests">
         <div class="service-item-head">
           <div class="service-symbol"><span class="icon">cleaning_services</span></div>
           <div class="service-name"><span class="item-label">Serviço solicitado</span><h3>{{ req.category.name || req.categoryId }}</h3><span class="item-id">#{{ req.id | slice:0:8 }}</span></div>
@@ -43,7 +43,7 @@
             <button class="btn btn-sm btn-primary" *ngIf="requestStatusViews[req.status]?.canAcceptQuote" [disabled]="isAcceptingQuote(q.id)" (click)="acceptQuote(q.id)"><span class="icon">check_circle</span>Aceitar proposta</button>
           </article>
         </div>
-      </article>
+      </app-record-card>
     </div>
     <ng-template #noRequestCards><app-empty-state icon="assignment" [message]="'CLIENT.NO_REQUESTS' | translate"></app-empty-state></ng-template>
     <nav class="card-pagination" *ngIf="requestTotalPages > 1" aria-label="Paginação dos pedidos"><button (click)="setRequestPage(requestPage - 1)" [disabled]="requestPage === 1"><span class="icon">chevron_left</span></button><span>Página {{ requestPage }} de {{ requestTotalPages }}</span><button (click)="setRequestPage(requestPage + 1)" [disabled]="requestPage === requestTotalPages"><span class="icon">chevron_right</span></button></nav>
@@ -55,7 +55,7 @@
       <label class="card-search"><span class="icon">search</span><input type="search" [(ngModel)]="searchTermApp" (ngModelChange)="appointmentPage = 1" placeholder="Buscar agendamento..." aria-label="Buscar agendamento"></label>
     </header>
     <div class="service-card-grid" *ngIf="pagedAppointments.length; else noAppointmentCards">
-      <article class="service-item appointment-item" *ngFor="let app of pagedAppointments">
+      <app-record-card class="service-item appointment-item" tone="secondary" *ngFor="let app of pagedAppointments">
         <div class="service-item-head">
           <div class="service-symbol secondary"><span class="icon">event_available</span></div>
           <div class="service-name"><span class="item-label">Serviço agendado</span><h3>Faxina Residencial</h3><span class="item-id">#{{ app.id | slice:0:8 }}</span></div>
@@ -72,7 +72,7 @@
           <button class="btn btn-primary btn-sm" *ngIf="appointmentStatusViews[app.status]?.canConfirm" [disabled]="isConfirmingAppointment(app.id)" (click)="confirmCompletion(app.id)"><span class="icon">task_alt</span>Confirmar conclusão</button>
           <button class="btn btn-gold btn-sm" *ngIf="appointmentStatusViews[app.status]?.canReview && !app.review" (click)="openRating(app.id)"><span class="icon">star</span>Avaliar</button>
         </footer>
-      </article>
+      </app-record-card>
     </div>
     <ng-template #noAppointmentCards><app-empty-state icon="event" [message]="'CLIENT.NO_APPOINTMENTS' | translate"></app-empty-state></ng-template>
     <nav class="card-pagination" *ngIf="appointmentTotalPages > 1" aria-label="Paginação dos agendamentos"><button (click)="setAppointmentPage(appointmentPage - 1)" [disabled]="appointmentPage === 1"><span class="icon">chevron_left</span></button><span>Página {{ appointmentPage }} de {{ appointmentTotalPages }}</span><button (click)="setAppointmentPage(appointmentPage + 1)" [disabled]="appointmentPage === appointmentTotalPages"><span class="icon">chevron_right</span></button></nav>
