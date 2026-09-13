@@ -116,7 +116,7 @@
   }
 
   .expand-button {
-    flex: 0 0 auto;
+    display: none !important;
   }
 
   .table-card ::ng-deep .p-datatable-wrapper {
@@ -124,13 +124,18 @@
   }
 
   .table-card ::ng-deep .p-datatable-table {
+    display: block;
     width: 100%;
     min-width: 0 !important;
-    table-layout: fixed;
   }
 
   .table-card ::ng-deep .p-datatable-thead {
     display: none;
+  }
+
+  .table-card ::ng-deep .p-datatable-tbody {
+    display: block;
+    width: 100%;
   }
 
   .table-card ::ng-deep .p-datatable-tbody > .data-row {
@@ -140,6 +145,17 @@
     gap: 10px 14px;
     padding: 16px 18px;
     border-top: 1px solid var(--border-light);
+    width: 100%;
+  }
+
+  .table-card ::ng-deep .p-datatable-tbody > tr:not(.data-row) {
+    display: block;
+    width: 100%;
+  }
+
+  .table-card ::ng-deep .p-datatable-tbody > tr:not(.data-row) > td {
+    display: block;
+    width: 100% !important;
   }
 
   .table-card ::ng-deep .p-datatable-tbody > .data-row > td {
