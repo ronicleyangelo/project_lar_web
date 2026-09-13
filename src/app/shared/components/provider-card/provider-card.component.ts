@@ -13,7 +13,7 @@ export class ProviderCardComponent implements OnChanges {
   @Input() isFavorite = false;
   @Input() favoritePending = false;
   
-  @Output() requestQuote = new EventEmitter<void>();
+  @Output() requestQuote = new EventEmitter<string>();
   @Output() favoriteChange = new EventEmitter<string>();
 
   displayTags: string[] = [];

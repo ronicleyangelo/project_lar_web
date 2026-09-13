@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, HostListener } from '@angular/core';
+import { AfterViewInit, Component, HostBinding, HostListener, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -16,13 +16,15 @@ import { Appointment, CreateReviewPayload } from '../../core/models/appointment.
 import { APPOINTMENT_STATUS_VIEWS, REQUEST_STATUS_VIEWS } from '../../core/presentation/lifecycle-view';
 import { TranslateService } from '@ngx-translate/core';
 import { PaymentService } from '../../core/services/payment.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-client-page',
   templateUrl: './client-page.component.html',
   styleUrls: ['./client-page.component.css']
 })
-export class ClientPageComponent implements OnInit {
+export class ClientPageComponent implements OnInit, AfterViewInit {
+  @ViewChild('newReqModal') newRequestTemplate?: TemplateRef<unknown>;
   @HostBinding('class.maximized') get isMaximized() { return !!this.maximizedTable; }
   readonly appointmentStatusViews = APPOINTMENT_STATUS_VIEWS;
   readonly requestStatusViews = REQUEST_STATUS_VIEWS;
@@ -109,7 +111,9 @@ export class ClientPageComponent implements OnInit {
     public authService: AuthService,
     private modalService: NgbModal,
     private messageService: MessageService,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -120,6 +124,23 @@ export class ClientPageComponent implements OnInit {
       this.activities = activities;
       this.newReqActivityIds = activities.filter(item => item.includedByDefault).map(item => item.id);
     }, error: error => this.showError(error, 'Não foi possível carregar as atividades.') });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.route.snapshot.queryParamMap.get('newRequest') !== '1') return;
+    const city = this.route.snapshot.queryParamMap.get('city');
+    const neighborhood = this.route.snapshot.queryParamMap.get('neighborhood');
+    if (city) this.newReqCity = city;
+    if (neighborhood) this.newReqNeighborhood = neighborhood;
+    setTimeout(() => {
+      if (this.newRequestTemplate) this.openNewRequestModal(this.newRequestTemplate);
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { newRequest: null, providerId: null, city: null, neighborhood: null },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    });
   }
 
   loadClientRequests(): void {

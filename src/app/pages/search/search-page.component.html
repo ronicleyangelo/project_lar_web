@@ -45,7 +45,7 @@
             <strong>{{ 'SEARCH.SEARCHING_PROS' | translate }}</strong>
           </div>
         <div class="row g-4" *ngIf="showResults">
-          <div class="col-12 col-xl-6 animate-in" *ngFor="let item of displayedRecommendations; let i = index" [style.animation-delay]="(i * 0.08) + 's'"><app-provider-card [recommendation]="item" [searchNeighborhood]="searchLocationLabel" [isFavorite]="isFavorite(item.provider.id)" [favoritePending]="isFavoritePending(item.provider.id)" (favoriteChange)="toggleFavorite($event)" (requestQuote)="onRequestQuote()"></app-provider-card></div>
+          <div class="col-12 col-xl-6 animate-in" *ngFor="let item of displayedRecommendations; let i = index" [style.animation-delay]="(i * 0.08) + 's'"><app-provider-card [recommendation]="item" [searchNeighborhood]="searchLocationLabel" [isFavorite]="isFavorite(item.provider.id)" [favoritePending]="isFavoritePending(item.provider.id)" (favoriteChange)="toggleFavorite($event)" (requestQuote)="onRequestQuote($event)"></app-provider-card></div>
         </div>
         <app-empty-state *ngIf="showEmptyResults" icon="search_off" [message]="'SEARCH.EMPTY_RESULTS' | translate"></app-empty-state>
         <div class="search-intro" *ngIf="showSearchIntro"><span class="icon">location_on</span><h4>{{ 'SEARCH.INTRO_TITLE' | translate }}</h4><p>{{ 'SEARCH.INTRO_DESC' | translate }}</p></div>

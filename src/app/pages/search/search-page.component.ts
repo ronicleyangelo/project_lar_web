@@ -171,7 +171,25 @@ export class SearchPageComponent implements OnInit {
     const control = this.form.controls.activityIds;
     control.setValue(checked ? Array.from(new Set([...control.value, id])) : control.value.filter(item => item !== id));
   }
-  onRequestQuote(): void { this.router.navigate([this.authService.currentUserValue ? '/client' : '/auth/login']); }
+  onRequestQuote(providerId: string): void {
+    const user = this.authService.currentUserValue;
+    if (!user) {
+      this.router.navigate(['/auth/login'], { queryParams: { returnUrl: '/explore' } });
+      return;
+    }
+    if (user.role !== 'CLIENT') {
+      this.searchError = 'Somente clientes podem solicitar uma faxina.';
+      return;
+    }
+    this.router.navigate(['/client'], {
+      queryParams: {
+        newRequest: 1,
+        providerId,
+        city: this.form.controls.city.value.trim() || null,
+        neighborhood: this.form.controls.neighborhood.value.trim() || null,
+      },
+    });
+  }
 
   isFavorite(providerId: string): boolean { return this.favoriteProviderIds.has(providerId); }
   isFavoritePending(providerId: string): boolean { return this.pendingFavoriteIds.has(providerId); }
