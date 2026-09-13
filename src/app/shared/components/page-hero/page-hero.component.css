@@ -23,9 +23,24 @@
 }
 @media (max-width: 767px) {
   .page-hero {
-    padding: 28px 16px;
+    padding: 24px 0;
+  }
+  .page-hero .container {
+    align-items: stretch !important;
+    flex-direction: column;
+    gap: 18px;
   }
   .page-hero h1 {
     font-size: 29px;
+  }
+  .page-hero-actions,
+  .page-hero-actions ::ng-deep .btn {
+    width: 100%;
+  }
+  .page-hero-actions ::ng-deep .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
   }
 }

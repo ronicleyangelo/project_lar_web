@@ -8,12 +8,12 @@
 </app-page-hero>
 
 <div class="container py-4">
-  <div id="requests-card" class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'requests'">
+  <div id="requests-card" class="table-card requests-table card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'requests'">
     <app-loading-state [loading]="isLoadingRequests" label="Carregando pedidos..."></app-loading-state>
     <p-table #dtRequests [value]="filteredRequests" dataKey="id" [globalFilterFields]="['category.name', 'description', 'status']" [rows]="5" [paginator]="true" responsiveLayout="scroll" styleClass="p-datatable-lg p-datatable-striped" *ngIf="!isLoadingRequests">
       <ng-template pTemplate="caption">
-        <div class="d-flex align-items-center justify-content-between p-3">
-          <h3 class="fw-bold m-0 text-dark d-flex align-items-center gap-2" style="font-size: 20px;">Pedidos em Aberto <button pButton pRipple type="button" [icon]="maximizedTable === 'requests' ? 'pi pi-window-minimize' : 'pi pi-window-maximize'" class="p-button-rounded p-button-text p-button-secondary p-button-sm" [attr.aria-label]="maximizedTable === 'requests' ? 'Restaurar tabela' : 'Expandir tabela'" [attr.aria-pressed]="maximizedTable === 'requests'" (click)="toggleMaximize('requests')"></button></h3>
+        <div class="table-caption p-3">
+          <h3 class="table-title fw-bold m-0 text-dark">Pedidos em Aberto <button pButton pRipple type="button" [icon]="maximizedTable === 'requests' ? 'pi pi-window-minimize' : 'pi pi-window-maximize'" class="p-button-rounded p-button-text p-button-secondary p-button-sm expand-button" [attr.aria-label]="maximizedTable === 'requests' ? 'Restaurar tabela' : 'Expandir tabela'" [attr.aria-pressed]="maximizedTable === 'requests'" (click)="toggleMaximize('requests')"></button></h3>
           <input pInputText type="text" (input)="dtRequests.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar pedido..." />
         </div>
       </ng-template>
@@ -28,25 +28,25 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-req let-expanded="expanded">
-        <tr>
-          <td>
+        <tr class="data-row">
+          <td class="expand-cell">
               <button type="button" pButton pRipple [pRowToggler]="req" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" *ngIf="req.quotes?.length > 0"></button>
             </td>
-            <td>
+            <td class="service-cell">
               <div class="fw-bold text-dark">{{ req.category.name || req.categoryId }}</div>
             <div class="text-muted small text-truncate" style="max-width: 250px;">{{ req.description }}</div>
           </td>
-          <td>
+          <td class="date-cell">
             <div class="fw-bold text-dark">{{ req.scheduledDate | date: 'dd/MM/yyyy' }}</div>
             <div class="text-muted small">{{ req.timeSlot }}</div>
           </td>
-          <td>
+          <td class="status-cell">
             <span class="badge" [ngClass]="requestStatusViews[req.status].badgeClass">{{ 'STATUS_REQUEST.' + req.status | translate }}</span>
           </td>
-          <td>
+          <td class="privacy-cell">
             <span class="badge bg-light text-dark border"><span class="icon" style="font-size: 11px;">lock</span> Endereço Protegido</span>
           </td>
-          <td>
+          <td class="quotes-cell">
             <span class="badge bg-primary text-white" *ngIf="(req.quotes?.length || 0) > 0">{{ req.quotes?.length }} Proposta(s)</span>
             <span class="text-muted small" *ngIf="!req.quotes || req.quotes.length === 0">Nenhuma</span>
           </td>
@@ -93,19 +93,18 @@
     <app-empty-state icon="assignment" [message]="'CLIENT.NO_REQUESTS' | translate"></app-empty-state>
   </ng-template>
 
-  <div id="appointments-card" class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'appointments'">
+  <div id="appointments-card" class="table-card appointments-table card border-0 shadow-sm rounded-4 overflow-hidden mb-5 bg-surface" [class.fullscreen-table]="maximizedTable === 'appointments'">
     <app-loading-state [loading]="isLoadingAppointments" label="Carregando agendamentos..."></app-loading-state>
     <p-table #dtApps [value]="filteredAppointments" [globalFilterFields]="['provider.fullName', 'status', 'id']" [rows]="5" [paginator]="true" responsiveLayout="scroll" styleClass="p-datatable-lg p-datatable-striped" *ngIf="!isLoadingAppointments">
       <ng-template pTemplate="caption">
-        <div class="d-flex align-items-center justify-content-between p-3">
-          <h3 class="fw-bold m-0 text-dark d-flex align-items-center gap-2" style="font-size: 20px;">Serviços Agendados <button pButton pRipple type="button" [icon]="maximizedTable === 'appointments' ? 'pi pi-window-minimize' : 'pi pi-window-maximize'" class="p-button-rounded p-button-text p-button-secondary p-button-sm" [attr.aria-label]="maximizedTable === 'appointments' ? 'Restaurar tabela' : 'Expandir tabela'" [attr.aria-pressed]="maximizedTable === 'appointments'" (click)="toggleMaximize('appointments')"></button></h3>
+        <div class="table-caption p-3">
+          <h3 class="table-title fw-bold m-0 text-dark">Serviços Agendados <button pButton pRipple type="button" [icon]="maximizedTable === 'appointments' ? 'pi pi-window-minimize' : 'pi pi-window-maximize'" class="p-button-rounded p-button-text p-button-secondary p-button-sm expand-button" [attr.aria-label]="maximizedTable === 'appointments' ? 'Restaurar tabela' : 'Expandir tabela'" [attr.aria-pressed]="maximizedTable === 'appointments'" (click)="toggleMaximize('appointments')"></button></h3>
           <input pInputText type="text" (input)="dtApps.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar agendamento..." />
         </div>
       </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 3rem"></th>
-            <th>Serviço</th>
+          <th>Serviço</th>
           <th>Profissional</th>
           <th>Data / Horário</th>
           <th>Status</th>
@@ -113,12 +112,12 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-app>
-        <tr>
-          <td>
+        <tr class="data-row">
+          <td class="service-cell">
             <div class="fw-bold text-dark">Faxina Residencial</div>
             <div class="text-muted small">ID: {{ app.id | slice:0:8 }}</div>
           </td>
-          <td>
+          <td class="professional-cell">
             <div class="d-flex align-items-center gap-2">
               <img *ngIf="app.provider?.photoUrl" [src]="app.provider?.photoUrl" class="rounded-circle object-fit-cover shadow-sm" style="width: 32px; height: 32px;" alt="Foto">
               <div *ngIf="!app.provider?.photoUrl" class="bg-primary-soft text-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 32px; height: 32px; font-weight: bold;">
@@ -127,13 +126,13 @@
               <span class="fw-bold text-dark">{{ app.provider?.fullName || 'Profissional' }}</span>
             </div>
           </td>
-          <td>
+          <td class="date-cell">
             <div class="fw-bold text-dark">{{ app.scheduledAt | date: 'dd/MM/yyyy HH:mm' }}</div>
           </td>
-          <td>
+          <td class="status-cell">
             <span class="badge" [ngClass]="appointmentStatusViews[app.status]?.badgeClass || 'bg-secondary'">{{ 'STATUS_APPOINTMENT.' + app.status | translate }}</span>
           </td>
-          <td class="text-end">
+          <td class="actions-cell text-end">
             <button class="btn btn-success btn-sm me-2" *ngIf="app.status === 'SCHEDULED' && app.payment?.status !== 'APPROVED'" [disabled]="isPayingAppointment(app.id)" (click)="payAppointment(app.id)">
               <span class="icon" style="font-size: 14px;">payments</span> {{ isPayingAppointment(app.id) ? 'Abrindo...' : 'Pagar' }}
             </button>

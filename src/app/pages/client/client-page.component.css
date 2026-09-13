@@ -7,6 +7,24 @@
   animation: fadeInUp 0.4s ease both;
 }
 
+.table-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.table-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 20px;
+}
+
+.table-caption input {
+  width: min(280px, 45%);
+}
+
 
 
 .request-card {
@@ -47,7 +65,7 @@
 
 @media (max-width: 576px) {
   :host .container {
-    padding-top: 24px !important;
+    padding: 20px 12px 88px !important;
   }
 
   .page-header {
@@ -72,6 +90,133 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+
+  .table-card {
+    margin-bottom: 24px !important;
+    border-radius: 16px !important;
+  }
+
+  .table-caption {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px !important;
+  }
+
+  .table-title {
+    justify-content: space-between;
+    width: 100%;
+    font-size: 19px;
+  }
+
+  .table-caption input {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .expand-button {
+    flex: 0 0 auto;
+  }
+
+  .table-card ::ng-deep .p-datatable-wrapper {
+    overflow: visible;
+  }
+
+  .table-card ::ng-deep .p-datatable-table {
+    width: 100%;
+    min-width: 0 !important;
+    table-layout: fixed;
+  }
+
+  .table-card ::ng-deep .p-datatable-thead {
+    display: none;
+  }
+
+  .table-card ::ng-deep .p-datatable-tbody > .data-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 14px;
+    padding: 16px 18px;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .table-card ::ng-deep .p-datatable-tbody > .data-row > td {
+    width: auto !important;
+    min-width: 0;
+    padding: 0 !important;
+    border: 0 !important;
+    white-space: normal;
+  }
+
+  .requests-table ::ng-deep .data-row {
+    padding-left: 48px !important;
+  }
+
+  .requests-table ::ng-deep .expand-cell {
+    position: absolute;
+    top: 14px;
+    left: 10px;
+  }
+
+  .table-card ::ng-deep .service-cell,
+  .appointments-table ::ng-deep .professional-cell {
+    grid-column: 1;
+  }
+
+  .table-card ::ng-deep .date-cell {
+    grid-column: 2;
+    grid-row: 1;
+    max-width: 132px;
+    text-align: right;
+  }
+
+  .table-card ::ng-deep .status-cell,
+  .table-card ::ng-deep .quotes-cell {
+    align-self: center;
+    grid-column: 2;
+    text-align: right;
+  }
+
+  .table-card ::ng-deep .privacy-cell {
+    display: none !important;
+  }
+
+  .appointments-table ::ng-deep .professional-cell {
+    grid-row: 2;
+  }
+
+  .appointments-table ::ng-deep .status-cell {
+    grid-row: 2;
+  }
+
+  .appointments-table ::ng-deep .actions-cell {
+    display: flex !important;
+    flex-wrap: wrap;
+    grid-column: 1 / -1;
+    gap: 8px;
+    text-align: left !important;
+  }
+
+  .appointments-table ::ng-deep .actions-cell .btn {
+    flex: 1;
+    margin: 0 !important;
+    min-height: 38px;
+  }
+
+  .table-card ::ng-deep .p-paginator {
+    padding: 8px 4px;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .table-card ::ng-deep .p-paginator .p-paginator-first,
+  .table-card ::ng-deep .p-paginator .p-paginator-last {
+    display: none;
+  }
+
+  .fullscreen-table {
+    inset: 8px !important;
   }
 }
 
