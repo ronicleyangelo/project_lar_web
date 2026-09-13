@@ -238,12 +238,13 @@
     <div class="row g-3">
       <div class="col-6">
         <label class="form-label text-muted small fw-bold">{{ 'CLIENT.PREF_DATE' | translate }}</label>
-        <input type="date" class="form-control" [(ngModel)]="newReqDate">
+        <input type="date" class="form-control" [(ngModel)]="newReqDate" [min]="minimumRequestDate" required>
+        <small class="text-danger d-block mt-1" *ngIf="newRequestSubmitted && !newReqDate">Informe a data do serviço.</small>
       </div>
       <div class="col-6">
         <label class="form-label text-muted small fw-bold">{{ 'CLIENT.TIME' | translate }}</label>
         <select class="form-select" [(ngModel)]="newReqTimeSlot">
-          <option value="Manh (08:00 - 12:00)">{{ 'CLIENT.MORNING' | translate }}</option>
+          <option value="Manhã (08:00 - 12:00)">{{ 'CLIENT.MORNING' | translate }}</option>
           <option value="Tarde (13:00 - 17:00)">{{ 'CLIENT.AFTERNOON' | translate }}</option>
           <option value="Integral">{{ 'CLIENT.FULL_DAY' | translate }}</option>
         </select>
@@ -269,12 +270,16 @@
       <label class="form-label text-muted small fw-bold">{{ 'CLIENT.MAX_BUDGET' | translate }}</label>
       <div class="input-group">
         <span class="input-group-text">R$</span>
-        <input type="number" min="0" class="form-control" [(ngModel)]="newReqBudget" placeholder="Ex.: 250">
+        <input type="text" inputmode="decimal" class="form-control" [value]="newReqBudgetDisplay"
+          (input)="onBudgetInput($event)" (blur)="formatBudgetDisplay()" placeholder="Ex.: 250,00" aria-label="Orçamento máximo">
       </div>
+      <small class="text-danger d-block mt-1" *ngIf="newRequestSubmitted && budgetInvalid">Informe um orçamento válido maior que zero.</small>
     </div>
     <div class="mb-3 mt-3">
       <label class="form-label text-muted small fw-bold">{{ 'CLIENT.SERVICE_DESC' | translate }}</label>
       <textarea class="form-control" rows="3" [(ngModel)]="newReqDescription" [placeholder]="'CLIENT.DESC_PLACEHOLDER' | translate"></textarea>
+      <small class="text-muted">Mínimo de 10 caracteres.</small>
+      <small class="text-danger d-block" *ngIf="newRequestSubmitted && newReqDescription.trim().length < 10">Descreva o serviço com pelo menos 10 caracteres.</small>
     </div>
   </div>
   <div class="modal-footer bg-surface border-top-0 pt-0 pb-4 px-4" style="border-radius: 0 0 var(--radius-md) var(--radius-md);">

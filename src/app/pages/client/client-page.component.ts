@@ -76,6 +76,8 @@ export class ClientPageComponent implements OnInit, AfterViewInit {
   newReqDate = '';
   newReqTimeSlot = 'Manhã (08:00 - 12:00)';
   newReqBudget?: number;
+  newReqBudgetDisplay = '';
+  newRequestSubmitted = false;
   newReqDescription = '';
   newReqCity = 'São Paulo';
   newReqNeighborhood = 'Moema';
@@ -99,6 +101,15 @@ export class ClientPageComponent implements OnInit, AfterViewInit {
   private readonly acceptingQuoteIds = new Set<string>();
   private readonly confirmingAppointmentIds = new Set<string>();
   private readonly payingAppointmentIds = new Set<string>();
+
+  get minimumRequestDate(): string {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  }
+
+  get budgetInvalid(): boolean {
+    return this.newReqBudget !== undefined && (!Number.isFinite(this.newReqBudget) || this.newReqBudget <= 0 || this.newReqBudget > 1_000_000);
+  }
 
   constructor(
     private requestService: RequestService,
@@ -183,7 +194,9 @@ export class ClientPageComponent implements OnInit, AfterViewInit {
 
   submitNewRequest(): void {
     if (this.isCreatingRequest) return;
-    if (!this.newReqCategoryId || !this.newReqDescription.trim() || !this.newReqCity.trim() || !this.newReqNeighborhood.trim() || !this.newReqActivityIds.length) {
+    this.newRequestSubmitted = true;
+    const invalidDate = !this.newReqDate || this.newReqDate < this.minimumRequestDate;
+    if (!this.newReqCategoryId || this.newReqDescription.trim().length < 10 || !this.newReqCity.trim() || !this.newReqNeighborhood.trim() || !this.newReqActivityIds.length || invalidDate || this.budgetInvalid) {
       this.messageService.add({ severity: 'warn', summary: 'Campos obrigatórios', detail: 'Preencha localização, descrição e selecione ao menos uma atividade.' });
       return;
     }
@@ -207,6 +220,9 @@ export class ClientPageComponent implements OnInit, AfterViewInit {
         this.currentModalRef?.close();
         this.currentModalRef = null;
         this.newReqDescription = '';
+        this.newReqBudget = undefined;
+        this.newReqBudgetDisplay = '';
+        this.newRequestSubmitted = false;
         this.clientRequests = [
           response.serviceRequest,
           ...this.clientRequests.filter(request => request.id !== response.serviceRequest.id)
@@ -219,6 +235,22 @@ export class ClientPageComponent implements OnInit, AfterViewInit {
       },
       error: error => this.showError(error, 'Não foi possível publicar o pedido.')
     });
+  }
+
+  onBudgetInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const sanitized = input.value.replace(/[^\d,.]/g, '').replace(/\.(?=.*\.)/g, '');
+    const normalized = sanitized.includes(',')
+      ? sanitized.replace(/\./g, '').replace(',', '.')
+      : sanitized;
+    const parsed = Number(normalized);
+    this.newReqBudgetDisplay = sanitized;
+    this.newReqBudget = sanitized.trim() === '' ? undefined : parsed;
+  }
+
+  formatBudgetDisplay(): void {
+    if (this.newReqBudget === undefined || !Number.isFinite(this.newReqBudget)) return;
+    this.newReqBudgetDisplay = this.newReqBudget.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
   toggleRequestActivity(id: string, checked: boolean): void {
