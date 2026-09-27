@@ -56,6 +56,7 @@ export interface GoogleAuthResponse {
 }
 
 export interface CompleteGoogleRegistrationPayload {
+  inviteCode: string;
   onboardingToken: string;
   role: 'CLIENT' | 'PROVIDER';
   phone: string;
@@ -78,6 +79,7 @@ export interface LoginPayload {
 }
 
 export interface RegisterClientPayload {
+  inviteCode: string;
   email: string;
   phone: string;
   password: string;
@@ -90,6 +92,7 @@ export interface RegisterClientPayload {
 }
 
 export interface RegisterProviderPayload {
+  inviteCode: string;
   email: string;
   phone: string;
   password: string;

@@ -15,6 +15,7 @@ const MOBILE_PHONE_PATTERN = /^[1-9]{2}9\d{8}$/;
 })
 export class CompleteGoogleRegistrationComponent implements OnInit {
   readonly form = this.formBuilder.nonNullable.group({
+    inviteCode: ['', Validators.required],
     role: ['CLIENT' as 'CLIENT' | 'PROVIDER', Validators.required],
     fullName: ['', [Validators.required, Validators.minLength(3)]],
     phone: ['', [Validators.required, Validators.pattern(MOBILE_PHONE_PATTERN)]],
@@ -104,6 +105,7 @@ export class CompleteGoogleRegistrationComponent implements OnInit {
     this.isLoading = true;
     this.error = '';
     this.authService.completeGoogleRegistration({
+      inviteCode: value.inviteCode.trim(),
       onboardingToken: this.onboardingToken,
       role: value.role,
       phone: value.phone,

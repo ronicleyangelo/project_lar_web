@@ -8,6 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { APP_RELEASE } from './core/config/app-version';
 import { LegalDialogService } from './core/services/legal-dialog.service';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
+import { MessageService } from 'primeng/api';
+import { BetaService } from './core/services/beta.service';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +20,10 @@ export class AppComponent implements OnInit, OnDestroy {
   readonly release = APP_RELEASE;
   currentUser: User | null = null;
   authPage: 'login' | 'register' | 'complete-google' | null = null;
+  feedbackVisible = false;
+  feedbackCategory = 'SUGGESTION';
+  feedbackMessage = '';
+  feedbackSending = false;
   private userSub!: Subscription;
   private routeSub!: Subscription;
   private updateSub?: Subscription;
@@ -27,6 +33,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private translate: TranslateService,
     private swUpdate: SwUpdate,
+    private betaService: BetaService,
+    private messageService: MessageService,
     public legalDialogs: LegalDialogService
   ) {}
 
@@ -65,6 +73,27 @@ export class AppComponent implements OnInit, OnDestroy {
     const serverLogout = this.authService.logout();
     void this.router.navigate(['/auth/login'], { replaceUrl: true }).then(() => {
       serverLogout.subscribe();
+    });
+  }
+
+  sendBetaFeedback(): void {
+    const message = this.feedbackMessage.trim();
+    if (message.length < 5) {
+      this.messageService.add({ severity: 'warn', summary: 'Feedback', detail: 'Conte um pouco mais sobre o que encontrou.' });
+      return;
+    }
+    this.feedbackSending = true;
+    this.betaService.sendFeedback(this.feedbackCategory, message, this.router.url).subscribe({
+      next: response => {
+        this.feedbackSending = false;
+        this.feedbackVisible = false;
+        this.feedbackMessage = '';
+        this.messageService.add({ severity: 'success', summary: 'Obrigado!', detail: response.message });
+      },
+      error: error => {
+        this.feedbackSending = false;
+        this.messageService.add({ severity: 'error', summary: 'Feedback', detail: error.error?.error || 'Nao foi possivel enviar agora.' });
+      },
     });
   }
 

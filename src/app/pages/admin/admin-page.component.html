@@ -42,6 +42,24 @@
     <div class="empty-admin" *ngIf="!isLoading && !adminProviders.length"><span class="icon">person_search</span>{{ 'ADMIN.NO_PROS_REGISTERED' | translate }}</div>
   </section>
 
+  <section class="review-section">
+    <div class="section-heading"><div><span class="page-eyebrow">BETA FECHADO</span><h3>Participantes autorizados</h3><p>Contas existentes e pessoas que entraram com convite durante o teste.</p></div><span class="pending-count"><strong>{{ betaParticipants.length }}</strong> participantes</span></div>
+    <div class="admin-provider-grid" *ngIf="betaParticipants.length">
+      <app-record-card tone="secondary" *ngFor="let participant of betaParticipants">
+        <header class="admin-provider-head"><div class="provider-cell"><span class="provider-avatar">{{ participant.name.slice(0, 2).toUpperCase() }}</span><div><strong>{{ participant.name }}</strong><small>{{ participant.email }}</small></div></div><span class="status-chip">{{ participant.role === 'CLIENT' ? 'Cliente' : 'Profissional' }}</span></header>
+        <div class="admin-provider-meta"><div><span class="icon">location_on</span><span><small>Cidade</small><strong>{{ participant.city || 'Nao informada' }}</strong></span></div><div><span class="icon">event</span><span><small>Entrada</small><strong>{{ participant.joinedAt | date:'dd/MM/yyyy' }}</strong><em>{{ participant.invitedDuringBeta ? 'Convite validado' : 'Conta anterior ao beta' }}</em></span></div></div>
+      </app-record-card>
+    </div>
+  </section>
+
+  <section class="review-section">
+    <div class="section-heading"><div><span class="page-eyebrow">RETORNO DOS TESTADORES</span><h3>Feedbacks recebidos</h3><p>Relatos enviados diretamente pelo aplicativo.</p></div><span class="pending-count"><strong>{{ betaFeedback.length }}</strong> relatos</span></div>
+    <div class="admin-provider-grid" *ngIf="betaFeedback.length">
+      <app-record-card tone="secondary" *ngFor="let feedback of betaFeedback"><header class="admin-provider-head"><div class="provider-cell"><span class="provider-avatar"><span class="icon">chat</span></span><div><strong>{{ feedback.user?.name || 'Usuario' }}</strong><small>{{ feedback.createdAt | date:'dd/MM/yyyy HH:mm' }}</small></div></div><span class="status-chip">{{ feedback.category }}</span></header><p>{{ feedback.message }}</p><small *ngIf="feedback.pageUrl">Tela: {{ feedback.pageUrl }}</small></app-record-card>
+    </div>
+    <div class="empty-admin" *ngIf="!betaFeedback.length"><span class="icon">forum</span>Nenhum feedback recebido ainda.</div>
+  </section>
+
   <p-dialog [(visible)]="reviewDialogVisible" [modal]="true" [draggable]="false" [resizable]="false" [closable]="!isSubmittingReview" [style]="{width: '520px', maxWidth: 'calc(100vw - 32px)'}" styleClass="review-dialog" (onHide)="closeReviewDialog()">
     <ng-template pTemplate="header">
       <div class="dialog-heading"><span class="dialog-icon icon">{{ reviewStatus === 'CHANGES_REQUESTED' ? 'edit_note' : 'person_off' }}</span><div><strong>{{ reviewDialogTitle }}</strong><small>{{ selectedProvider?.fullName }}</small></div></div>

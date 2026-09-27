@@ -26,4 +26,7 @@ export class AdminService {
   reviewProvider(id: string, status: 'VERIFIED' | 'CHANGES_REQUESTED' | 'REJECTED', note = ''): Observable<any> {
     return this.http.put(`${this.apiUrl}/providers/${id}/verification`, { status, note });
   }
+
+  getBetaParticipants(): Observable<any[]> { return this.http.get<any[]>(`${this.apiUrl}/beta/participants`); }
+  getBetaFeedback(): Observable<any[]> { return this.http.get<any[]>(`${this.apiUrl}/beta/feedback`); }
 }

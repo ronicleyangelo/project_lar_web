@@ -17,6 +17,8 @@ export class AdminPageComponent implements OnInit {
   readonly verificationStatusViews = VERIFICATION_STATUS_VIEWS;
   adminMetrics: AdminMetrics = { totalUsers: 0, totalClients: 0, totalProviders: 0, totalRequests: 0, openRequests: 0, totalQuotes: 0, totalAppointments: 0, activeAppointments: 0, completedAppointments: 0, totalReviews: 0, pendingReviews: 0, suspendedUsers: 0, conversionRate: '0%', completionRate: '0%' };
   adminProviders: AdminProvider[] = [];
+  betaParticipants: any[] = [];
+  betaFeedback: any[] = [];
   isLoading = true;
   reviewDialogVisible = false;
   isSubmittingReview = false;
@@ -55,6 +57,8 @@ export class AdminPageComponent implements OnInit {
   loadAdminDashboard() {
     this.adminService.getMetrics().subscribe({ next: metrics => this.adminMetrics = metrics, error: error => this.showError(error) });
     this.adminService.getProviders().subscribe({ next: providers => { this.adminProviders = providers; this.isLoading = false; }, error: error => { this.isLoading = false; this.showError(error); } });
+    this.adminService.getBetaParticipants().subscribe({ next: participants => this.betaParticipants = participants, error: error => this.showError(error) });
+    this.adminService.getBetaFeedback().subscribe({ next: feedback => this.betaFeedback = feedback, error: error => this.showError(error) });
   }
 
   openReviewDialog(provider: AdminProvider, status: Exclude<ReviewDecision, 'VERIFIED'>): void {

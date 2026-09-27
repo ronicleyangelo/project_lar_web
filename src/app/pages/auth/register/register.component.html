@@ -23,6 +23,12 @@
       <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
       <div class="mb-3">
+        <label class="form-label" for="inviteCode">Codigo de convite do beta</label>
+        <input id="inviteCode" type="text" class="form-control" formControlName="inviteCode" autocomplete="off" placeholder="Digite o codigo recebido" [class.is-invalid]="form.controls.inviteCode.touched && form.controls.inviteCode.invalid">
+        <div class="invalid-feedback">Informe o codigo fornecido pelo responsavel pelo teste.</div>
+      </div>
+
+      <div class="mb-3">
         <label class="form-label">{{ 'AUTH.FULL_NAME' | translate }}</label>
         <input type="text" class="form-control" formControlName="fullName" [placeholder]="'AUTH.FULL_NAME_PLACEHOLDER' | translate" [class.is-invalid]="form.controls.fullName.touched && form.controls.fullName.invalid">
         <div class="invalid-feedback">{{ 'AUTH.FULL_NAME_ERROR' | translate }}</div>

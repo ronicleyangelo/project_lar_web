@@ -5,6 +5,12 @@
   (logoutClicked)="onLogout()">
 </app-header>
 
+<aside *ngIf="!authPage" class="beta-banner" role="status">
+  <span class="icon" aria-hidden="true">science</span>
+  <span><strong>Beta fechado</strong> Ambiente de testes com usuarios convidados. Pagamentos reais estao desativados.</span>
+  <button *ngIf="currentUser" type="button" (click)="feedbackVisible = true">Enviar feedback</button>
+</aside>
+
 <main class="main-content" [class.auth-route]="authPage">
   <router-outlet></router-outlet>
 </main>
@@ -54,4 +60,16 @@
 <app-mobile-nav *ngIf="!authPage && currentUser" [currentUser]="currentUser"></app-mobile-nav>
 
 <p-toast position="top-right" [life]="2000"></p-toast>
+
+<p-dialog header="Enviar feedback do beta" [(visible)]="feedbackVisible" [modal]="true" [draggable]="false" [resizable]="false" [style]="{width: '480px', maxWidth: 'calc(100vw - 24px)'}">
+  <div class="feedback-form">
+    <label for="feedbackCategory">Tipo</label>
+    <select id="feedbackCategory" class="form-select" [(ngModel)]="feedbackCategory">
+      <option value="BUG">Encontrei um erro</option><option value="SUGGESTION">Sugestao</option><option value="USABILITY">Dificuldade de uso</option><option value="GENERAL">Outro</option>
+    </select>
+    <label for="feedbackMessage">O que aconteceu?</label>
+    <textarea id="feedbackMessage" class="form-control" rows="5" maxlength="2000" [(ngModel)]="feedbackMessage" placeholder="Descreva o que voce esperava e o que aconteceu."></textarea>
+    <button type="button" class="btn btn-primary" [disabled]="feedbackSending" (click)="sendBetaFeedback()">{{ feedbackSending ? 'Enviando...' : 'Enviar feedback' }}</button>
+  </div>
+</p-dialog>
 </div>

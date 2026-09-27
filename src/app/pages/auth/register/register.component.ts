@@ -14,6 +14,7 @@ const MOBILE_PHONE_PATTERN = /^[1-9]{2}9\d{8}$/;
 })
 export class RegisterComponent implements OnInit {
   readonly form = this.formBuilder.nonNullable.group({
+    inviteCode: ['', Validators.required],
     role: ['CLIENT' as 'CLIENT' | 'PROVIDER', Validators.required],
     fullName: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.email]],
@@ -86,12 +87,14 @@ export class RegisterComponent implements OnInit {
     this.isLoading = true;
     const request$ = value.role === 'CLIENT'
       ? this.authService.registerClient({
+          inviteCode: value.inviteCode.trim(),
           fullName: value.fullName.trim(), email: value.email.trim(), password: value.password,
           phone: value.phone, neighborhood: value.neighborhood.trim(), city: value.city.trim(),
           fullAddress: value.fullAddress.trim(),
           acceptPrivacy: value.acceptPrivacy, acceptTerms: value.acceptTerms,
         })
       : this.authService.registerProvider({
+          inviteCode: value.inviteCode.trim(),
           fullName: value.fullName.trim(), email: value.email.trim(), password: value.password,
           phone: value.phone, bio: value.bio.trim(), city: value.city.trim(),
           neighborhood: value.neighborhood.trim(), serviceRadiusKm: value.serviceRadiusKm,

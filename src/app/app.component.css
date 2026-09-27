@@ -34,6 +34,13 @@
   overflow: hidden;
 }
 
+.beta-banner { min-height: 42px; padding: 8px clamp(16px, 4vw, 48px); display: flex; align-items: center; justify-content: center; gap: 10px; background: #fff3cd; border-bottom: 1px solid #e8d38a; color: #664d03; font-size: 12px; }
+.beta-banner .icon { font-size: 18px; }
+.beta-banner button { margin-left: auto; border: 0; background: transparent; color: #8a3b20; font: inherit; font-weight: 800; text-decoration: underline; cursor: pointer; }
+.feedback-form { display: grid; gap: 10px; }
+.feedback-form label { margin-top: 4px; font-size: 12px; font-weight: 800; color: var(--text-primary); }
+.feedback-form .btn { margin-top: 8px; justify-self: end; }
+
 .app-footer {
   min-height: 64px;
   padding: 18px clamp(20px, 5vw, 64px);
@@ -74,6 +81,8 @@
 /* A barra inferior existe somente em telas móveis. Reservar espaço dela no
    desktop criava uma rolagem vazia, especialmente nas telas de autenticação. */
 @media (max-width: 767px) {
+  .beta-banner { align-items: flex-start; flex-wrap: wrap; justify-content: flex-start; }
+  .beta-banner button { width: 100%; margin-left: 28px; text-align: left; }
   .app-shell:not(.auth-shell) {
     width: 100%;
     min-height: 100dvh;
